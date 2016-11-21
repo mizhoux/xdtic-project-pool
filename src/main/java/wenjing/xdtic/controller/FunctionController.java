@@ -24,53 +24,62 @@ public class FunctionController {
     @Autowired
     private UserDao userDao;
 
-    @RequestMapping(value = "/valid/username", method = POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseCode> validUsername(@RequestBody User user) {
-        String username = user.getUsername();
-        System.out.println("req username: " + username);
-        if ("mizhou".equals(username)) {
-            return new ResponseEntity<>(new ResponseCode("error"), HttpStatus.OK);
-        }
-        return new ResponseEntity<>(new ResponseCode("ok"), HttpStatus.OK);
-    }
-
     @RequestMapping(value = "/valid/user", method = POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<ResponseCode> validUser(
-            @RequestParam(required = false) String username,
-            @RequestParam(required = false) String password) {
+            @RequestParam String username,
+            @RequestParam String password) {
         System.out.println("valid username: " + username + ", password: " + password);
-        if ("mizhoux".equals(username) && "zm2016".equals(password)) {
+        User user = userDao.selectuser(username, password);
+        if (user != null) {
             return new ResponseEntity<>(new ResponseCode("ok"), HttpStatus.OK);
         }
 
         return new ResponseEntity<>(new ResponseCode("error"), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/user/login", method = POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "/user/login",
+            method = POST,
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String userLogin(
-            @RequestParam(required = false) String username,
-            @RequestParam(required = false) String password) {
-        System.out.println("login: username: " + username + ", password: " + password);
-        if ("mizhoux".equals(username) && "zm2016".equals(password)) {
+            @RequestParam String username,
+            @RequestParam String password) {
+        User user = userDao.selectuser(username, password);
+        if (user != null) {
             return "/page/user/center";
-        //    return new ResponseEntity<>(new ResponseCode("ok"), HttpStatus.OK);
         }
-        return "failed";
-        //return new ResponseEntity<>(new ResponseCode("error"), HttpStatus.OK);
+
+        return "/page/user/register";
+    }
+
+    /**
+     * 验证用户名是否可用
+     *
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/valid/username", method = POST, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseCode> validUsername(@RequestBody User user) {
+        
+        String username = user.getUsername();
+        boolean userExisted = userDao.containsUser(username);
+        if (userExisted == true) {
+            return new ResponseEntity<>(new ResponseCode("error"), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(new ResponseCode("ok"), HttpStatus.OK);
+
     }
 
     @RequestMapping(value = "/user/register", method = POST)
     public String registerUser(
             @RequestParam String username,
             @RequestParam String password,
-            @RequestParam String passConfirm) {
-        System.out.println("username: " + username);
-        System.out.println("password: " + password);
-        System.out.println("passConfirm: " + passConfirm);
-        if ("mizhou".equals(username)) {
-            System.err.println("register error");
-            return "/page/user/register";
+            @RequestParam String passConfirm) 
+    {
+        
+        boolean addSucc = userDao.addUser(username, password);
+        if (addSucc) {
+            return "/page/user/login";
         }
-        return "/page/user/login";
+        return "/page/user/register";
     }
 }

@@ -70,6 +70,17 @@ public class UserDao {
         //    return resultUser;
     }
 
+    //判断 username 是否已经存在
+    public boolean containsUser(String username) {
+        String SQL = "SELECT id FROM user where username='" + username + "'";
+        try {
+            Map<String, Object> map = jdbcTemplate.queryForMap(SQL);
+            return true;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
+    }
+
     public boolean addUser(String username, String password, String email) {
         String SQL = "INSERT INTO user SET username = ?, password = ?, email = ?";
         int result = jdbcTemplate.update(SQL, username, password, email);
@@ -77,6 +88,13 @@ public class UserDao {
         return result == 1;
     }
 
+    public  boolean addUser(String username,String password) {
+        String SQL = "INSERT INTO user SET username = ?, password = ?";
+        int result = jdbcTemplate.update(SQL, username, password);
+
+        return result == 1;
+    }
+            
     public User updateUser(User user) {
         String SQL = "UPDATE user "
                 + "set nickname=?, name=?, sex=?, phone=?, profe=?, stunum=?,"
