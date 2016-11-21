@@ -24,6 +24,13 @@ public class FunctionController {
     @Autowired
     private UserDao userDao;
 
+    /**
+     * 根据用户名和密码验证用户是否可注册
+     *
+     * @param username
+     * @param password
+     * @return
+     */
     @RequestMapping(value = "/valid/user", method = POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<ResponseCode> validUser(
             @RequestParam String username,
@@ -37,6 +44,13 @@ public class FunctionController {
         return new ResponseEntity<>(new ResponseCode("error"), HttpStatus.OK);
     }
 
+    /**
+     * 根据用户名和密码进行登录
+     *
+     * @param username
+     * @param password
+     * @return
+     */
     @RequestMapping(value = "/user/login",
             method = POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
@@ -59,7 +73,7 @@ public class FunctionController {
      */
     @RequestMapping(value = "/valid/username", method = POST, consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ResponseCode> validUsername(@RequestBody User user) {
-        
+
         String username = user.getUsername();
         boolean userExisted = userDao.containsUser(username);
         if (userExisted == true) {
@@ -69,13 +83,20 @@ public class FunctionController {
 
     }
 
+    /**
+     * 根据用户名和密码进行注册
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @param passConfirm
+     * @return
+     */
     @RequestMapping(value = "/user/register", method = POST)
     public String registerUser(
             @RequestParam String username,
             @RequestParam String password,
-            @RequestParam String passConfirm) 
-    {
-        
+            @RequestParam String passConfirm) {
+
         boolean addSucc = userDao.addUser(username, password);
         if (addSucc) {
             return "/page/user/login";
