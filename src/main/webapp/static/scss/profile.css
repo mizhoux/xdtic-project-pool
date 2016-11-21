@@ -1,0 +1,67 @@
+/*reset we-ui-cell*/
+.weui-cell {
+  display: inline-flex;
+}
+
+.weui-btn_primary {
+  background-color: #faa147;
+}
+
+.weui-btn_primary:not(.weui-btn_disabled):active {
+  color: rgba(255, 255, 255, 0.6);
+  background-color: #dc8d3d;
+}
+
+.tic-table .tic-tr-two {
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.tic-table .tic-tr-two .tic-td-label {
+  flex: 0 0 30%;
+  text-align: center;
+  padding: 1rem;
+  box-sizing: border-box;
+  border-right: solid 1px #ccc4c4;
+}
+
+.tic-table .tic-tr-two .tic-td-content {
+  flex: 0 0 70%;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.tic-table-head {
+  padding: .8rem .5rem;
+}
+
+.tic-table-head > h2 {
+  padding: .8rem 0;
+}
+
+.tic-table-head > p {
+  font-size: .8rem;
+  padding: .8rem 0;
+}
+
+.tic-header-three {
+  border-bottom: solid 1px #ccc4c4;
+  background: #f8f8f8;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tic-header-three > span {
+  flex: 0 1 10%;
+  padding: .8rem .5rem;
+  box-sizing: border-box;
+}
+
+.tic-header-three > h2 {
+  flex: 0 0 80%;
+  text-align: center;
+  box-sizing: border-box;
+  padding: .8rem 0;
+}

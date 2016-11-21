@@ -1,0 +1,38 @@
+{
+    "res": {
+        "page/hall/hall.jsp": {
+            "uri": "/page/hall/hall.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/layout/frame.jsp": {
+            "uri": "/page/layout/frame.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/user/center.jsp": {
+            "uri": "/page/user/center.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "static/libs/vue-tap.js": {
+            "uri": "/static/libs/vue-tap.js",
+            "type": "js"
+        },
+        "static/libs/vue.js": {
+            "uri": "/static/libs/vue.js",
+            "type": "js"
+        },
+        "static/scss/weui.css": {
+            "uri": "/static/scss/weui.css",
+            "type": "css"
+        }
+    },
+    "pkg": {}
+}

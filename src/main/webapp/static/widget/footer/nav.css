@@ -1,0 +1,15 @@
+.tic-nav {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  border-top: solid 1px #ccc4c4;
+}
+
+.tic-nav > div {
+  flex: 1 0 33.333%;
+  text-align: center;
+  padding: 0.5rem 0 0;
+}

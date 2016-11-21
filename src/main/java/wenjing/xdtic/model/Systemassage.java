@@ -1,0 +1,49 @@
+package wenjing.xdtic.model;
+
+/**
+ *
+ * @author admin
+ */
+public class Systemassage {
+
+    private Integer uid;
+    private Integer mid;
+    private String massage;
+    private String date;
+
+    public Systemassage() {
+    }
+
+    public Integer getUid() {
+        return uid;
+    }
+
+    public void setUid(Integer uid) {
+        this.uid = uid;
+    }
+
+    public Integer getMid() {
+        return mid;
+    }
+
+    public void setMid(Integer mid) {
+        this.mid = mid;
+    }
+
+    public String getMassage() {
+        return massage;
+    }
+
+    public void setMassage(String massage) {
+        this.massage = massage;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+}

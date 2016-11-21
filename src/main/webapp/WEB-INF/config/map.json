@@ -1,0 +1,148 @@
+{
+    "res": {
+        "page/hall/hall.jsp": {
+            "uri": "/page/hall/hall.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/index.jsp": {
+            "uri": "/page/index.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/layout/frame.jsp": {
+            "uri": "/page/layout/frame.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/user/center.jsp": {
+            "uri": "/page/user/center.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/user/login.jsp": {
+            "uri": "/page/user/login.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/user/profile.jsp": {
+            "uri": "/page/user/profile.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/user/register.jsp": {
+            "uri": "/page/user/register.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/widget/footer/nav.jsp": {
+            "uri": "/page/widget/footer/nav.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/widget/footer/nav.scss": {
+            "uri": "/xdtic/static/page/widget/footer/nav.css",
+            "type": "css"
+        },
+        "static/js/module/formSerialize.js": {
+            "uri": "/xdtic/static/js/module/formSerialize.js",
+            "type": "js",
+            "extras": {
+                "moduleId": "static/js/module/formSerialize"
+            }
+        },
+        "static/js/user/login.js": {
+            "uri": "/xdtic/static/js/user/login.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
+        "static/js/user/profile.js": {
+            "uri": "/xdtic/static/js/user/profile.js",
+            "type": "js"
+        },
+        "static/js/user/register.js": {
+            "uri": "/xdtic/static/js/user/register.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
+        "static/libs/mod.js": {
+            "uri": "/xdtic/static/libs/mod.js",
+            "type": "js"
+        },
+        "static/libs/vue-tap.js": {
+            "uri": "/xdtic/static/libs/vue-tap.js",
+            "type": "js"
+        },
+        "static/libs/vue.js": {
+            "uri": "/xdtic/static/libs/vue.js",
+            "type": "js"
+        },
+        "static/scss/center.scss": {
+            "uri": "/xdtic/static/scss/center.css",
+            "type": "css"
+        },
+        "static/scss/common.scss": {
+            "uri": "/xdtic/static/scss/common.css",
+            "type": "css"
+        },
+        "static/scss/profile.scss": {
+            "uri": "/xdtic/static/scss/profile.css",
+            "type": "css"
+        },
+        "static/scss/register.scss": {
+            "uri": "/xdtic/static/scss/register.css",
+            "type": "css"
+        },
+        "static/scss/weui.css": {
+            "uri": "/xdtic/static/scss/weui.css",
+            "type": "css"
+        },
+        "node_modules/es6-promise/dist/es6-promise.js": {
+            "uri": "/xdtic/static/node_modules/es6-promise/dist/es6-promise.js",
+            "type": "js",
+            "extras": {
+                "moduleId": "node_modules/es6-promise/dist/es6-promise"
+            },
+            "deps": [
+                "node_modules/process/browser.js"
+            ]
+        },
+        "node_modules/whatwg-fetch/fetch.js": {
+            "uri": "/xdtic/static/node_modules/whatwg-fetch/fetch.js",
+            "type": "js",
+            "extras": {
+                "moduleId": "node_modules/whatwg-fetch/fetch"
+            }
+        },
+        "node_modules/process/browser.js": {
+            "uri": "/xdtic/static/node_modules/process/browser.js",
+            "type": "js",
+            "extras": {
+                "moduleId": "node_modules/process/browser"
+            }
+        }
+    },
+    "pkg": {}
+}
