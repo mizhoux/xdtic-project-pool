@@ -12,9 +12,9 @@
         <title>登录</title>
     </head>
     <body>
-        <form method="POST" action="./user/login">
+        <form method="POST" action="/xdtic/fn/valid/user">
             用户名：<input type="text" name="username" /><br/><br/>
-            密码：<input type="password" name="password" /><br/><br/>
+            密码：  <input type="password" name="password" /><br/><br/>
             <input type="submit" value="登录" />
         </form>
         <br/>

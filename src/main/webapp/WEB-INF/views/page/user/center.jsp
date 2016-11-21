@@ -16,7 +16,7 @@
                 <header>
                     <div class="tic-avatar">
                         <div class="avatar">
-                            <img src="/xdtic/static/images/avatar.png" alt="西电腾讯俱乐部">
+                                <img src="/xdtic/static/images/avatar.png" alt="西电腾讯俱乐部">
                             <p><c:out value="${user.username}" /></p>
                         </div>
                         <div class="bg">

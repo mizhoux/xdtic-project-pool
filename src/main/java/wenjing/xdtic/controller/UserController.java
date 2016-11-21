@@ -27,6 +27,11 @@ public class UserController {
     @Autowired
     private UserDao userDao;
 
+    @RequestMapping(value = "/{function}")
+    public String index(@PathVariable String function) {
+        return "/page/user/" + function;
+    }
+
     @RequestMapping(value = "/test_json", method = POST)
     public ResponseEntity<?> testPostJson(@RequestBody User user) {
         System.out.println("enter method 'testPostJson'...");
@@ -68,13 +73,13 @@ public class UserController {
     }
 
     //个人信息查询
-    @ResponseBody //return的值作为http请求的内容返回客户端 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)//请求数据
-    public User getPesonalInformationById(@PathVariable("id") Integer id
-    ) {
-        User user = userDao.getUser(id);
-        return user;
-    }
+//    @ResponseBody //return的值作为http请求的内容返回客户端 
+//    @RequestMapping(value = "/{id}", method = RequestMethod.GET)//请求数据
+//    public User getPesonalInformationById(@PathVariable("id") Integer id
+//    ) {
+//        User user = userDao.getUser(id);
+//        return user;
+//    }
 
     @ResponseBody //return的值作为http请求的内容返回客户端 
     @RequestMapping(method = RequestMethod.GET)//请求数据
