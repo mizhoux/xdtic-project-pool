@@ -1,5 +1,7 @@
 package wenjing.xdtic.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -41,6 +43,31 @@ public class UserDao {
         } catch (EmptyResultDataAccessException ex) {
             return null;// 捕获异常      spring查询不到输入数据时返回null
         }
+    }
+
+    public User getUserByResultSet(Integer id) {
+        String SQL = "SELECT * FROM user WHERE id = " + id;
+        User user = jdbcTemplate.queryForObject(SQL, this::parseUser);
+        return user;
+    }
+
+    public User parseUser(ResultSet rs, int rowNum) throws SQLException {
+        if (rs.next()) {
+            User u = new User();
+            u.setId(rs.getInt("id"));
+            u.setUsername(rs.getString("password"));
+            u.setPassword(rs.getString("password"));
+            u.setEmail(rs.getString("email"));
+            u.setNickname(rs.getString("nickname"));
+            u.setProfe(rs.getString("profe"));
+            u.setPhone(rs.getString("phone"));
+            u.setStunum(rs.getString("stunum"));
+            u.setPexperice(rs.getString("pexperice"));
+            u.setProfile(rs.getString("profile"));
+
+            return u;
+        }
+        return null;
     }
 
     public User selectuser(String username, String password) {
@@ -88,13 +115,13 @@ public class UserDao {
         return result == 1;
     }
 
-    public  boolean addUser(String username,String password) {
+    public boolean addUser(String username, String password) {
         String SQL = "INSERT INTO user SET username = ?, password = ?";
         int result = jdbcTemplate.update(SQL, username, password);
 
         return result == 1;
     }
-            
+
     public User updateUser(User user) {
         String SQL = "UPDATE user "
                 + "set nickname=?, name=?, sex=?, phone=?, profe=?, stunum=?,"
