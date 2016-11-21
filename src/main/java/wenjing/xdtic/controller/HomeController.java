@@ -12,20 +12,9 @@ public class HomeController {
 
     @RequestMapping({"/", "index", "home", "test", "login"})
     public String index() {
-        //    return "/page/user/login";
-        return "login";
+        return "/page/user/login";
     }
 
-    /*
-    @RequestMapping(value = "/page/{f}/{s}")
-    public String index2(@PathVariable("f") String f, @PathVariable("s") String s) {
-        System.out.println("f: " + f);
-        System.out.println("s: " + s);
-
-        return "/page/" + f + "/" + s;
-    }
-     */
-    
     @RequestMapping("register")
     public String login() {
         return "register";
