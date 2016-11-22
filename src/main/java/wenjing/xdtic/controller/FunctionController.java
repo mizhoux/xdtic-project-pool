@@ -31,7 +31,8 @@ public class FunctionController {
      * @param password
      * @return
      */
-    @RequestMapping(value = "/valid/user", method = POST, consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "/valid/user", method = POST,
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<ResponseCode> validUser(
             @RequestParam String username,
             @RequestParam String password) {
@@ -51,8 +52,7 @@ public class FunctionController {
      * @param password
      * @return
      */
-    @RequestMapping(value = "/user/login",
-            method = POST,
+    @RequestMapping(value = "/user/login", method = POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String userLogin(
             @RequestParam String username,
@@ -71,8 +71,10 @@ public class FunctionController {
      * @param user
      * @return
      */
-    @RequestMapping(value = "/valid/username", method = POST, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ResponseCode> validUsername(@RequestBody User user) {
+    @RequestMapping(value = "/valid/username", method = POST, 
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ResponseCode> validUsername(
+            @RequestBody User user) { // 将前端数据转化为 User
 
         String username = user.getUsername();
         boolean userExisted = userDao.containsUser(username);
@@ -91,7 +93,8 @@ public class FunctionController {
      * @param passConfirm
      * @return
      */
-    @RequestMapping(value = "/user/register", method = POST)
+    @RequestMapping(value = "/user/register", method = POST,
+            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String registerUser(
             @RequestParam String username,
             @RequestParam String password,
