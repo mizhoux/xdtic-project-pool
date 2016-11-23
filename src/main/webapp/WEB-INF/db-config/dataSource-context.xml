@@ -10,7 +10,7 @@
 
     <bean id="propertyConfigurer"
           class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
-          p:location="/WEB-INF/config/database.properties" />
+          p:location="/WEB-INF/db-config/database.properties" />
     
     <!-- Spring 的 DriverManagerDataSource，每次获取 Connection 时都会新建一个（开发用）-->
     <bean id="dataSource"

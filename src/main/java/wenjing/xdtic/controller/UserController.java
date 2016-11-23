@@ -16,6 +16,7 @@ import wenjing.xdtic.model.User;
  * @author admin
  *
  */
+//用户个人信息、密码更新
 @Controller
 @RequestMapping("/user")
 public class UserController {
@@ -34,7 +35,7 @@ public class UserController {
             @RequestParam("password") String password,
             HttpSession session) {
 
-        User user = userDao.selectuser(username, password);
+        User user = userDao.getUserByResultSet(username, password);
 
         if (user == null) {
             return "register";
@@ -64,7 +65,8 @@ public class UserController {
     @RequestMapping(value = "/info/{id}", method = RequestMethod.GET)//请求数据
     public User getPesonalInformationById(@PathVariable("id") Integer id
     ) {
-        User user = userDao.getUser(id);
+    //    User user = userDao.getUser(id);
+        User user = userDao.getUserByResultSet(id);
         return user;
     }
 
@@ -74,7 +76,7 @@ public class UserController {
             @RequestParam("username") String username,
             @RequestParam("password") String password
     ) {
-        User user = userDao.selectuser(username, password);
+        User user = userDao.getUserByResultSet(username, password);
         return user;
     }
 

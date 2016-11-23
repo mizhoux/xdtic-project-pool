@@ -44,57 +44,48 @@ public class UserDao {
             return null;// 捕获异常      spring查询不到输入数据时返回null
         }
     }
-
+    
+    //通过id查询获得用户的个人信息
     public User getUserByResultSet(Integer id) {
         String SQL = "SELECT * FROM user WHERE id = " + id;
-        User user = jdbcTemplate.queryForObject(SQL, this::parseUser);
+        User user =  jdbcTemplate.query(SQL, this::parseUser);
         return user;
     }
-
-    public User parseUser(ResultSet rs, int rowNum) throws SQLException {
+    
+    //通过用户名、密码 获取用户个人信息
+    public User parseUser(ResultSet rs) throws SQLException {
         if (rs.next()) {
-            User u = new User();
-            u.setId(rs.getInt("id"));
-            u.setUsername(rs.getString("password"));
-            u.setPassword(rs.getString("password"));
-            u.setEmail(rs.getString("email"));
-            u.setNickname(rs.getString("nickname"));
-            u.setProfe(rs.getString("profe"));
-            u.setPhone(rs.getString("phone"));
-            u.setStunum(rs.getString("stunum"));
-            u.setPexperice(rs.getString("pexperice"));
-            u.setProfile(rs.getString("profile"));
+            User user = new User();
+            user.setId(rs.getInt("id"));
+            user.setUsername(rs.getString("username"));
+            user.setPassword(rs.getString("password"));
+            user.setEmail(rs.getString("email"));
+            user.setNickname(rs.getString("nickname"));
+            user.setProfe(rs.getString("profe"));
+            user.setPhone(rs.getString("phone"));
+            user.setStunum(rs.getString("stunum"));
+            user.setPexperice(rs.getString("pexperice"));
+            user.setProfile(rs.getString("profile"));
 
-            return u;
+            return user;
         }
         return null;
     }
 
-    public User selectuser(String username, String password) {
-        String SQL = "SELECT * from  user where username='" + username + "'AND password='" + password + "'";
-
-        try {
-            Map<String, Object> map = jdbcTemplate.queryForMap(SQL);
-            //Map数据集返回对象名为string类型的值
-            User user = new User();
-            user.setId((Integer) map.get("id"));//将得到的数据赋值，并返回
-            user.setUsername((String) map.get("username"));
-            user.setPassword((String) map.get("password"));
-            user.setEmail((String) map.get("email"));
-            user.setNickname((String) map.get("nickname"));
-            user.setProfe((String) map.get("profe"));
-            user.setSex((String) map.get("sex"));
-            user.setPhone((String) map.get("phone"));
-            user.setStunum((String) map.get("stunum"));
-            user.setPexperice((String) map.get("pexperice"));
-            user.setProfile((String) map.get("profile"));
-            return user;
-        } catch (EmptyResultDataAccessException ex) {
-            return null;// 捕获异常      spring查询不到输入数据时返回null
+    /**
+     *
+     * @param username
+     * @param password
+     * @return
+     */
+    public User getUserByResultSet(String username, String password) {
+        String SQL = "SELECT * FROM  user WHERE username=? AND password= ?";
+        User user = jdbcTemplate.query(SQL, this::parseUser, username, password);
+        if (user != null) {
+            System.err.println("user is NOT null");
         }
-
-        //    User resultUser = jdbcTemplate.queryForObject(SQL, User.class);
-        //    return resultUser;
+        //查询并返回对象
+        return user;
     }
 
     //判断 username 是否已经存在
