@@ -11,7 +11,7 @@
 作者：
 
 前端
-* [garfileds](https://github.com/garfileds)
+* [garfileds](https://github.com/garfileds) : [tic-wechat](https://github.com/garfileds/tic-wechat)
 
 后端
 * [mizhoux](https://github.com/mizhoux)
