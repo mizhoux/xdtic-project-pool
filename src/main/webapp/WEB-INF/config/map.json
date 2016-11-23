@@ -35,6 +35,13 @@
                 "isPage": true
             }
         },
+        "page/user/msgs.jsp": {
+            "uri": "/page/user/msgs.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
         "page/user/profile.jsp": {
             "uri": "/page/user/profile.jsp",
             "type": "jsp",
@@ -49,6 +56,13 @@
                 "isPage": true
             }
         },
+        "page/user/resetPass.jsp": {
+            "uri": "/page/user/resetPass.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
         "page/widget/footer/nav.jsp": {
             "uri": "/page/widget/footer/nav.jsp",
             "type": "jsp",
@@ -57,7 +71,7 @@
             }
         },
         "page/widget/footer/nav.scss": {
-            "uri": "/xdtic/static/page/widget/footer/nav.css",
+            "uri": "/xdtic/page/widget/footer/nav.css",
             "type": "css"
         },
         "static/js/module/formSerialize.js": {
@@ -67,20 +81,50 @@
                 "moduleId": "static/js/module/formSerialize"
             }
         },
+        "static/js/module/tools.js": {
+            "uri": "/xdtic/static/js/module/tools.js",
+            "type": "js",
+            "extras": {
+                "moduleId": "static/js/module/tools"
+            }
+        },
         "static/js/user/login.js": {
             "uri": "/xdtic/static/js/user/login.js",
             "type": "js",
             "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "static/js/module/formSerialize.js"
+            ]
+        },
+        "static/js/user/msgs.js": {
+            "uri": "/xdtic/static/js/user/msgs.js",
+            "type": "js",
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
                 "node_modules/es6-promise/dist/es6-promise.js",
                 "node_modules/whatwg-fetch/fetch.js"
             ]
         },
         "static/js/user/profile.js": {
             "uri": "/xdtic/static/js/user/profile.js",
-            "type": "js"
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "static/js/module/formSerialize.js"
+            ]
         },
         "static/js/user/register.js": {
             "uri": "/xdtic/static/js/user/register.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
+        "static/js/user/resetPass.js": {
+            "uri": "/xdtic/static/js/user/resetPass.js",
             "type": "js",
             "deps": [
                 "node_modules/es6-promise/dist/es6-promise.js",
@@ -107,6 +151,10 @@
             "uri": "/xdtic/static/scss/common.css",
             "type": "css"
         },
+        "static/scss/msgs.scss": {
+            "uri": "/xdtic/static/scss/msgs.css",
+            "type": "css"
+        },
         "static/scss/profile.scss": {
             "uri": "/xdtic/static/scss/profile.css",
             "type": "css"
@@ -120,7 +168,7 @@
             "type": "css"
         },
         "node_modules/es6-promise/dist/es6-promise.js": {
-            "uri": "/xdtic/static/node_modules/es6-promise/dist/es6-promise.js",
+            "uri": "/xdtic/node_modules/es6-promise/dist/es6-promise.js",
             "type": "js",
             "extras": {
                 "moduleId": "node_modules/es6-promise/dist/es6-promise"
@@ -130,14 +178,21 @@
             ]
         },
         "node_modules/whatwg-fetch/fetch.js": {
-            "uri": "/xdtic/static/node_modules/whatwg-fetch/fetch.js",
+            "uri": "/xdtic/node_modules/whatwg-fetch/fetch.js",
             "type": "js",
             "extras": {
                 "moduleId": "node_modules/whatwg-fetch/fetch"
             }
         },
+        "node_modules/vue-infinite-scroll/vue-infinite-scroll.js": {
+            "uri": "/xdtic/node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+            "type": "js",
+            "extras": {
+                "moduleId": "node_modules/vue-infinite-scroll/vue-infinite-scroll"
+            }
+        },
         "node_modules/process/browser.js": {
-            "uri": "/xdtic/static/node_modules/process/browser.js",
+            "uri": "/xdtic/node_modules/process/browser.js",
             "type": "js",
             "extras": {
                 "moduleId": "node_modules/process/browser"

@@ -10,13 +10,13 @@
 		<main>
 			<img src="/xdtic/static/images/logo2.png" alt="西电腾讯俱乐部" />
 
-			<form action="/fn/user/register" method="POST" class="tic-form" id="formRegister">
+			<form action="<c:url value='/fn/user/register' />" method="POST" class="tic-form" id="formRegister">
 				<p class="tic-error-tip" 
 				     v-show="hasError">{{errorMsg}}</p>
 				<div class="tic-field"
-					 :class="{ 'tic-error': userNameError }">
-					<input type="text" name="userName" placeholder="用户名" 
-						 v-model="userName"
+					 :class="{ 'tic-error': usernameError }">
+					<input type="text" name="username" placeholder="用户名" 
+						 v-model="username"
 						 @blur="validName"/>
 				</div>
 				<div class="tic-field"

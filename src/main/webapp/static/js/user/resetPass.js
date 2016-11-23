@@ -3,40 +3,41 @@
 var Promise = require('node_modules/es6-promise/dist/es6-promise').Promise;
 require('node_modules/whatwg-fetch/fetch');
 
-var urlValidUserName = '/fn/valid/username';
+var urlValidUserName = '/fn/valid/user';
 
-var formRegister = new Vue({
-    el: '#formRegister',
+var formResetPass = new Vue({
+    el: '#formResetPass',
     data: {
         username: '',
-        password: '',
-        passConfirm: '',
-        usernameError: false,
+        passOld: '',
+        passNew: '',
+        passNewConfirm: '',
+        userError: false,
         passError: false
     },
     computed: {
         errorCount: function errorCount() {
             var count = 0;
-            if (this.usernameError) count++;
+            if (this.userError) count++;
             if (this.passError) count++;
             return count;
         },
         errorMsg: function errorMsg() {
             var msg = '';
             if (this.usernameError) {
-                msg = '抱歉，用户名已被注册';
+                msg = '用户名或原始密码错误';
             } else if (this.passError) {
-                msg = '两次密码输入不一致';
+                msg = '两次新密码输入不一致';
             }
             return msg;
         },
         hasError: function hasError() {
-            return this.usernameError || this.passError;
+            return this.userError || this.passError;
         }
     },
 
     methods: {
-        validName: function validName(event) {
+        validUser: function validUser(event) {
             fetch(urlValidUserName, {
                 method: 'POST',
                 headers: {
@@ -44,15 +45,16 @@ var formRegister = new Vue({
                     'Accept': 'application/json'
                 },
                 body: JSON.stringify({
-                    username: formRegister.username
+                    username: formResetPass.username,
+                    password: formResetPass.passOld
                 })
             }).then(function (response) {
                 return response.json();
             }).then(function (data) {
                 if (data.code == 'ok') {
-                    formRegister.usernameError = false;
+                    formResetPass.userError = false;
                 } else {
-                    formRegister.usernameError = true;
+                    formResetPass.userError = true;
                 }
             })['catch'](function (error) {
                 console.log('request failed', error);
@@ -60,35 +62,39 @@ var formRegister = new Vue({
         },
 
         validPass: function validPass() {
-            this.passError = !(this.password === this.passConfirm);
+            this.passError = !(this.passNew === this.passNewConfirm);
             return this.passError;
         },
 
-        validRegister: function validRegister(param) {
+        validForm: function validForm(param) {
             fetch(urlValidUserName, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    username: formRegister.username
+                    username: formResetPass.username
                 })
             }).then(function (response) {
                 return response.json();
             }).then(function (data) {
                 if (data.code == 'ok') {
-                    formRegister.usernameError = false;
-                    formRegister.validPass();
+                    formResetPass.userError = false;
+                    formResetPass.validPass();
                 } else {
-                    formRegister.usernameError = true;
+                    formResetPass.userError = true;
                 }
 
-                if (!formRegister.hasError) {
-                    formRegister.$el.submit();
+                if (!formResetPass.hasError) {
+                    formResetPass.$el.submit();
                 }
             })['catch'](function (error) {
                 console.log('request failed', error);
             });
+        },
+
+        navBack: function navBack() {
+            window.history.go(-1);
         }
     }
 });

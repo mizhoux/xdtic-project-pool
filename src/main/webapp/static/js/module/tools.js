@@ -1,8 +1,12 @@
-define('static/js/common/formSerialize', function(require, exports, module) {
+define('static/js/module/tools', function(require, exports, module) {
 
   "use strict";
   
   function serialize(form) {
+      if (typeof form === 'string') {
+          form = document.querySelector(form);
+      }
+  
       var len = form.elements.length; //表单字段长度;表单字段包括<input><select><button>等
       var field = null; //用来存储每一条表单字段
       var parts = []; //保存字符串将要创建的各个部分
@@ -43,6 +47,7 @@ define('static/js/common/formSerialize', function(require, exports, module) {
                   }
               default:
                   if (field.name.length) {
+                      opValue = field.value;
                       parts.push(encodeURIComponent(field.name) + '=' + encodeURIComponent(opValue));
                   }
                   break;
@@ -51,6 +56,23 @@ define('static/js/common/formSerialize', function(require, exports, module) {
       return parts.join("&");
   }
   
-  module.exports = serialize;
+  function SaferHTML(templateData) {
+      var s = templateData[0];
+      for (var i = 1; i < arguments.length; i++) {
+          var arg = String(arguments[i]);
+  
+          // 转义占位符中的特殊字符。
+          s += arg.replace(/&/g, "&").replace(/</g, "<").replace(/</g, ">");
+  
+          // 不转义模板中的特殊字符。
+          s += templateData[i];
+      }
+      return s;
+  }
+  
+  module.exports = {
+      serialize: serialize,
+      SaferHTML: SaferHTML
+  };
 
 });

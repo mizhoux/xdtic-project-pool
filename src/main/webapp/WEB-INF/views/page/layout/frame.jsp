@@ -19,14 +19,18 @@
             <fis:require id="static/scss/weui.css" />
             <fis:require id="static/scss/common.scss" />
         </fis:block>
+        
+        <fis:block name="jsPre">
+        </fis:block>
     </fis:head>
 
     <fis:body class="body">
         <div id="wrapper">
             <fis:block name="body"></fis:block>
         </div>
+        
     </fis:body>
-
+    
     <fis:block name="js">
         <fis:require id="static/libs/vue.js" />
         <fis:require id="static/libs/vue-tap.js" />

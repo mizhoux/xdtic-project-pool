@@ -3,6 +3,10 @@ define('static/js/module/formSerialize', function(require, exports, module) {
   "use strict";
   
   function serialize(form) {
+      if (typeof form === 'string') {
+          form = document.querySelector(form);
+      }
+  
       var len = form.elements.length; //表单字段长度;表单字段包括<input><select><button>等
       var field = null; //用来存储每一条表单字段
       var parts = []; //保存字符串将要创建的各个部分
@@ -43,6 +47,7 @@ define('static/js/module/formSerialize', function(require, exports, module) {
                   }
               default:
                   if (field.name.length) {
+                      opValue = field.value;
                       parts.push(encodeURIComponent(field.name) + '=' + encodeURIComponent(opValue));
                   }
                   break;
