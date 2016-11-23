@@ -3,13 +3,27 @@ package wenjing.xdtic.test;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import wenjing.xdtic.model.User;
 
 public class RestClient {
 
     public static void main(String[] args) throws Exception {
-        testPostJson();
+        testLogin("mizhoux", "zm2016");
+    }
+
+    public static void testLogin(String username, String password) {
+        String URL = "http://localhost:8080/xdtic/fn/valid/user";
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("username", username);
+        params.add("password", password);
+
+        RestTemplate template = new RestTemplate();
+        ResponseEntity<String> entity = template.postForEntity(URL, params, String.class);
+        System.out.println("code: " + entity.getStatusCode());
+        System.out.println("body: " + entity.getBody());
     }
 
     public static void testPostJson() {
@@ -17,9 +31,6 @@ public class RestClient {
         user.setUsername("Michael");
         user.setPassword("abcedfg");
 
-//        List<HttpMessageConverter> messageConverters = new ArrayList<>(1);
-//        HttpMessageConverter messageConverter = new MappingJackson2HttpMessageConverter();
-//        messageConverters.add(messageConverter);
         String URL = "http://localhost:8080/xdtic/user/test_json";
 
         RestTemplate template = new RestTemplate();

@@ -3,7 +3,7 @@
 var Promise = require('node_modules/es6-promise/dist/es6-promise').Promise;
 require('node_modules/whatwg-fetch/fetch');
 
-var urlValidUserName = '/fn/valid/username';
+var urlValidUserName = '/xdtic/fn/valid/username';
 
 var formRegister = new Vue({
     el: '#formRegister',
@@ -49,14 +49,17 @@ var formRegister = new Vue({
             }).then(function (response) {
                 return response.json();
             }).then(function (data) {
-                if (data.code == 'ok') {
+                // console.log("code: " + data.code);
+                if (data.code === 'ok') {
                     formRegister.usernameError = false;
                 } else {
                     formRegister.usernameError = true;
                 }
-            })['catch'](function (error) {
+            })
+            ['catch'](function (error) {
                 console.log('request failed', error);
             });
+            
         },
 
         validPass: function validPass() {

@@ -1,7 +1,6 @@
 package wenjing.xdtic.controller;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -13,15 +12,7 @@ public class HomeController {
 
     @RequestMapping({"/", "index", "home", "test", "login"})
     public String index() {
-        return "index";
-    }
-
-    @RequestMapping(value = "/page/{f}/{s}")
-    public String index2(@PathVariable("f") String f, @PathVariable("s") String s) {
-        System.out.println("f: " + f);
-        System.out.println("s: " + s);
-
-        return "/page/" + f + "/" + s;
+        return "/page/user/login";
     }
 
     @RequestMapping("register")

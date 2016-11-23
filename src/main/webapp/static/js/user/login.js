@@ -5,7 +5,7 @@ require('node_modules/whatwg-fetch/fetch');
 
 var formSerialize = require('static/js/module/formSerialize');
 
-var urlValidUser = '/fn/valid/user';
+var urlValidUser = '/xdtic/fn/valid/user';
 
 var formLogin = new Vue({
     el: '#formLogin',
@@ -19,14 +19,14 @@ var formLogin = new Vue({
             fetch(urlValidUser, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+		          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
                 },
                 credentials: 'same-origin',
                 body: formSerialize(formLogin.$el)
             }).then(function (response) {
                 return response.json();
             }).then(function (data) {
-                if (data.code === 'ok') {
+               if (data.code === 'ok') {
                     formLogin.$el.submit();
                 } else {
                     formLogin.hasError = true;

@@ -1,5 +1,7 @@
 package wenjing.xdtic.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -43,6 +45,31 @@ public class UserDao {
         }
     }
 
+    public User getUserByResultSet(Integer id) {
+        String SQL = "SELECT * FROM user WHERE id = " + id;
+        User user = jdbcTemplate.queryForObject(SQL, this::parseUser);
+        return user;
+    }
+
+    public User parseUser(ResultSet rs, int rowNum) throws SQLException {
+        if (rs.next()) {
+            User u = new User();
+            u.setId(rs.getInt("id"));
+            u.setUsername(rs.getString("password"));
+            u.setPassword(rs.getString("password"));
+            u.setEmail(rs.getString("email"));
+            u.setNickname(rs.getString("nickname"));
+            u.setProfe(rs.getString("profe"));
+            u.setPhone(rs.getString("phone"));
+            u.setStunum(rs.getString("stunum"));
+            u.setPexperice(rs.getString("pexperice"));
+            u.setProfile(rs.getString("profile"));
+
+            return u;
+        }
+        return null;
+    }
+
     public User selectuser(String username, String password) {
         String SQL = "SELECT * from  user where username='" + username + "'AND password='" + password + "'";
 
@@ -70,9 +97,27 @@ public class UserDao {
         //    return resultUser;
     }
 
+    //判断 username 是否已经存在
+    public boolean containsUser(String username) {
+        String SQL = "SELECT id FROM user where username='" + username + "'";
+        try {
+            Map<String, Object> map = jdbcTemplate.queryForMap(SQL);
+            return true;
+        } catch (EmptyResultDataAccessException e) {
+            return false;
+        }
+    }
+
     public boolean addUser(String username, String password, String email) {
         String SQL = "INSERT INTO user SET username = ?, password = ?, email = ?";
         int result = jdbcTemplate.update(SQL, username, password, email);
+
+        return result == 1;
+    }
+
+    public boolean addUser(String username, String password) {
+        String SQL = "INSERT INTO user SET username = ?, password = ?";
+        int result = jdbcTemplate.update(SQL, username, password);
 
         return result == 1;
     }

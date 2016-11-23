@@ -2,14 +2,10 @@ package wenjing.xdtic.controller;
 
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wenjing.xdtic.dao.UserDao;
@@ -27,13 +23,9 @@ public class UserController {
     @Autowired
     private UserDao userDao;
 
-    @RequestMapping(value = "/test_json", method = POST)
-    public ResponseEntity<?> testPostJson(@RequestBody User user) {
-        System.out.println("enter method 'testPostJson'...");
-        if (user != null) {
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        }
-        return new ResponseEntity<>("无法接收 User", HttpStatus.BAD_REQUEST);
+    @RequestMapping(value = "/{function}")
+    public String index(@PathVariable String function) {
+        return "/page/user/" + function;
     }
 
     @RequestMapping(value = "/login", method = RequestMethod.POST)
@@ -69,7 +61,7 @@ public class UserController {
 
     //个人信息查询
     @ResponseBody //return的值作为http请求的内容返回客户端 
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)//请求数据
+    @RequestMapping(value = "/info/{id}", method = RequestMethod.GET)//请求数据
     public User getPesonalInformationById(@PathVariable("id") Integer id
     ) {
         User user = userDao.getUser(id);

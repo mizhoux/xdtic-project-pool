@@ -31,6 +31,11 @@
     
     <context:component-scan base-package="wenjing.xdtic.controller, wenjing.xdtic.dao" />
 	
+    <!--
+    <bean name="/page/**"   
+          class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
+    -->
+    
     <bean id="viewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver"
           p:prefix="/WEB-INF/views/"

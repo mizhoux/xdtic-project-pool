@@ -3,7 +3,7 @@
 var Promise = require('node_modules/es6-promise/dist/es6-promise').Promise;
 require('node_modules/whatwg-fetch/fetch');
 
-var urlValidUserName = '/fn/valid/user';
+var urlValidUserName = '/xdtic/fn/valid/user';
 
 var formResetPass = new Vue({
     el: '#formResetPass',
