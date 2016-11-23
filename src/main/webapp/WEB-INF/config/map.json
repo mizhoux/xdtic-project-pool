@@ -168,7 +168,7 @@
             "type": "css"
         },
         "node_modules/es6-promise/dist/es6-promise.js": {
-            "uri": "/xdtic/node_modules/es6-promise/dist/es6-promise.js",
+            "uri": "/xdtic/static/node_modules/es6-promise/dist/es6-promise.js",
             "type": "js",
             "extras": {
                 "moduleId": "node_modules/es6-promise/dist/es6-promise"
@@ -178,21 +178,21 @@
             ]
         },
         "node_modules/whatwg-fetch/fetch.js": {
-            "uri": "/xdtic/node_modules/whatwg-fetch/fetch.js",
+            "uri": "/xdtic/static/node_modules/whatwg-fetch/fetch.js",
             "type": "js",
             "extras": {
                 "moduleId": "node_modules/whatwg-fetch/fetch"
             }
         },
         "node_modules/vue-infinite-scroll/vue-infinite-scroll.js": {
-            "uri": "/xdtic/node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+            "uri": "/xdtic/static/node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
             "type": "js",
             "extras": {
                 "moduleId": "node_modules/vue-infinite-scroll/vue-infinite-scroll"
             }
         },
         "node_modules/process/browser.js": {
-            "uri": "/xdtic/node_modules/process/browser.js",
+            "uri": "/xdtic/static/node_modules/process/browser.js",
             "type": "js",
             "extras": {
                 "moduleId": "node_modules/process/browser"
