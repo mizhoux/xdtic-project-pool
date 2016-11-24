@@ -23,19 +23,19 @@
 						<c:if test="${user.hasMsg}">
 							<c:set var="notice" value="notice" />
 						</c:if>
-						<a href="/user/msg?userid=<c:out value="${user.id}" />" v-tap class="grid <c:out value="${notice}" />">
+						<a href="/xdtic/user/msg?userid=<c:out value="${user.id}" />" v-tap class="grid <c:out value="${notice}" />">
 							<img src="/xdtic/static/images/sys-msg.png" alt="系统消息">
 							<p>系统消息</p>
 						</a>
-						<a class="grid" href="/user/profile?userid=<c:out value="${user.id}" />" v-tap>
+						<a class="grid" href="/xdtic/user/profile?userid=<c:out value="${user.id}" />" v-tap>
 							<img src="/xdtic/static/images/profile.png" alt="个人信息">
 							<p>个人信息</p>
 						</a>
-						<a class="grid" href="/logout" v-tap>
+						<a class="grid" href="/xdtic/logout" v-tap>
 							<img src="/xdtic/static/images/switch-account.png" alt="切换账号">
 							<p>切换账号</p>
 						</a>
-						<a class="grid" href="/user/resetPass" v-tap>
+						<a class="grid" href="/xdtic/user/resetPass" v-tap>
 							<img src="/xdtic/static/images/change-pass.png" alt="修改密码">
 							<p>修改密码</p>
 						</a>
