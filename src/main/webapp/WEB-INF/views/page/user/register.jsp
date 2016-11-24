@@ -3,12 +3,12 @@
 <%@ taglib uri="/fis" prefix="fis"%>
 
 <fis:extends name="page/layout/frame.jsp">
-    <fis:block name="body">
-        <header>
-            <h2>注册</h2>
-        </header>
-        <main>
-            <img src="<c:url value="/static/images/logo2.png"/>" alt="西电腾讯俱乐部" />
+	<fis:block name="body">
+		<header>
+			<h2>注册</h2>
+		</header>
+		<main>
+			<img src="/xdtic/static/images/logo2.png" alt="西电腾讯俱乐部" />
 
 			<form action="<c:url value='/fn/user/register' />" method="POST" class="tic-form" id="formRegister">
 				<p class="tic-error-tip" 
@@ -36,17 +36,17 @@
 		</main>
 	</fis:block>
 
-    <fis:block name="style">
-        <fis:parent />
-        <fis:require id="static/scss/register.scss" />
-    </fis:block>
+	<fis:block name="style">
+		<fis:parent />
+		<fis:require id="static/scss/register.scss" />
+	</fis:block>
 
-    <fis:block name="js">
-        <fis:parent />
-        <fis:require id="static/libs/mod.js" />
-        <fis:require id="static/js/user/register.js" />
-    </fis:block>
-
-    <%-- auto inject by fis3-preprocess-extlang--%>
-    <fis:require name="page/user/register.jsp" />
+	<fis:block name="js">
+		<fis:parent />
+		<fis:require id="static/libs/mod.js" />
+		<fis:require id="static/js/user/register.js" />
+	</fis:block>
+ 
+  <%-- auto inject by fis3-preprocess-extlang--%>
+  <fis:require name="page/user/register.jsp" />
 </fis:extends>

@@ -5,6 +5,7 @@
   position: fixed;
   bottom: 0;
   width: 100%;
+  background-color: #ffffff;
   border-top: solid 1px #ccc4c4;
 }
 
@@ -12,4 +13,8 @@
   flex: 1 0 33.333%;
   text-align: center;
   padding: 0.5rem 0 0;
+}
+
+body {
+  padding-bottom: 70px;
 }

@@ -1,5 +1,5 @@
 /**
- * @fileOverview for msg.jsp
+ * @fileOverview for msgs.jsp
  * @Author       adoug
  * @DateTime     2016-11-23
  */

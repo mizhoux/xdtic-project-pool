@@ -9,7 +9,7 @@
 				<header>
 					<div class="tic-avatar">
 						<div class="avatar">
-                            <img src="/xdtic/static/images/avatar.png" alt="西电腾讯俱乐部">
+							<img src="/xdtic/static/images/avatar.png" alt="西电腾讯俱乐部">
 							<p><c:out value="${user.username}" /></p>
 						</div>
 						<div class="bg">
@@ -20,12 +20,10 @@
 				<main>
 					<div class="tic-four-grid">
 						<c:set var="notice" value="" />
-                                                
 						<c:if test="${user.hasMsg}">
 							<c:set var="notice" value="notice" />
 						</c:if>
-                                                
-						<a href="/xdtic/user/msg?userid=<c:out value="${user.id}" />" v-tap class="grid <c:out value="${notice}" />">
+						<a href="/xdtic/user/msgs?userid=<c:out value="${user.id}" />" v-tap class="grid <c:out value="${notice}" />">
 							<img src="/xdtic/static/images/sys-msg.png" alt="系统消息">
 							<p>系统消息</p>
 						</a>

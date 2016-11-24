@@ -74,6 +74,15 @@
             "uri": "/xdtic/page/widget/footer/nav.css",
             "type": "css"
         },
+        "static/js/hall/hall.js": {
+            "uri": "/xdtic/static/js/hall/hall.js",
+            "type": "js",
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
         "static/js/module/formSerialize.js": {
             "uri": "/xdtic/static/js/module/formSerialize.js",
             "type": "js",
@@ -151,6 +160,10 @@
             "uri": "/xdtic/static/scss/common.css",
             "type": "css"
         },
+        "static/scss/hall.scss": {
+            "uri": "/xdtic/static/scss/hall.css",
+            "type": "css"
+        },
         "static/scss/msgs.scss": {
             "uri": "/xdtic/static/scss/msgs.css",
             "type": "css"
@@ -167,6 +180,13 @@
             "uri": "/xdtic/static/scss/weui.css",
             "type": "css"
         },
+        "node_modules/vue-infinite-scroll/vue-infinite-scroll.js": {
+            "uri": "/xdtic/static/node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+            "type": "js",
+            "extras": {
+                "moduleId": "node_modules/vue-infinite-scroll/vue-infinite-scroll"
+            }
+        },
         "node_modules/es6-promise/dist/es6-promise.js": {
             "uri": "/xdtic/static/node_modules/es6-promise/dist/es6-promise.js",
             "type": "js",
@@ -182,13 +202,6 @@
             "type": "js",
             "extras": {
                 "moduleId": "node_modules/whatwg-fetch/fetch"
-            }
-        },
-        "node_modules/vue-infinite-scroll/vue-infinite-scroll.js": {
-            "uri": "/xdtic/static/node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
-            "type": "js",
-            "extras": {
-                "moduleId": "node_modules/vue-infinite-scroll/vue-infinite-scroll"
             }
         },
         "node_modules/process/browser.js": {

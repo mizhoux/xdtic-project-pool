@@ -32,7 +32,7 @@
 							<span class="tic-td-label">姓名</span>
 							<span class="tic-td-content" v-show="!isEditing">{{user.realName}}</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<input type="text" name="realName" v-model="user.realName" />
+								<input type="text" name="name" v-model="user.realName" />
 							</span>
 						</div>
 						<div class="tic-tr-two">
@@ -72,7 +72,7 @@
 							<span class="tic-td-label">专业</span>
 							<span class="tic-td-content" v-show="!isEditing">{{user.major}}</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<input type="text" name="major" v-model="user.major" />
+								<input type="text" name="profe" v-model="user.major" />
 							</span>
 						</div>
 						<div class="tic-tr-two">
@@ -86,21 +86,21 @@
 							<span class="tic-td-label">学号</span>
 							<span class="tic-td-content" v-show="!isEditing">{{user.studentNo}}</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<input type="text" name="studentNo" v-model="user.studentNo" />
+								<input type="text" name="stunum" v-model="user.studentNo" />
 							</span>
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">个人能力</span>
 							<span class="tic-td-content" v-show="!isEditing">{{user.ability}}</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<textarea name="ability" v-model="user.ability"></textarea>
+								<textarea name="profile" v-model="user.ability"></textarea>
 							</span>
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">项目经历</span>
 							<span class="tic-td-content" v-show="!isEditing">{{user.projectDesc}}</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<textarea name="projectDesc" v-model="user.projectDesc"></textarea>
+								<textarea name="pexperice" v-model="user.projectDesc"></textarea>
 							</span>
 						</div>
 						<input type="hidden" name="id" value="<c:out value="${user.id}" />">
@@ -131,13 +131,13 @@
 			var userInfo = {
 				username: "<c:out value="${user.username}" />",
 				email: "<c:out value="${user.email}" />",
-				realName: "<c:out value="${user.realName}" />",
+				name: "<c:out value="${user.name}" />",
 				sex: "<c:out value="${user.sex}" />",
-				major: "<c:out value="${user.major}" />",
+				profe: "<c:out value="${user.profe}" />",
 				phone: "<c:out value="${user.phone}" />",
-				studentNo: "<c:out value="${user.studentNo}" />",
-				ability: "<c:out value="${user.ability}" />",
-				projectDesc: "<c:out value="${user.projectDesc}" />"
+				stunum: "<c:out value="${user.stunum}" />",
+				profile: "<c:out value="${user.profile}" />",
+				pexperice: "<c:out value="${user.pexperice}" />"
 			}
 		</script>
     </fis:block>

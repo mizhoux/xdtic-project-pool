@@ -49,17 +49,14 @@ var formRegister = new Vue({
             }).then(function (response) {
                 return response.json();
             }).then(function (data) {
-                // console.log("code: " + data.code);
-                if (data.code === 'ok') {
+                if (data.code == 'ok') {
                     formRegister.usernameError = false;
                 } else {
                     formRegister.usernameError = true;
                 }
-            })
-            ['catch'](function (error) {
+            })['catch'](function (error) {
                 console.log('request failed', error);
             });
-            
         },
 
         validPass: function validPass() {
