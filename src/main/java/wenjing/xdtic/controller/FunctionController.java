@@ -1,5 +1,6 @@
 package wenjing.xdtic.controller;
 
+import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,6 +18,7 @@ import wenjing.xdtic.model.User;
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
+//登录注册方法
 @Controller
 @RequestMapping("/fn")
 public class FunctionController {
@@ -37,11 +39,13 @@ public class FunctionController {
             @RequestParam String username,
             @RequestParam String password) {
         System.out.println("valid username: " + username + ", password: " + password);
-        User user = userDao.selectuser(username, password);
+        
+        User user = userDao.getUserByResultSet(username, password);
         if (user != null) {
+            System.out.println("valid ok");
             return new ResponseEntity<>(new ResponseCode("ok"), HttpStatus.OK);
         }
-
+        System.out.println("valid error");
         return new ResponseEntity<>(new ResponseCode("error"), HttpStatus.OK);
     }
 
@@ -56,9 +60,14 @@ public class FunctionController {
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String userLogin(
             @RequestParam String username,
-            @RequestParam String password) {
-        User user = userDao.selectuser(username, password);
+            @RequestParam String password,
+            HttpSession session) {
+        System.out.println("username: " + username);
+        System.out.println("password: " + password);
+        User user = userDao.getUserByResultSet(username, password);
         if (user != null) {
+            System.out.println("User Is Not NULL -> to Center");
+            session.setAttribute("user", user);
             return "/page/user/center";
         }
 
