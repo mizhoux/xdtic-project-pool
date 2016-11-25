@@ -73,7 +73,8 @@ var formResetPass = new Vue({
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    username: formResetPass.username
+                    username: formResetPass.username,
+                    password: formResetPass.passOld
                 })
             }).then(function (response) {
                 return response.json();
