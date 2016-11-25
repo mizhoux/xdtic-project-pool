@@ -10,7 +10,7 @@ public class User {
     private String username;
     private String password;
     private String email;
-     private String name;
+    private String name;
     private String nickname;
     private String sex;
     private String profe;//专业
@@ -118,7 +118,9 @@ public class User {
         this.pexperice = pexperice;
     }
 
-    
-   
+    @Override
+    public String toString() {
+        return "User{" + "id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", name=" + name + ", nickname=" + nickname + ", sex=" + sex + ", profe=" + profe + ", stunum=" + stunum + ", phone=" + phone + ", profile=" + profile + ", pexperice=" + pexperice + '}';
+    }
 
 }

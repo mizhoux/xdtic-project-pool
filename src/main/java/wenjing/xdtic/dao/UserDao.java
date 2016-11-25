@@ -45,6 +45,7 @@ public class UserDao {
         if (rs.next()) {
             User user = new User();
             user.setId(rs.getInt("id"));
+            user.setName(rs.getString("name"));
             user.setUsername(rs.getString("username"));
             user.setPassword(rs.getString("password"));
             user.setEmail(rs.getString("email"));
@@ -81,41 +82,36 @@ public class UserDao {
         return result == 1;
     }
 
-    public User updateUser(User user) {
-        String SQL = "UPDATE user "
-                + "set nickname=?, name=?, sex=?, phone=?, profe=?, stunum=?,"
-                + "profile=?,pexperice=?,email=? "
-                + "where id=" + user.getId();
-        try {
-            int result = jdbcTemplate.update(SQL,
-                    user.getNickname(),
-                    user.getName(),
-                    user.getSex(),
-                    user.getPhone(),
-                    user.getProfe(),
-                    user.getStunum(),
-                    user.getProfile(),
-                    user.getPexperice(),
-                    user.getEmail());
+    /**
+     * 更新用户
+     *
+     * @param user 要更新的用户信息
+     * @return 是否更新成功
+     */
+    public boolean updateUser(User user) {
+        String SQL = "UPDATE user SET "
+                + "nickname= ?, name = ?, sex = ?, phone = ?, profe = ?,"
+                + "stunum = ?,  profile= ?, pexperice = ?, email = ? "
+                + "WHERE id = ?";
+        int result = jdbcTemplate.update(SQL,
+                user.getNickname(),
+                user.getName(),
+                user.getSex(),
+                user.getPhone(),
+                user.getProfe(),
+                user.getStunum(),
+                user.getProfile(),
+                user.getPexperice(),
+                user.getEmail(),
+                user.getId());
 
-            if (result == 1) {
-                return user;
-            }
-        } catch (EmptyResultDataAccessException ex) {
-            // 捕获异常      spring查询不到输入数据时返回null
-        }
-        return null;
+        return result == 1;
     }
 
-    public User updatepassword(User user) {
-        String SQL = "UPDATE user SET password = ? WHERE id = " + user.getId();
-
-        int result = jdbcTemplate.update(SQL, user.getPassword());
-        if (result == 1) {
-            getUserByMap(user.getId());
-        }
-
-        return null;
+    public boolean updatepassword(String username, String passOld, String passNew) {
+        String SQL = "UPDATE user SET password = ? WHERE username = ? AND password = ?";
+        int result = jdbcTemplate.update(SQL, passNew, username, passOld);
+        return result == 1;
     }
 
     public User getUserByMap(Integer id) {
