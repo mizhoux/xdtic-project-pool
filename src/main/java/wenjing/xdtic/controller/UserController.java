@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wenjing.xdtic.dao.UserDao;
@@ -24,49 +25,23 @@ public class UserController {
     @Autowired
     private UserDao userDao;
 
-    @RequestMapping(value = "/{function}")
-    public String index(@PathVariable String function) {
-        return "/page/user/" + function;
-    }
-
-    @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public String login(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password,
+    @RequestMapping(value = "/user/profile", method = GET)
+    public String getUserProfile(
+            @RequestParam("userid") Integer id,
             HttpSession session) {
+        System.out.println("enter getUserProfile...");
 
-        User user = userDao.getUserByResultSet(username, password);
+        User user = userDao.getUser(id);
+        session.setAttribute("user", user);
 
-        if (user == null) {
-            return "register";
-        } else {
-            session.setAttribute("user", user);
-
-            return "personalcenter";
-        }
-    }
-
-    @RequestMapping(value = "/register", method = RequestMethod.POST)//创建资源
-    public String register(
-            @RequestParam("username") String username,
-            @RequestParam("password") String password,
-            @RequestParam("email") String email) {
-        boolean success = userDao.addUser(username, password, email);//创建
-        if (success) {
-            return "login";
-        } else {
-            return "register";
-        }
-
+        return "/page/user/profile";
     }
 
     //个人信息查询
     @ResponseBody //return的值作为http请求的内容返回客户端 
     @RequestMapping(value = "/info/{id}", method = RequestMethod.GET)//请求数据
-    public User getPesonalInformationById(@PathVariable("id") Integer id
-    ) {
-    //    User user = userDao.getUser(id);
-        User user = userDao.getUserByResultSet(id);
+    public User getPesonalInformationById(@PathVariable("id") Integer id) {
+        User user = userDao.getUser(id);
         return user;
     }
 
@@ -74,9 +49,8 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET)//请求数据
     public User getPesonalInformationByUsernameAndPassword(
             @RequestParam("username") String username,
-            @RequestParam("password") String password
-    ) {
-        User user = userDao.getUserByResultSet(username, password);
+            @RequestParam("password") String password) {
+        User user = userDao.getUser(username, password);
         return user;
     }
 
@@ -96,7 +70,7 @@ public class UserController {
             @RequestParam(required = false) String pexperice) {
         System.out.println("enter method 'updateUser'... ");
 
-        User oldUser = userDao.getUser(id);
+        User oldUser = userDao.getUserByMap(id);
 
         User user = new User();
         user.setId(id);//将得到的数据赋值，并返回
@@ -127,7 +101,7 @@ public class UserController {
             @RequestParam("email") String email) {
         System.out.println("update passwd entered...");
 
-        User user = userDao.getUser(id);
+        User user = userDao.getUserByMap(id);
 
         if (oldPassword.equals(user.getPassword())) {
             user.setPassword(newPassword);

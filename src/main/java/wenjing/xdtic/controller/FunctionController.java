@@ -40,12 +40,10 @@ public class FunctionController {
             @RequestParam String password) {
         System.out.println("valid username: " + username + ", password: " + password);
         
-        User user = userDao.getUserByResultSet(username, password);
+        User user = userDao.getUser(username, password);
         if (user != null) {
-            System.out.println("valid ok");
             return new ResponseEntity<>(new ResponseCode("ok"), HttpStatus.OK);
         }
-        System.out.println("valid error");
         return new ResponseEntity<>(new ResponseCode("error"), HttpStatus.OK);
     }
 
@@ -62,11 +60,8 @@ public class FunctionController {
             @RequestParam String username,
             @RequestParam String password,
             HttpSession session) {
-        System.out.println("username: " + username);
-        System.out.println("password: " + password);
-        User user = userDao.getUserByResultSet(username, password);
+        User user = userDao.getUser(username, password);
         if (user != null) {
-            System.out.println("User Is Not NULL -> to Center");
             session.setAttribute("user", user);
             return "/page/user/center";
         }
@@ -86,7 +81,7 @@ public class FunctionController {
             @RequestBody User user) { // 将前端数据转化为 User
 
         String username = user.getUsername();
-        boolean userExisted = userDao.containsUser(username);
+        boolean userExisted = userDao.containsUsername(username);
         if (userExisted == true) {
             return new ResponseEntity<>(new ResponseCode("error"), HttpStatus.OK);
         }
