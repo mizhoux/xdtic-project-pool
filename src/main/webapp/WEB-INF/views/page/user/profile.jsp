@@ -1,7 +1,14 @@
+<%@page import="wenjing.xdtic.model.User"%>
 <%@ page contentType="text/html;charset=utf-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/fis" prefix="fis"%>
 
+<%
+    User user = (User)session.getAttribute("user");
+    if (user != null) {
+        System.out.println("user name -> " + user.getName());
+    }
+%>
 <fis:extends name="page/layout/frame.jsp">
 	<fis:block name="body">
 		<div id="appProfile">
@@ -131,13 +138,13 @@
 			var userInfo = {
 				username: "<c:out value="${user.username}" />",
 				email: "<c:out value="${user.email}" />",
-				name: "<c:out value="${user.name}" />",
+				realName: "<c:out value="${user.name}" />",
 				sex: "<c:out value="${user.sex}" />",
-				profe: "<c:out value="${user.profe}" />",
+				major: "<c:out value="${user.profe}" />",
 				phone: "<c:out value="${user.phone}" />",
-				stunum: "<c:out value="${user.stunum}" />",
-				profile: "<c:out value="${user.profile}" />",
-				pexperice: "<c:out value="${user.pexperice}" />"
+				studentNo: "<c:out value="${user.stunum}" />",
+				ability: "<c:out value="${user.profile}" />",
+				projectDesc: "<c:out value="${user.pexperice}" />"
 			}
 		</script>
     </fis:block>

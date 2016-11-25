@@ -274,12 +274,12 @@
       	"username": "adoug",
       	"email": "942434869@qq.com",
       	"name": "张骥",
-  			"sex": "boy"/"girl",
-  			"profe": "软件工程",
-  			"phone": "15029679086",
-  			"stunum": "1603121451",
-  			"profile": "ps,c++,ui设计",
-  			"pexperice": "人脸识别系统"
+        "sex": "boy"/"girl",
+        "profe": "软件工程",
+        "phone": "15029679086",
+        "stunum": "1603121451",
+        "profile": "ps,c++,ui设计",
+        "pexperice": "人脸识别系统"
     	}
    }
    ```
