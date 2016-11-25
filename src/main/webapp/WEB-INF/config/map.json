@@ -71,7 +71,7 @@
             }
         },
         "page/widget/footer/nav.scss": {
-            "uri": "/xdtic/page/widget/footer/nav.css",
+            "uri": "/xdtic/static/page/widget/footer/nav.css",
             "type": "css"
         },
         "static/js/hall/hall.js": {
