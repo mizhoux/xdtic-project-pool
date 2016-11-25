@@ -11,43 +11,40 @@ import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.User;
 
 /**
+ * 用户页面的路由
  *
- * @author admin
- *
+ * @author wenjing
  */
-//用户个人信息、密码更新
 @Controller
-@RequestMapping("/user")
+@RequestMapping("user") // 和 "/user" 作用一样，SpringMVC 会自动在前面添加上 /
 public class UserController {
 
     @Autowired
     private UserDao userDao;
 
-    @RequestMapping("/resetPass")
+    @RequestMapping("resetPass")
     public String getUpdatePasswordPage() {
-        return "/page/user/resetPass";
+        return "page/user/resetPass";
     }
 
-    @RequestMapping("/profile")
+    @RequestMapping("profile")
     public String getUserProfile(
             @RequestParam("userid") Integer id,
             HttpSession session) {
-        System.out.println("enter getUserProfile...");
-
         User user = userDao.getUser(id);
         session.setAttribute("user", user);
 
-        return "/page/user/profile";
+        return "page/user/profile";
     }
 
-    @RequestMapping("/{page}")
+    @RequestMapping("{page}")
     public String index(@PathVariable String page) {
-        return "/page/user/" + page;
+        return "page/user/" + page;
     }
 
     // 测试代码，个人信息查询
     @ResponseBody //return的值作为http请求的内容返回客户端 
-    @RequestMapping("/info/{id}")//请求数据
+    @RequestMapping("info/{id}")//请求数据
     public User getPesonalInformationById(@PathVariable("id") Integer id) {
         User user = userDao.getUser(id);
         return user;
