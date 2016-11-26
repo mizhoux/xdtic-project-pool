@@ -22,13 +22,8 @@ public class UserController {
     @Autowired
     private UserDao userDao;
 
-    @RequestMapping("resetPass")
-    public String getUpdatePasswordPage() {
-        return "page/user/resetPass";
-    }
-
     @RequestMapping("profile")
-    public String getUserProfile(
+    public String getUserProfilePage(
             @RequestParam("userid") Integer id,
             HttpSession session) {
         User user = userDao.getUser(id);

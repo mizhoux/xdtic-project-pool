@@ -20,6 +20,7 @@
         <velocity.version>1.7</velocity.version>
         <velocity-tools.version>2.0</velocity-tools.version>
         <servlet.version>3.1.0</servlet.version>
+        <aspectj.version>1.8.9</aspectj.version>
     </properties>
     
     <dependencies>
@@ -147,6 +148,17 @@
             <version>0.9.5.2</version>
         </dependency>
 
+        <!-- aspectj -->
+        <dependency>  
+            <groupId>org.aspectj</groupId>  
+            <artifactId>aspectjweaver</artifactId>  
+            <version>${aspectj.version}</version>  
+        </dependency>  
+        <dependency>  
+            <groupId>org.aspectj</groupId>  
+            <artifactId>aspectjrt</artifactId>  
+            <version>${aspectj.version}</version>  
+        </dependency> 
     </dependencies>
 
     <build>
