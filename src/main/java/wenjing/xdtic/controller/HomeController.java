@@ -19,14 +19,4 @@ public class HomeController {
     public String login() {
         return "register";
     }
-
-    @RequestMapping("user/personalinformation")
-    public String personalinformation() {
-        return "personalinformation";
-    }
-
-    @RequestMapping("systemassage")
-    public String systemassage() {
-        return "systemassage";
-    }
 }

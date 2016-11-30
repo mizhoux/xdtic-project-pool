@@ -23,7 +23,7 @@ import wenjing.xdtic.model.User;
 
 /**
  * api 功能 <br>
- * 功能包括：用户注册、登录、修改个人信息、修改密码，验证用户是否已经存在
+ * 功能包括：用户注册、登录、修改个人信息、修改密码，验证用户是否已经存在，获得用户当前的系统消息
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
@@ -165,7 +165,14 @@ public class FunctionController {
         return _user == null ? RespCode.ERROR : RespCode.OK;
     }
 
-    //获取系统消息列表
+    /**
+     * 根据用户的 id 获取系统消息列表
+     *
+     * @param uid 用户 id
+     * @param pageNum
+     * @param size
+     * @return
+     */
     @ResponseBody
     @RequestMapping(value = "/get/msg", method = GET)
     public RespMsgs getmassage(
@@ -177,7 +184,7 @@ public class FunctionController {
 
         int offset = pageNum * size;
 
-        List<Systemassage> systemassages = systemassageDao.getSystemassageid(uid, offset, size);
+        List<Systemassage> systemassages = systemassageDao.getSystemassageByUserId(uid, offset, size);
         RespMsgs respMsgs = new RespMsgs();
         respMsgs.setPageNum(pageNum);
         respMsgs.setSize(size);

@@ -11,7 +11,6 @@ import wenjing.xdtic.model.User;
 public class RestClient {
 
     public static void main(String[] args) throws Exception {
-        testLogin("mizhoux", "zm2016");
     }
 
     public static void testLogin(String username, String password) {
@@ -60,15 +59,6 @@ public class RestClient {
 
         ResponseEntity<String> response = template.getForEntity(url, String.class, params);
         System.out.println(response.getBody());
-//        params.put("id", 1);
-//        params.put("username", "文静宋");
-//        params.put("password", "123456");
-//        params.put("nickname", "wenjing");
-//        params.put("email", "24256230812@qq.com");
-//        params.put("sex", "女");
-//        params.put("profile", "西安电子科技大学计算机学院研究生");
-        //   template.postForLocation(url, null, params);
-        //template.put(url, null, params);
 
     }
 }

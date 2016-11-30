@@ -22,44 +22,53 @@ public class SystemassageDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
+    /**
+     * 获得用户的消息总数
+     *
+     * @param uid 用户的 id
+     * @return
+     */
     public int countMessages(Integer uid) {
         String SQL = "SELECT COUNT(*) FROM systemassage";
         Map<String, Object> map = jdbcTemplate.queryForMap(SQL);
-        Long count = (Long)map.get("COUNT(*)");
-        
+        Long count = (Long) map.get("COUNT(*)");
+
         return count.intValue();
     }
-    
-    public List<Systemassage> getSystemassageid(Integer uid, Integer pageNum ,Integer size) {
+
+    public List<Systemassage> getSystemassageByUserId(Integer uid, Integer pageNum, Integer size) {
         String SQL = "SELECT * FROM  systemassage WHERE uid = ? LIMIT ?, ?";
 
         List<Systemassage> messages = new ArrayList<>();
-
         try {
             List<Map<String, Object>> maps = jdbcTemplate.queryForList(SQL, uid, pageNum, size);
 
-            for (Map<String, Object> map : maps) {
-                //Map数据集返回对象名为string类型的值
-                Systemassage systemassage = new Systemassage();
-                systemassage.setUid((Integer) map.get("uid"));//将得到的数据赋值，并返回
-                systemassage.setMid((Integer) map.get("mid"));
-                systemassage.setMassage((String) map.get("massage"));
-                systemassage.setType((String) map.get("type"));
-                
-                Timestamp timestamp = (java.sql.Timestamp) map.get("date");
-
-                LocalDateTime dateTime = timestamp.toLocalDateTime();
-                String dateStr = dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                systemassage.setDate(dateStr);
-
+            for (Map<String, Object> map : maps) { // 返回的 Map 数据集键为 String 类型
+                Systemassage systemassage = parseMessage(map);
                 messages.add(systemassage);
             }
-
         } catch (EmptyResultDataAccessException ex) {
             //    return null;// 捕获异常      spring查询不到输入数据时返回null    
         }
 
         return messages;
     }
-    
+
+    private Systemassage parseMessage(Map<String, Object> map) {
+        //Map数据集返回对象名为string类型的值
+        Systemassage systemassage = new Systemassage();
+
+        systemassage.setUid((Integer) map.get("uid"));//将得到的数据赋值，并返回
+        systemassage.setMid((Integer) map.get("mid"));
+        systemassage.setMassage((String) map.get("massage"));
+        systemassage.setType((String) map.get("type"));
+
+        Timestamp timestamp = (Timestamp) map.get("date");
+
+        LocalDateTime dateTime = timestamp.toLocalDateTime();
+        String dateStr = dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        systemassage.setDate(dateStr);
+
+        return systemassage;
+    }
 }
