@@ -1,5 +1,6 @@
 package wenjing.xdtic.controller;
 
+import java.util.List;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,11 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import wenjing.xdtic.dao.SystemassageDao;
 import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.RespCode;
+import wenjing.xdtic.model.Systemassage;
 import wenjing.xdtic.model.User;
 
 /**
@@ -26,6 +30,7 @@ public class FunctionController {
 
     @Autowired
     private UserDao userDao;
+    private SystemassageDao systemassageDao;
 
     @RequestMapping(value = "/user/resetPass", method = POST)
     public String updateUserPassword(@RequestParam String username,
@@ -136,4 +141,16 @@ public class FunctionController {
         }
         return "/page/user/register";
     }
+    //获取系统消息列表
+    
+        @RequestMapping(value ="/get/msg" ,method = GET)
+       
+        public String getmassage(Integer id)          
+        {
+           List<Systemassage> systemassages = systemassageDao.getSystemassageid(id);
+           if(systemassages.isEmpty())
+           {return null;}
+           return "msg" ;         
+        }
+   
 }
