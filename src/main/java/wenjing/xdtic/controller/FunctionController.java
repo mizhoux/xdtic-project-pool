@@ -171,14 +171,13 @@ public class FunctionController {
     public RespMsgs getmassage(
             @RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer size) {
-        System.out.println("uid: " + uid);
+        System.out.println("uid: " + uid);    //api中request请求参数中与三个uid，pageNum，size
         System.out.println("pageNum: " + pageNum);
         System.out.println("size: " + size);
 
-        int offset = pageNum * size;
-
+        int offset = pageNum * size;   
         List<Systemassage> systemassages = systemassageDao.getSystemassageid(uid, offset, size);
-        RespMsgs respMsgs = new RespMsgs();
+        RespMsgs respMsgs = new RespMsgs(); //返回的数据类型是非基本类型，故定义RespMsgs类型来存放数据
         respMsgs.setPageNum(pageNum);
         respMsgs.setSize(size);
 

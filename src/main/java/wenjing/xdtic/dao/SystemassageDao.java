@@ -32,6 +32,7 @@ public class SystemassageDao {
     
     public List<Systemassage> getSystemassageid(Integer uid, Integer pageNum ,Integer size) {
         String SQL = "SELECT * FROM  systemassage WHERE uid = ? LIMIT ?, ?";
+        //limit 后加限制条件
 
         List<Systemassage> messages = new ArrayList<>();
 
@@ -46,12 +47,10 @@ public class SystemassageDao {
                 systemassage.setMassage((String) map.get("massage"));
                 systemassage.setType((String) map.get("type"));
                 
-                Timestamp timestamp = (java.sql.Timestamp) map.get("date");
-
+                Timestamp timestamp = (java.sql.Timestamp) map.get("date");    //获取时间
                 LocalDateTime dateTime = timestamp.toLocalDateTime();
-                String dateStr = dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-                systemassage.setDate(dateStr);
-
+                String dateStr = dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));//设施时间格式
+                systemassage.setDate(dateStr); //加入map
                 messages.add(systemassage);
             }
 
