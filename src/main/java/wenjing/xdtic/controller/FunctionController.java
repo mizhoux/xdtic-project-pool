@@ -48,8 +48,7 @@ public class FunctionController {
     @RequestMapping(value = "user/register", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public String userRegister(
             @RequestParam String username,
-            @RequestParam("pass") String password,
-            @RequestParam String passConfirm) {
+            @RequestParam("pass") String password, @RequestParam String passConfirm) {
 
         boolean addSucc = userDao.addUser(username, password);
         if (addSucc) {
@@ -68,9 +67,9 @@ public class FunctionController {
      */
     @RequestMapping(value = "user/login", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public String userLogin(
-            @RequestParam String username,
-            @RequestParam String password,
-            HttpSession session) {
+            HttpSession session,
+            @RequestParam String username, @RequestParam String password) {
+
         User user = userDao.getUser(username, password);
         if (user != null) {
             session.setAttribute("user", user);
@@ -90,10 +89,9 @@ public class FunctionController {
      * @return
      */
     @RequestMapping(value = "user/resetPass", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public String updateUserPassword(@RequestParam String username,
-            @RequestParam String passOld,
-            @RequestParam String passNew,
-            @RequestParam String passNewConfirm) {
+    public String updateUserPassword(
+            @RequestParam String username, @RequestParam String passOld,
+            @RequestParam String passNew, @RequestParam String passNewConfirm) {
 
         if (passNew.equals(passNewConfirm)) {
             boolean updatePassSucc = userDao.updatePassword(username, passOld, passNew);
@@ -113,7 +111,7 @@ public class FunctionController {
      */
     @ResponseBody
     @RequestMapping(value = "update/profile", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode updateUserProfile(User user, HttpSession session) {
+    public RespCode updateUserProfile(HttpSession session, User user) {
         boolean updateSucc = userDao.updateUser(user);
         session.setAttribute("user", user);
         return updateSucc ? RespCode.OK : RespCode.ERROR;
@@ -161,6 +159,7 @@ public class FunctionController {
     @RequestMapping(value = "valid/user", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode validUserByFormValue(
             @RequestParam String username, @RequestParam String password) {
+
         User _user = userDao.getUser(username, password);
         return _user == null ? RespCode.ERROR : RespCode.OK;
     }
@@ -178,16 +177,13 @@ public class FunctionController {
     public RespMsgs getmassage(
             @RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer size) {
-        System.out.println("uid: " + uid);
-        System.out.println("pageNum: " + pageNum);
-        System.out.println("size: " + size);
 
         int offset = pageNum * size;
+        List<Systemassage> msgs = systemassageDao.getSystemassageByUserId(uid, offset, size);
 
-        List<Systemassage> systemassages = systemassageDao.getSystemassageByUserId(uid, offset, size);
         RespMsgs respMsgs = new RespMsgs();
         respMsgs.setPageNum(pageNum);
-        respMsgs.setSize(size);
+        respMsgs.setSize(msgs.size()); // 设置返回的 size 为本次返回消息的数量
 
         int count = systemassageDao.countMessages(uid);
         if ((pageNum + 1) * size >= count) {
@@ -196,7 +192,7 @@ public class FunctionController {
             respMsgs.setHasMore(true);
         }
 
-        respMsgs.setMsgs(systemassages);
+        respMsgs.setMsgs(msgs);
 
         return respMsgs;
     }

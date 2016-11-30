@@ -1,5 +1,7 @@
 package wenjing.xdtic.aop;
 
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -17,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ControllerLogger {
 
-    @Pointcut("execution(* wenjing.xdtic.controller.*.*(..))")
+    @Pointcut("execution(* wenjing.xdtic.controller.FunctionController.*(..))")
     public void advice() {
 
     }
@@ -25,7 +27,7 @@ public class ControllerLogger {
     @Before("advice()")
     public void doBefore(JoinPoint jp) {
         String methodName = getMethodName(jp);
-        System.out.println("enter method: " + methodName);
+        System.out.println("call method: " + methodName);
     }
 
     public void doAround() {
@@ -33,8 +35,6 @@ public class ControllerLogger {
 
     @After("advice()")
     public void doAfter(JoinPoint jp) {
-        String methodName = getMethodName(jp);
-        System.out.println("exit  method: " + methodName);
     }
 
     public void doReturn() {
@@ -50,8 +50,26 @@ public class ControllerLogger {
         Object target = jp.getTarget();
         String className = target.getClass().getSimpleName();
         MethodSignature signature = (MethodSignature) jp.getSignature();
+
+        String returnTypeName = signature.getReturnType().getSimpleName();
         String methodName = signature.getName();
 
-        return className + ":" + methodName;
+        Class<?>[] paramTypes = signature.getParameterTypes();
+        String[] paramNames = signature.getParameterNames();
+        String params = IntStream.range(0, paramNames.length)
+                .mapToObj(i -> paramTypes[i].getSimpleName() + " " + paramNames[i])
+                .collect(Collectors.joining(", ", "(", ")"));
+
+        Object[] args = jp.getArgs();
+        String argValues = IntStream.range(0, args.length)
+                .mapToObj(i -> paramNames[i] + ": " + args[i])
+                .collect(Collectors.joining("\n"));
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(className).append('.')
+                .append(methodName).append(params).append("\n")
+                .append(argValues).append("\n");
+
+        return sb.toString();
     }
 }
