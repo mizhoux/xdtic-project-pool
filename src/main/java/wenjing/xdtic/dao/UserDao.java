@@ -10,8 +10,9 @@ import org.springframework.stereotype.Repository;
 import wenjing.xdtic.model.User;
 
 /**
+ * 用户表的数据库访问类
  *
- * @author admin
+ * @author wenjing
  */
 @Repository
 public class UserDao {
@@ -19,7 +20,12 @@ public class UserDao {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    //通过id查询获得用户的个人信息
+    /**
+     * 根据 用户id 数据库中查询出用户
+     *
+     * @param id 用户id
+     * @return 查询的用户
+     */
     public User getUser(Integer id) {
         String SQL = "SELECT * FROM user WHERE id = " + id;
         User user = jdbcTemplate.query(SQL, this::parseUser);
@@ -27,10 +33,11 @@ public class UserDao {
     }
 
     /**
+     * 根据用户名和密码从数据库中查询出用户
      *
-     * @param username
-     * @param password
-     * @return
+     * @param username 用户名
+     * @param password 密码
+     * @return 查询的用户
      */
     public User getUser(String username, String password) {
         String SQL = "SELECT * FROM  user WHERE username=? AND password= ?";
@@ -40,41 +47,53 @@ public class UserDao {
         return user;
     }
 
-    //通过用户名、密码 获取用户个人信息
+    /**
+     * 判断用户名在数据库中是否已经存在
+     *
+     * @param username 用户名
+     * @return 用户名是否已经存在
+     */
+    public boolean containsUsername(String username) {
+        String SQL = "SELECT * FROM user WHERE username = ?";
+        User user = jdbcTemplate.query(SQL, this::parseUser, username);
+        return user != null;
+    }
+
+    /**
+     * 将 ResultSet 中的数据转换为用户
+     *
+     * @param rs ResultSet
+     * @return 用户
+     * @throws SQLException
+     */
     public User parseUser(ResultSet rs) throws SQLException {
         if (rs.next()) {
             User user = new User();
             user.setId(rs.getInt("id"));
-            user.setName(rs.getString("name"));
             user.setUsername(rs.getString("username"));
             user.setPassword(rs.getString("password"));
-            user.setEmail(rs.getString("email"));
+            user.setName(rs.getString("name"));
             user.setNickname(rs.getString("nickname"));
+            user.setEmail(rs.getString("email"));
+            user.setSex(rs.getString("sex"));
             user.setProfe(rs.getString("profe"));
             user.setPhone(rs.getString("phone"));
             user.setStunum(rs.getString("stunum"));
-            user.setPexperice(rs.getString("pexperice"));
             user.setProfile(rs.getString("profile"));
+            user.setPexperice(rs.getString("pexperice"));
 
             return user;
         }
         return null;
     }
 
-    //判断 username 是否已经存在
-    public boolean containsUsername(String username) {
-        String SQL = "SELECT id FROM user where username = ?";
-        User user = jdbcTemplate.query(SQL, this::parseUser, username);
-        return user != null;
-    }
-
-    public boolean addUser(String username, String password, String email) {
-        String SQL = "INSERT INTO user SET username = ?, password = ?, email = ?";
-        int result = jdbcTemplate.update(SQL, username, password, email);
-
-        return result == 1;
-    }
-
+    /**
+     * 添加用户
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @return 是否添加成功
+     */
     public boolean addUser(String username, String password) {
         String SQL = "INSERT INTO user SET username = ?, password = ?";
         int result = jdbcTemplate.update(SQL, username, password);
@@ -89,26 +108,34 @@ public class UserDao {
      * @return 是否更新成功
      */
     public boolean updateUser(User user) {
-        String SQL = "UPDATE user SET "
-                + "nickname= ?, name = ?, sex = ?, phone = ?, profe = ?,"
-                + "stunum = ?,  profile= ?, pexperice = ?, email = ? "
+        String SQL = "UPDATE user SET username = ?, name = ?, nickname= ?, email = ?, "
+                + "sex = ?, profe = ?, phone = ?, stunum = ?, profile= ?, pexperice = ? "
                 + "WHERE id = ?";
         int result = jdbcTemplate.update(SQL,
-                user.getNickname(),
+                user.getUsername(),
                 user.getName(),
-                user.getSex(),
-                user.getPhone(),
-                user.getProfe(),
-                user.getStunum(),
-                user.getProfile(),
-                user.getPexperice(),
+                user.getNickname(),
                 user.getEmail(),
+                user.getSex(),
+                user.getProfile(),
+                user.getPhone(),
+                user.getStunum(),
+                user.getProfe(),
+                user.getPexperice(),
                 user.getId());
 
         return result == 1;
     }
 
-    public boolean updatepassword(String username, String passOld, String passNew) {
+    /**
+     * 更新用户密码
+     *
+     * @param username 用户名
+     * @param passOld 旧密码
+     * @param passNew 新密码
+     * @return 是否更新成功
+     */
+    public boolean updatePassword(String username, String passOld, String passNew) {
         String SQL = "UPDATE user SET password = ? WHERE username = ? AND password = ?";
         int result = jdbcTemplate.update(SQL, passNew, username, passOld);
         return result == 1;

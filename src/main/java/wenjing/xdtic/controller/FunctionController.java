@@ -1,11 +1,12 @@
 package wenjing.xdtic.controller;
 
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,77 +17,56 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wenjing.xdtic.dao.SystemassageDao;
 import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.RespCode;
+import wenjing.xdtic.model.RespMsgs;
 import wenjing.xdtic.model.Systemassage;
 import wenjing.xdtic.model.User;
 
 /**
+ * api 功能 <br>
+ * 功能包括：用户注册、登录、修改个人信息、修改密码，验证用户是否已经存在
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
-//登录注册方法
 @Controller
-@RequestMapping("/fn")
+@RequestMapping("fn") // 和 "/fn" 作用一样，SpringMVC 会自动在前面添加上 /
 public class FunctionController {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
     private SystemassageDao systemassageDao;
 
-    @RequestMapping(value = "/user/resetPass", method = POST)
-    public String updateUserPassword(@RequestParam String username,
-            @RequestParam String passOld,
-            @RequestParam String passNew,
-            @RequestParam String passNewConfirm) {
-        if (passNew.equals(passNewConfirm)) {
-            boolean updatePassSucc = userDao.updatepassword(username, passOld, passNew);
-            if (updatePassSucc) {
-                return "/page/user/login";
-            }
-        }
-        return ""; // 更新密码不成功
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/update/profile", method = POST,
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode updateUserProfile(User user) {
-        System.out.println("updateUserProfile:\n" + user);
-        boolean updateSucc = userDao.updateUser(user);
-        return updateSucc ? RespCode.OK : RespCode.ERROR;
-    }
-
     /**
-     * 根据用户名和密码验证用户是否可注册
+     * 根据用户名和密码进行注册（以 Form 提交）
      *
-     * @param user
-     * @param username
-     * @param password
+     * @param username 用户名
+     * @param password 密码
+     * @param passConfirm
      * @return
      */
-    @RequestMapping(value = "/valid/user", method = POST,
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public ResponseEntity<RespCode> validUser(
+    @RequestMapping(value = "user/register", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    public String userRegister(
             @RequestParam String username,
-            @RequestParam String password) {
+            @RequestParam("pass") String password,
+            @RequestParam String passConfirm) {
 
-        System.out.println("valid username: " + username + ", password: " + password);
-
-        User user1 = userDao.getUser(username, password);
-        if (user1 != null) {
-            return new ResponseEntity<>(RespCode.OK, HttpStatus.OK);
+        boolean addSucc = userDao.addUser(username, password);
+        if (addSucc) {
+            return "page/user/login";
         }
-        return new ResponseEntity<>(RespCode.ERROR, HttpStatus.OK);
+        return "page/user/register";
     }
 
     /**
-     * 根据用户名和密码进行登录
+     * 根据用户名和密码进行登录（以 Form 提交）
      *
-     * @param username
-     * @param password
+     * @param username 用户名
+     * @param password 密码
+     * @param session
      * @return
      */
-    @RequestMapping(value = "/user/login", method = POST,
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @RequestMapping(value = "user/login", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public String userLogin(
             @RequestParam String username,
             @RequestParam String password,
@@ -94,63 +74,124 @@ public class FunctionController {
         User user = userDao.getUser(username, password);
         if (user != null) {
             session.setAttribute("user", user);
-            return "/page/user/center";
+            return "page/user/center";
         }
 
-        return "/page/user/register";
+        return "page/user/register";
     }
 
     /**
-     * 验证用户名是否可用
+     * 修改用户密码
      *
-     * @param user
+     * @param username 用户名
+     * @param passOld 旧密码
+     * @param passNew 新密码
+     * @param passNewConfirm 第二次输入的新密码
      * @return
      */
-    @RequestMapping(value = "/valid/username", method = POST,
-            consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RespCode> validUsername(
-            @RequestBody User user) { // 将前端数据转化为 User
+    @RequestMapping(value = "user/resetPass", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    public String updateUserPassword(@RequestParam String username,
+            @RequestParam String passOld,
+            @RequestParam String passNew,
+            @RequestParam String passNewConfirm) {
 
-        String username = user.getUsername();
-        boolean userExisted = userDao.containsUsername(username);
-        if (userExisted == true) {
-            return new ResponseEntity<>(RespCode.ERROR, HttpStatus.OK);
+        if (passNew.equals(passNewConfirm)) {
+            boolean updatePassSucc = userDao.updatePassword(username, passOld, passNew);
+            if (updatePassSucc) {
+                return "page/user/login";
+            }
         }
-        return new ResponseEntity<>(RespCode.OK, HttpStatus.OK);
-
+        return ""; // 更新密码不成功
     }
 
     /**
-     * 根据用户名和密码进行注册
+     * 修改用户个人信息
+     *
+     * @param user 提交的个人信息（以 Form 提交）
+     * @param session
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "update/profile", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    public RespCode updateUserProfile(User user, HttpSession session) {
+        boolean updateSucc = userDao.updateUser(user);
+        session.setAttribute("user", user);
+        return updateSucc ? RespCode.OK : RespCode.ERROR;
+    }
+
+    /**
+     * 验证用户名是否可用（以 JSON 提交）
+     *
+     * @param params
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "valid/username", method = POST, consumes = APPLICATION_JSON_VALUE)
+    public RespCode validUsername(@RequestBody Map<String, String> params) {
+        String username = params.get("username");
+
+        boolean usernameExisted = userDao.containsUsername(username);
+        return usernameExisted ? RespCode.ERROR : RespCode.OK;
+    }
+
+    /**
+     * 根据用户名和密码验证用户是否可注册（以 JSON 提交）
+     *
+     * @param params
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping(value = "valid/user", method = POST, consumes = APPLICATION_JSON_UTF8_VALUE)
+    public RespCode validUserByJsonValue(@RequestBody Map<String, String> params) {
+        String username = params.get("username");
+        String password = params.get("password");
+
+        User _user = userDao.getUser(username, password);
+        return _user == null ? RespCode.ERROR : RespCode.OK;
+    }
+
+    /**
+     * 根据用户名和密码验证用户是否可注册（以 Form 提交）
      *
      * @param username 用户名
      * @param password 密码
-     * @param passConfirm
      * @return
      */
-    @RequestMapping(value = "/user/register", method = POST,
-            consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public String registerUser(
-            @RequestParam String username,
-            @RequestParam String password,
-            @RequestParam String passConfirm) {
-
-        boolean addSucc = userDao.addUser(username, password);
-        if (addSucc) {
-            return "/page/user/login";
-        }
-        return "/page/user/register";
+    @ResponseBody
+    @RequestMapping(value = "valid/user", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    public RespCode validUserByFormValue(
+            @RequestParam String username, @RequestParam String password) {
+        User _user = userDao.getUser(username, password);
+        return _user == null ? RespCode.ERROR : RespCode.OK;
     }
+
     //获取系统消息列表
-    
-        @RequestMapping(value ="/get/msg" ,method = GET)
-       
-        public String getmassage(Integer id)          
-        {
-           List<Systemassage> systemassages = systemassageDao.getSystemassageid(id);
-           if(systemassages.isEmpty())
-           {return null;}
-           return "msg" ;         
+    @ResponseBody
+    @RequestMapping(value = "/get/msg", method = GET)
+    public RespMsgs getmassage(
+            @RequestParam Integer uid,
+            @RequestParam Integer pageNum, @RequestParam Integer size) {
+        System.out.println("uid: " + uid);
+        System.out.println("pageNum: " + pageNum);
+        System.out.println("size: " + size);
+
+        int offset = pageNum * size;
+
+        List<Systemassage> systemassages = systemassageDao.getSystemassageid(uid, offset, size);
+        RespMsgs respMsgs = new RespMsgs();
+        respMsgs.setPageNum(pageNum);
+        respMsgs.setSize(size);
+
+        int count = systemassageDao.countMessages(uid);
+        if ((pageNum + 1) * size >= count) {
+            respMsgs.setHasMore(false);
+        } else {
+            respMsgs.setHasMore(true);
         }
-   
+
+        respMsgs.setMsgs(systemassages);
+
+        return respMsgs;
+    }
+
 }

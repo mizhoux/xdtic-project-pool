@@ -201,7 +201,7 @@
    - url: /xdtic/user/register
    - jsp: /page/user/register.jsp
    
-   - api: /xdtic/fn/valid/userName `[POST]`
+   - api: /xdtic/fn/valid/username `[POST]`
        - request
        ```
        {
@@ -255,12 +255,12 @@
     		"username": "adoug",
     		"email": "942434869@qq.com",
     		"name": "张骥",
-  			"sex": "boy"/"girl",
-  			"profe": "软件工程",
-  			"phone": "15029679086",
-  			"stunum": "1603121451",
-  			"profile": "ps,c++,ui设计",
-  			"pexperice": "人脸识别系统"
+                "sex": "boy"/"girl",
+                "profe": "软件工程",
+                "phone": "15029679086",
+                "stunum": "1603121451",
+                "profile": "ps,c++,ui设计",
+                "pexperice": "人脸识别系统"
     	}
     }
    ```
@@ -371,7 +371,7 @@
 
 - api: /xdtic/fn/user/resetPass
 
-    - 表单提交，api验证并跳转页面至登录页面（url: /user/login）
+    - 以表单提交，api验证并跳转页面至登录页面（url: /user/login）
     
     - request `[POST]`
     ```
