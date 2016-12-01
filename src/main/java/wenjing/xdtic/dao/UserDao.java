@@ -117,10 +117,10 @@ public class UserDao {
                 user.getNickname(),
                 user.getEmail(),
                 user.getSex(),
-                user.getProfile(),
+                user.getProfe(),
                 user.getPhone(),
                 user.getStunum(),
-                user.getProfe(),
+                user.getProfile(),
                 user.getPexperice(),
                 user.getId());
 
@@ -145,8 +145,8 @@ public class UserDao {
         String SQL = "SELECT * FROM user WHERE id = " + id;
 
         try {
+            //Map数据集，此时 键为String类型，值为 Object 类型
             Map<String, Object> map = jdbcTemplate.queryForMap(SQL);
-            //Map数据集返回对象名为string类型的值
             User user = new User();
             user.setId((Integer) map.get("id"));//将得到的数据赋值，并返回
             user.setUsername((String) map.get("username"));
@@ -162,8 +162,8 @@ public class UserDao {
 
             return user;
 
-        } catch (EmptyResultDataAccessException ex) {
-            return null;// 捕获异常      spring查询不到输入数据时返回null
+        } catch (EmptyResultDataAccessException ex) { // 捕获异常
+            return null;    //  Spring 查询不到输入数据时抛出异常，此时返回 null
         }
     }
 

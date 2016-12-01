@@ -9,6 +9,11 @@ a {
   text-decoration: none;
 }
 
+textarea {
+  outline: none;
+  resize: none;
+}
+
 /*页面header布局，eg：profile.jsp*/
 .tic-header-three {
   border-bottom: solid 1px #ccc4c4;

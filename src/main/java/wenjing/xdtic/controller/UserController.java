@@ -32,9 +32,9 @@ public class UserController {
         return "page/user/profile";
     }
 
-    @RequestMapping("{page}")
-    public String index(@PathVariable String page) {
-        return "page/user/" + page;
+    @RequestMapping("{pageName}")
+    public String index(@PathVariable String pageName) {
+        return "page/user/" + pageName;
     }
 
     // 测试代码，个人信息查询

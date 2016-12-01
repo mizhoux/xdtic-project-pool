@@ -71,7 +71,7 @@ define('static/js/module/tools', function(require, exports, module) {
   }
   
   module.exports = {
-      serialize: serialize,
+      formSerialize: serialize,
       SaferHTML: SaferHTML
   };
 

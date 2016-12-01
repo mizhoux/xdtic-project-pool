@@ -21,6 +21,13 @@
                 "isPage": true
             }
         },
+        "page/myProject/postProject.jsp": {
+            "uri": "/page/myProject/postProject.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
         "page/user/center.jsp": {
             "uri": "/page/user/center.jsp",
             "type": "jsp",
@@ -97,6 +104,15 @@
                 "moduleId": "static/js/module/tools"
             }
         },
+        "static/js/myProject/postProject.js": {
+            "uri": "/xdtic/static/js/myProject/postProject.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "static/js/module/tools.js"
+            ]
+        },
         "static/js/user/login.js": {
             "uri": "/xdtic/static/js/user/login.js",
             "type": "js",
@@ -166,6 +182,10 @@
         },
         "static/scss/msgs.scss": {
             "uri": "/xdtic/static/scss/msgs.css",
+            "type": "css"
+        },
+        "static/scss/postProject.scss": {
+            "uri": "/xdtic/static/scss/postProject.css",
             "type": "css"
         },
         "static/scss/profile.scss": {
