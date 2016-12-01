@@ -10,23 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class HomeController {
 
-    @RequestMapping({"/", "index", "home", "test", "login"})
+    @RequestMapping({"/", "index", "home", "login"})
     public String index() {
         return "/page/user/login";
     }
 
-    @RequestMapping("register")
-    public String login() {
-        return "register";
-    }
-
-    @RequestMapping("user/personalinformation")
-    public String personalinformation() {
-        return "personalinformation";
-    }
-
-    @RequestMapping("systemassage")
-    public String systemassage() {
-        return "systemassage";
-    }
 }

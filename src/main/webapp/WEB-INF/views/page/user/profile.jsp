@@ -2,6 +2,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/fis" prefix="fis"%>
 
+<%
+    User user = (User)session.getAttribute("user");
+    if (user != null) {
+        System.out.println("user name -> " + user.getName());
+    }
+%>
 <fis:extends name="page/layout/frame.jsp">
 	<fis:block name="body">
 		<div id="appProfile">

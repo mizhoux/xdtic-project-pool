@@ -51,7 +51,7 @@ var formResetPass = new Vue({
             }).then(function (response) {
                 return response.json();
             }).then(function (data) {
-                if (data.code == 'ok') {
+                if (data.code === 'ok') {
                     formResetPass.userError = false;
                 } else {
                     formResetPass.userError = true;
@@ -79,7 +79,7 @@ var formResetPass = new Vue({
             }).then(function (response) {
                 return response.json();
             }).then(function (data) {
-                if (data.code == 'ok') {
+                if (data.code === 'ok') {
                     formResetPass.userError = false;
                     formResetPass.validPass();
                 } else {

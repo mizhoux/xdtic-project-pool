@@ -29,12 +29,9 @@
     <mvc:resources mapping="xitic/static/**" location="/static/"/>
     -->
     
-    <context:component-scan base-package="wenjing.xdtic.controller, wenjing.xdtic.dao" />
+    <context:component-scan base-package="wenjing.xdtic.*" />
 	
-    <!--
-    <bean name="/page/**"   
-          class="org.springframework.web.servlet.mvc.UrlFilenameViewController"/>
-    -->
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
     
     <bean id="viewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver"

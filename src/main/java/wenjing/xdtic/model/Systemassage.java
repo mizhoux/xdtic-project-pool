@@ -8,6 +8,7 @@ public class Systemassage {
 
     private Integer uid;
     private Integer mid;
+    private String type ;
     private String massage;
     private String date;
 
@@ -44,6 +45,14 @@ public class Systemassage {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 }
