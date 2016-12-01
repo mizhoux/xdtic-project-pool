@@ -49,8 +49,8 @@
 			<div class="tic-msg">
 				<div class="tic-msg-two">
 					<div class="tic-msg-left">
-						<img v-if="msg.type === 'join'" src="/static/images/msg-dialog-red.png" alt="">
-						<img v-else src="/static/images/msg-dialog.png" alt="">
+						<img v-if="msg.type === 'join'" src="/xdtic/static/images/msg-dialog-red.png" alt="">
+						<img v-else src="/xdtic/static/images/msg-dialog.png" alt="">
 					</div>
 					<div class="tic-msg-right">
 						<a :href="'/xdtic/user/msg?id=' + msg.mid" class="tic-msg-link" v-tap>
