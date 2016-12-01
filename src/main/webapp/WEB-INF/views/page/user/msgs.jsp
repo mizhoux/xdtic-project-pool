@@ -34,6 +34,11 @@
 	</fis:block>
 
 	<fis:block name="jsPre">
+		<script type="text/javascript">
+			var userInfo = {
+				id: "<c:out value="${user.id}" />"
+			};
+		</script>
     </fis:block>
 
 	<fis:block name="js">
@@ -49,14 +54,8 @@
 					</div>
 					<div class="tic-msg-right">
 						<a :href="'/xdtic/user/msg?id=' + msg.mid" class="tic-msg-link" v-tap>
-							<p v-if="msg.type === 'join'">
-								您已成功报名{{msg.peojectCreator}}的{{msg.proname}}，请等待发布者的手机短息通知，祝您顺利~
-							</p>
-							<p v-if="msg.type === 'pass'">
-								您发布的{{msg.proname}}项目已经通过审核，快去看大家的踊跃报吧~
-							</p>
-							<p v-if="msg.type === 'post'">
-								您已成功发布{{msg.proname}}项目，请耐心等待审核，通过后将在项目大厅上线，祝您顺利~
+							<p>
+								{{msg.massage}}
 							</p>
 						</a>
 					</div>

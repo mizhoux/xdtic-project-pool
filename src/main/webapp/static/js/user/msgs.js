@@ -13,7 +13,7 @@ require('node_modules/whatwg-fetch/fetch');
 
 var urlLoadMoreMsg = '/xdtic/fn/get/msg';
 
-var pageNum = 1;
+var pageNum = 0;
 var pageSize = 8;
 
 Vue.component('tic-msg', {
@@ -28,7 +28,8 @@ var msgBox = new Vue({
 		busy: false,
 		noMore: false,
 		isLoading: false,
-		checkImmediately: false
+		checkImmediately: false,
+		user: userInfo
 	},
 
 	beforeMount: function beforeMount() {
@@ -47,7 +48,7 @@ function loadMore() {
 		return;
 	}
 
-	var url = urlLoadMoreMsg + '?pageNum=' + pageNum + '&size=' + pageSize;
+	var url = urlLoadMoreMsg + '?uid=' + this.user.id + '&pageNum=' + pageNum + '&size=' + pageSize;
 
 	this.busy = true;
 	this.isLoading = true;
