@@ -11,7 +11,7 @@ require('node_modules/whatwg-fetch/fetch');
 
 var tools = require('static/js/module/tools');
 
-var urlPostProject = '/xdtic/fn/project/post';
+var urlPostProject = urlPrefix + '/fn/project/post';
 
 Vue.component('tic-tag-box', {
 	template: '#tic-tag',
@@ -99,7 +99,7 @@ var appPostProject = new Vue({
 			}).then(function (data) {
 				if (data.code === 'ok') {
 					self.postIsSucc = true;
-					window.location.href = '/myProject/myPost';
+					window.location.href = '/myProject?content=myPost';
 				} else {
 					self.postIsFail = true;
 				}

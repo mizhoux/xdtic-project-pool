@@ -53,7 +53,7 @@
 						<img v-else src="/xdtic/static/images/msg-dialog.png" alt="">
 					</div>
 					<div class="tic-msg-right">
-						<a :href="'/xdtic/user/msg?id=' + msg.mid" class="tic-msg-link" v-tap>
+						<a :href="'<c:url value='/user/msg' />?id=' + msg.mid" class="tic-msg-link" v-tap>
 							<p>
 								{{msg.massage}}
 							</p>

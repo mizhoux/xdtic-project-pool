@@ -1,3 +1,4 @@
+
 ### 我的项目
 
 #### 发布项目页面
@@ -32,6 +33,163 @@
         code: "ok"/"error"
    }
    ```
+
+#### 我的发布页面
+- url: /xdtic/myProject?type=post
+- jsp: /page/myProject/myProject.jsp
+
+- jsp页面所需变量
+   ```
+   {
+        "user": {
+            "id": "u001",
+            "name": "adoug"
+        }
+   }
+   ```
+
+- api: /xdtic/fn/get/project/myPost `[GET]`
+
+   - 说明：获取我的发布的项目
+   - request
+   ```
+   {
+        uid: "u001",
+        pageNum: 0,
+        pageSize: 5
+   }
+   ```
+   - response `[JSON]`
+   ```
+   {
+    	"pageSize": 2,
+    	"pageNum": 0,
+    	"hasMore": false,
+    	"projects": [{
+    	    "statu": "checking"/"pass"  /*两种*/
+    		"proId": "p001",
+    		"proname": "SSR召唤符画法项目",
+    		"isCollected": true,
+    		"username": "adoug",
+    		"date": "2016.02.05",
+    		"tags": ["Web", "情感"],
+    		"desc": "一万次悲伤/依然会有意义/我一直在最温暖的地方等你/似乎只能这样/停留一个方向/已不能改变"
+    	}, {
+    		"proId": "p002",
+    		"proname": "tic项目池",
+    		"isCollected": false,
+    		"username": "adoug",
+    		"date": "2016.02.05",
+    		"tags": ["Web", "情感"],
+    		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你",
+    		"statu": "pass"
+    	}]
+    }
+   ```
+
+#### 我的收藏页面
+- url: /xdtic/myProject?type=collect
+- jsp: /page/myProject/myProject.jsp
+
+- jsp页面所需变量
+   ```
+       {
+            "user": {
+                "id": "u001",
+                "name": "adoug"
+            }
+       }
+   ```
+
+- api: /xdtic/fn/get/project/myCollect `[GET]`
+
+   - 说明：获取我的收藏的项目
+   - request
+   ```
+       {
+            uid: "u001",
+            pageNum: 0,
+            pageSize: 5
+       }
+   ```
+   - response `[JSON]`
+   ```
+       {
+        	"pageSize": 2,
+        	"pageNum": 0,
+        	"hasMore": false,
+        	"projects": [{
+        		"proId": "p001",
+        		"proname": "SSR召唤符画法项目",
+        		"isCollected": true,
+        		"username": "adoug",
+        		"date": "2016.02.05",
+        		"tags": ["Web", "情感"],
+        		"desc": "一万次悲伤/依然会有意义/我一直在最温暖的地方等你/似乎只能这样/停留一个方向/已不能改变"
+        	}, {
+        		"proId": "p002",
+        		"proname": "tic项目池",
+        		"isCollected": false,
+        		"username": "adoug",
+        		"date": "2016.02.05",
+        		"tags": ["Web", "情感"],
+        		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
+        	}]
+    }
+   ```
+
+#### 我的参与页面
+- url: /xdtic/myProject?type=join
+- jsp: /page/myProject/myProject.jsp
+
+- jsp页面所需变量
+   ```
+   {
+        "user": {
+            "id": "u001",
+            "name": "adoug"
+        }
+   }
+   ```
+
+- api: /xdtic/fn/get/project/myJoin `[GET]`
+
+   - 说明：获取我的参与的项目
+   - request
+   ```
+   {
+        uid: "u001",
+        pageNum: 0,
+        pageSize: 5
+   }
+   ```
+   
+   - response `[JSON]`
+   ```
+       {
+        	"pageSize": 2,
+        	"pageNum": 0,
+        	"hasMore": false,
+        	"projects": [{
+        		"proId": "p001",
+        		"proname": "SSR召唤符画法项目",
+        		"isCollected": true,
+        		"username": "adoug",
+        		"date": "2016.02.05",
+        		"tags": ["Web", "情感"],
+        		"desc": "一万次悲伤/依然会有意义/我一直在最温暖的地方等你/似乎只能这样/停留一个方向/已不能改变"
+        	}, {
+        		"proId": "p002",
+        		"proname": "tic项目池",
+        		"isCollected": false,
+        		"username": "adoug",
+        		"date": "2016.02.05",
+        		"tags": ["Web", "情感"],
+        		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
+        	}]
+    }
+   ```
+
 
 ### 项目大厅
 
@@ -236,7 +394,7 @@
    - url: /xdtic/user/register
    - jsp: /page/user/register.jsp
    
-   - api: /xdtic/fn/valid/username `[POST]`
+   - api: /xdtic/fn/valid/userName `[POST]`
        - request
        ```
        {
@@ -290,12 +448,12 @@
     		"username": "adoug",
     		"email": "942434869@qq.com",
     		"name": "张骥",
-                "sex": "boy"/"girl",
-                "profe": "软件工程",
-                "phone": "15029679086",
-                "stunum": "1603121451",
-                "profile": "ps,c++,ui设计",
-                "pexperice": "人脸识别系统"
+  			"sex": "boy"/"girl",
+  			"profe": "软件工程",
+  			"phone": "15029679086",
+  			"stunum": "1603121451",
+  			"profile": "ps,c++,ui设计",
+  			"pexperice": "人脸识别系统"
     	}
     }
    ```
@@ -373,7 +531,7 @@
 
 - api: /xdtic/fn/user/resetPass
 
-    - 以表单提交，api验证并跳转页面至登录页面（url: /user/login）
+    - 表单提交，api验证并跳转页面至登录页面（url: /user/login）
     
     - request `[POST]`
     ```

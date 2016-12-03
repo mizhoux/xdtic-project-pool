@@ -14,6 +14,12 @@ textarea {
   resize: none;
 }
 
+hr {
+  border: none;
+  border-bottom: dotted 2px #ccc4c4;
+  margin: 1rem 0;
+}
+
 /*页面header布局，eg：profile.jsp*/
 .tic-header-three {
   border-bottom: solid 1px #ccc4c4;
@@ -24,13 +30,13 @@ textarea {
   align-items: center;
 }
 
-.tic-header-three > span {
-  flex: 0 1 10%;
+.tic-header-three > span, .tic-header-three > a, .tic-header-three > .tic-header-three-aside {
+  flex: 0 0 10%;
   padding: .8rem .5rem;
   box-sizing: border-box;
 }
 
-.tic-header-three > h2 {
+.tic-header-three > h2, .tic-header-three > .tic-header-three-center {
   flex: 0 0 80%;
   text-align: center;
   box-sizing: border-box;

@@ -5,7 +5,7 @@ require('node_modules/whatwg-fetch/fetch');
 
 var formSerialize = require('static/js/module/formSerialize');
 
-var urlValidUser = '/xdtic/fn/valid/user';
+var urlValidUser = urlPrefix + '/fn/valid/user';
 
 var formLogin = new Vue({
     el: '#formLogin',

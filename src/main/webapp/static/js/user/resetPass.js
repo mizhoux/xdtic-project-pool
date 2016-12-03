@@ -3,7 +3,7 @@
 var Promise = require('node_modules/es6-promise/dist/es6-promise').Promise;
 require('node_modules/whatwg-fetch/fetch');
 
-var urlValidUserName = '/xdtic/fn/valid/user';
+var urlValidUserName = urlPrefix + '/fn/valid/user';
 
 var formResetPass = new Vue({
     el: '#formResetPass',
@@ -51,7 +51,7 @@ var formResetPass = new Vue({
             }).then(function (response) {
                 return response.json();
             }).then(function (data) {
-                if (data.code === 'ok') {
+                if (data.code == 'ok') {
                     formResetPass.userError = false;
                 } else {
                     formResetPass.userError = true;
@@ -79,7 +79,7 @@ var formResetPass = new Vue({
             }).then(function (response) {
                 return response.json();
             }).then(function (data) {
-                if (data.code === 'ok') {
+                if (data.code == 'ok') {
                     formResetPass.userError = false;
                     formResetPass.validPass();
                 } else {

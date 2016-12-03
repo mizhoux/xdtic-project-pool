@@ -21,6 +21,20 @@
                 "isPage": true
             }
         },
+        "page/myProject/detailPost.jsp": {
+            "uri": "/page/myProject/detailPost.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/myProject/myProject.jsp": {
+            "uri": "/page/myProject/myProject.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
         "page/myProject/postProject.jsp": {
             "uri": "/page/myProject/postProject.jsp",
             "type": "jsp",
@@ -81,6 +95,28 @@
             "uri": "/xdtic/static/page/widget/footer/nav.css",
             "type": "css"
         },
+        "page/widget/header/projectDetailHeader.jsp": {
+            "uri": "/page/widget/header/projectDetailHeader.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/widget/header/projectDetailHeader.scss": {
+            "uri": "/xdtic/static/page/widget/header/projectDetailHeader.css",
+            "type": "css"
+        },
+        "page/widget/main/projectDetail.jsp": {
+            "uri": "/page/widget/main/projectDetail.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/widget/main/projectDetail.scss": {
+            "uri": "/xdtic/static/page/widget/main/projectDetail.css",
+            "type": "css"
+        },
         "static/js/hall/hall.js": {
             "uri": "/xdtic/static/js/hall/hall.js",
             "type": "js",
@@ -103,6 +139,16 @@
             "extras": {
                 "moduleId": "static/js/module/tools"
             }
+        },
+        "static/js/myProject/myProject.js": {
+            "uri": "/xdtic/static/js/myProject/myProject.js",
+            "type": "js",
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "static/js/module/tools.js"
+            ]
         },
         "static/js/myProject/postProject.js": {
             "uri": "/xdtic/static/js/myProject/postProject.js",
@@ -156,6 +202,10 @@
                 "node_modules/whatwg-fetch/fetch.js"
             ]
         },
+        "static/libs/common.js": {
+            "uri": "/xdtic/static/libs/common.js",
+            "type": "js"
+        },
         "static/libs/mod.js": {
             "uri": "/xdtic/static/libs/mod.js",
             "type": "js"
@@ -176,12 +226,20 @@
             "uri": "/xdtic/static/scss/common.css",
             "type": "css"
         },
+        "static/scss/detailPost.scss": {
+            "uri": "/xdtic/static/scss/detailPost.css",
+            "type": "css"
+        },
         "static/scss/hall.scss": {
             "uri": "/xdtic/static/scss/hall.css",
             "type": "css"
         },
         "static/scss/msgs.scss": {
             "uri": "/xdtic/static/scss/msgs.css",
+            "type": "css"
+        },
+        "static/scss/myProject.scss": {
+            "uri": "/xdtic/static/scss/myProject.css",
             "type": "css"
         },
         "static/scss/postProject.scss": {

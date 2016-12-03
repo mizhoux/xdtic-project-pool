@@ -11,7 +11,7 @@ var infiniteScroll = require('node_modules/vue-infinite-scroll/vue-infinite-scro
 var Promise = require('node_modules/es6-promise/dist/es6-promise').Promise;
 require('node_modules/whatwg-fetch/fetch');
 
-var urlLoadMoreMsg = '/xdtic/fn/get/msg';
+var urlLoadMoreMsg = urlPrefix + '/fn/get/msg';
 
 var pageNum = 0;
 var pageSize = 8;

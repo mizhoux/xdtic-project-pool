@@ -32,6 +32,7 @@
     </fis:body>
     
     <fis:block name="js">
+        <fis:require id="static/libs/common.js" />
         <fis:require id="static/libs/vue.js" />
         <fis:require id="static/libs/vue-tap.js" />
     </fis:block>
