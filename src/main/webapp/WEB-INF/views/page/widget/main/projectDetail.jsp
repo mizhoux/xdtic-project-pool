@@ -10,31 +10,33 @@
             <img src="/xdtic/static/images/avatar.png" alt="adoug">     
         </div>
         <div class="tic-article-header-center">
-            <p class="tic-title-strong">adoug</p>
-            <p class="tic-title-secondary">2016.01.28</p>
+            <p class="tic-title-strong"><c:out value='${user.username}' /></p>
+            <p class="tic-title-secondary"><c:out value='${project.date}' /></p>
         </div>
-        <p class="tic-article-header-right tic-title-em">状态：审核中</p>
+
+        <c:set var="projectStatu" value="审核中" />
+        <c:if test="${project.statu} == 'pass'">
+            <c:set var="projectStatu" value="审核通过" />
+        </c:if>
+        <p class="tic-article-header-right tic-title-em">状态：<c:out value="${projectStatu}" /></p>
     </div>
     <section class="tic-article-section">
-        <p>这里就是项目的详情了，文字就不限量了，感觉应该加上可以添加图片的功能，这里的文字颜
-        色是#222222，字号15。
+        <p>
+            <c:out value='${project.promassage}' />
         </p>
     </section>
     <hr>
     <section class="tic-article-section">
         <p class="tic-title-strong">招聘详情</p>
         <p>
-            产品经理：2名
-            UI设计：1名
-            前端：1名
+            <c:out value='${project.prowant}' />
         </p>
     </section>
     <hr/>
     <section class="tic-article-section">
         <p class="tic-title-strong">联系方式</p>
         <p>
-            邮箱：yuqingya@163.com
-            如有疑问，敬请用以上方式咨询~
+            <c:out value='${project.concat}' />
         </p>
     </section>
 </article>

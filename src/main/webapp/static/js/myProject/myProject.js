@@ -32,6 +32,8 @@ var bus = new Vue();
 //searchBar接收请求操作后通知projectBox
 bus.$on('loadProject', function (type) {
 	projectBox.pageNum = 0;
+
+	projectBox.myProjectType = type;
 	projectBox.urlLoadProject = urlLoadProjectMap[type];
 	projectBox.projects.splice(0, projectBox.projects.length);
 
@@ -48,7 +50,7 @@ bus.$on('loadProject', function (type) {
 Vue.component('tic-project', {
 	template: '#tic-project',
 
-	props: ['project', 'index', 'userid'],
+	props: ['project', 'index', 'userid', 'projecttype'],
 
 	methods: {
 		collect: function collect(params) {
@@ -67,7 +69,7 @@ Vue.component('tic-project', {
 			}).then(function (data) {
 				if (data.code === 'error') {
 					self.$emit('uncollect', params.projectIndex);
-					self.$emit('collectFail');
+					self.$emit('collectfail');
 				}
 			});
 		},
@@ -89,7 +91,7 @@ Vue.component('tic-project', {
 			}).then(function (data) {
 				if (data.code === 'error') {
 					self.$emit('collect', params.projectIndex);
-					self.$emit('collectFail');
+					self.$emit('collectfail');
 				}
 			});
 		}
@@ -101,6 +103,20 @@ Vue.component('tic-project', {
 				return this.project.statu === 'pass' ? '审核已通过~' : '审核中...';
 			}
 			return '';
+		},
+
+		projectDetailLink: function projectDetailLink() {
+			if (this.projecttype === 'post') {
+				return urlPrefix + '/myProject/myPost/detail';
+			}
+
+			if (this.projecttype === 'collect') {
+				return urlPrefix + '/myProject/myCollect/detail';
+			}
+
+			if (this.projecttype === 'join') {
+				return urlPrefix + '/myProject/myJoin/detail';
+			}
 		}
 	}
 });
@@ -120,6 +136,7 @@ var projectBox = new Vue({
 		pageNum: 0,
 		pageSize: 5,
 
+		myProjectType: myProjectType,
 		urlLoadProject: urlLoadProject,
 
 		user: userInfo

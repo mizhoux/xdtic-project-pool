@@ -1,9 +1,6 @@
-.tic-article {
-  padding: 1rem;
-}
-
 .tic-article .tic-article-header {
   overflow: hidden;
+  padding: .5rem 1rem;
 }
 
 .tic-article .tic-article-header .tic-article-header-left {
@@ -40,4 +37,27 @@
 
 .tic-article .tic-title-em {
   color: #088fd9;
+}
+
+.tic-cells-title {
+  color: #088fd9;
+  font-size: 1.5rem;
+}
+
+/*reset*/
+.tic-cells-nomargin {
+  margin-top: 0;
+}
+
+.weui-btn_primary {
+  background-color: #2b9ddc;
+}
+
+.weui-btn_primary:not(.weui-btn_disabled):active {
+  color: rgba(255, 255, 255, 0.6);
+  background-color: #237cad;
+}
+
+.tic-header-three > .tic-header-three-aside:nth-child(3) {
+  visibility: hidden;
 }

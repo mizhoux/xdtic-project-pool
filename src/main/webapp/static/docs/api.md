@@ -87,6 +87,75 @@
     }
    ```
 
+#### 我的发布-收藏详情页
+- url: /xdtic/myProject/myPost/detail?proId=p001
+- jsp: /page/myProject/myPost/detail
+
+- jsp页面所需变量
+   ```
+   {
+    	"project": {
+    		"proname": "时间典当铺",
+    		"tag": ["Web", "情感"],
+    		"isCollected": true,
+    		"proId": "p001",
+    		"statu": "pass",
+    		"prowant": "产品经理：2名  UI设计：1名 前端：1名",
+    		"promassage": "这里就是项目的详情了，文字就不限量了，感觉应该加上可以添加图片的功能，这里的文字颜
+            色是#222222，字号15。",
+            "concat": "邮箱：yuqingyaa@163.com 如有疑问，敬请用以上方式咨询~",
+            "date": "2016.01.28"
+    	},
+    
+    	"user": {
+    		"id": "u001",
+    		"username": "adoug"
+    	}
+    }
+   ```
+   
+#### 编辑已发布项目页面
+- url: /xdtic/myProject/myPost/editDetail?proId=p001
+- jsp: /page/myProject/myPost/editDetail
+
+- jsp页面所需变量：
+   ```
+   {
+    	"project": {
+    		"proname": "时间典当铺",
+    		"tag": ["Web", "情感"],
+    		"proId": "p001",
+    		"prowant": "产品经理：2名  UI设计：1名  前端：1名",
+    		"promassage":"天空之城在哭泣。",
+            "concat":"邮箱：yuqingya@163.com 如有疑问，敬请用以上方式咨询~",
+            "date": "2016.01.28"
+    	},
+    
+    	"user": {
+    		"id": "u001",
+    		"username": "adoug"
+    	}
+    }
+   ```
+
+- api: /xdtic/fn/project/update
+- request `[POST]` `[Form]`
+   ```
+   {
+        promassage:	            
+        "港岛妹妹，我送给你的西班牙馅饼。"
+    							        
+        prowant: 
+        "产品经理：2名  UI设计：1名  前端：1名"
+    						            
+        concat:	
+        "邮箱：yuqingyaa@163.com   如有疑问，敬请用以上方式咨询~"
+    						            
+        uid:u001
+        proId:p001
+   }
+   ```
+
 #### 我的收藏页面
 - url: /xdtic/myProject?type=collect
 - jsp: /page/myProject/myProject.jsp

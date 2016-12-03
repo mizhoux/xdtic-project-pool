@@ -52,7 +52,7 @@
 
 	<fis:block name="js">
 		<fis:parent />
-		<fis:require id="static/libs/mod.js" />
+		
 		<fis:require id="static/js/user/resetPass.js" />
 	</fis:block>
  

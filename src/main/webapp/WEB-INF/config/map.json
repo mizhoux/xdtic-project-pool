@@ -21,8 +21,15 @@
                 "isPage": true
             }
         },
-        "page/myProject/detailPost.jsp": {
-            "uri": "/page/myProject/detailPost.jsp",
+        "page/myProject/myPost/detail.jsp": {
+            "uri": "/page/myProject/myPost/detail.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/myProject/myPost/editDetail.jsp": {
+            "uri": "/page/myProject/myPost/editDetail.jsp",
             "type": "jsp",
             "extras": {
                 "isPage": true
@@ -95,6 +102,14 @@
             "uri": "/xdtic/static/page/widget/footer/nav.css",
             "type": "css"
         },
+        "page/widget/header/projectDetailHeader.js": {
+            "uri": "/xdtic/static/page/widget/header/projectDetailHeader.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
         "page/widget/header/projectDetailHeader.jsp": {
             "uri": "/page/widget/header/projectDetailHeader.jsp",
             "type": "jsp",
@@ -139,6 +154,15 @@
             "extras": {
                 "moduleId": "static/js/module/tools"
             }
+        },
+        "static/js/myProject/myPost/editDetail.js": {
+            "uri": "/xdtic/static/js/myProject/myPost/editDetail.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "static/js/module/tools.js"
+            ]
         },
         "static/js/myProject/myProject.js": {
             "uri": "/xdtic/static/js/myProject/myProject.js",
@@ -230,6 +254,10 @@
             "uri": "/xdtic/static/scss/detailPost.css",
             "type": "css"
         },
+        "static/scss/editDetailPost.scss": {
+            "uri": "/xdtic/static/scss/editDetailPost.css",
+            "type": "css"
+        },
         "static/scss/hall.scss": {
             "uri": "/xdtic/static/scss/hall.css",
             "type": "css"
@@ -258,13 +286,6 @@
             "uri": "/xdtic/static/scss/weui.css",
             "type": "css"
         },
-        "node_modules/vue-infinite-scroll/vue-infinite-scroll.js": {
-            "uri": "/xdtic/static/node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
-            "type": "js",
-            "extras": {
-                "moduleId": "node_modules/vue-infinite-scroll/vue-infinite-scroll"
-            }
-        },
         "node_modules/es6-promise/dist/es6-promise.js": {
             "uri": "/xdtic/static/node_modules/es6-promise/dist/es6-promise.js",
             "type": "js",
@@ -280,6 +301,13 @@
             "type": "js",
             "extras": {
                 "moduleId": "node_modules/whatwg-fetch/fetch"
+            }
+        },
+        "node_modules/vue-infinite-scroll/vue-infinite-scroll.js": {
+            "uri": "/xdtic/static/node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+            "type": "js",
+            "extras": {
+                "moduleId": "node_modules/vue-infinite-scroll/vue-infinite-scroll"
             }
         },
         "node_modules/process/browser.js": {

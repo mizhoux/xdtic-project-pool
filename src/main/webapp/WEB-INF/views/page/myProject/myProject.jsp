@@ -36,17 +36,18 @@
 					 v-for="(project, index) in projects"
 					 :project="project"
 					 :index="index"
+					 :projecttype="myProjectType"
 					 userid="<c:out value='${user.id}' />"
 					 @collect="collect"
 					 @uncollect="uncollect"
-					 @collectFail="openDialog" >
+					 @collectfail="openDialog" >
 					</tic-project>
 				</div>
 			</div>
 			<div v-show="collectIsFail">
 			    <div class="weui-mask"></div>
 			    <div class="weui-dialog">
-			        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提</strong></div>
+			        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
 			        <div class="weui-dialog__bd">啊哦，操作失败，稍后重试呗~</div>
 			        <div class="weui-dialog__ft">
 			            <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" v-tap.prevent="{methods: closeDialog}">确定</a>
@@ -80,15 +81,15 @@
 
 	<fis:block name="js">
 		<fis:parent />
-		<fis:require id="static/libs/mod.js" />
+		
 		<fis:require id="static/js/myProject/myProject.js" />
 
 		<script type="text/x-template" id="tic-project">
 			<div class="weui-panel weui-panel_access">
 				<div class="weui-panel__bd">
-				    <a :href="'<c:url value='/project' />?pid='+project.proId+'uid='+userid" class="weui-media-box weui-media-box_appmsg">
+				    <a :href="projectDetailLink +'?proId=' + project.proId" class="weui-media-box weui-media-box_appmsg">
 			         <div class="weui-media-box__hd">
-			             <img class="weui-media-box__thumb" src="/xdtic/static/images/avatar.png" alt="">
+			             <img class="weui-media-box__thumb" src="<c:url value='/static/images/avatar.png' />" alt="">
 				        </div>
 				        <div class="weui-media-box__bd">
 					        <h4 class="weui-media-box__title">
@@ -96,10 +97,10 @@
 				            		{{project.proname}}
 				            	</span>
 				            	<span class="tic-collect">
-				                	<img src="/xdtic/static/images/hall/uncollect.png" alt="收藏"
+				                	<img src="<c:url value='/static/images/hall/uncollect.png' />" alt="收藏"
 				                	 v-tap="{methods: collect, projectIndex: index, userid: userid}"
 				                	 v-show="!project.isCollected" />
-				                	<img src="/xdtic/static/images/hall/collect.png" alt="取消收藏"
+				                	<img src="<c:url value='/static/images/hall/collect.png' />" alt="取消收藏"
 				                	 v-tap="{methods: uncollect, projectIndex: index, userid: userid}"
 				                	 v-show="project.isCollected" />
 			                	</span>
