@@ -4,75 +4,62 @@
 
 <fis:extends name="page/layout/frame.jsp">
     <fis:block name="body">
-		<header class="tic-header-hall">
-			<img src="/xdtic/static/images/hall/logo.png" alt="西电腾讯俱乐部">
-			<aside>
-				<div class="weui-search-bar" id="searchBar"
-				 :class="{'weui-search-bar_focusing': isFocusing}">
-				    <form class="weui-search-bar__form"
-				     @submit.prevent="search">
-				        <div class="weui-search-bar__box">
-				            <i class="weui-icon-search"></i>
-				            <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="大家都在搜：T派校园大赛" 
-				             v-model="keyWords"
-				             @blur="inputBlur" />
-				            <a href="javascript:" class="weui-icon-clear" id="searchClear"
-				             v-tap="{methods:clearInput}"></a>
-				        </div>
-				        <label for="search_input" class="weui-search-bar__label" id="search_text"
-				         v-show="!isFocusing"
-				         v-tap="{methods:showInput}">
-				            <i class="weui-icon-search"></i>
-				            <span>大家都在搜：T派校园大赛</span>
-				        </label>
-				    </form>
-				    <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel"
-				     v-tap="{methods:cancelSearch}">取消</a>
-				</div>
-			</aside>
+		<header>
+			<div class="tic-header-three">
+				<span></span>
+				<h2><c:out value="${user.name}" /></h2>
+				<a href="<c:url value='/myProject/postProject'/>" v-tap>
+					<img src="/xdtic/static/images/myProject/post-project.png" alt="发布新项目">
+				</a>
+			</div>
+			<nav class="tic-nav-header" id="myProjectNav"
+			 v-tap="{methods: switchType}">
+				<a data-type="join"
+				 :class="{'tic-nav-current': currentLink === 'join'}">
+					我的参与	
+				</a>
+				<a data-type="collect"
+				 :class="{'tic-nav-current': currentLink === 'collect'}">
+					我的收藏
+				</a>
+				<a data-type="post"
+				 :class="{'tic-nav-current': currentLink === 'post'}">
+					我的发布
+				</a>
+			</nav>
 		</header>
 
 		<main id="appBody">
 			<div class="tic-project-box" id="projectBox" v-infinite-scroll="loadProject" infinite-scroll-disabled="busy" infinite-scroll-distance="10" infinite-scroll-immediate-check="checkImmediately">
-				<div id="hotProjectBox">
-					<tic-project
-					 v-for="(hotProject, index) in hotProjects"
-					 v-bind:project="hotProject"
-					 v-bind:index="index"
-					 userid="<c:out value='${user.id}' />"
-					 @collect="collectHot"
-					 @uncollect="uncollectHot"
-					 @collectFail="openDialog">
-					</tic-project>
-				</div>
-				<div id="normalProjectBox">
+				<div>
 					<tic-project
 					 v-for="(project, index) in projects"
 					 :project="project"
 					 :index="index"
+					 :projecttype="myProjectType"
 					 userid="<c:out value='${user.id}' />"
 					 @collect="collect"
 					 @uncollect="uncollect"
-					 @collectFail="openDialog">
+					 @collectfail="openDialog" >
 					</tic-project>
 				</div>
-				<div v-show="collectIsFail">
-				    <div class="weui-mask"></div>
-				    <div class="weui-dialog">
-				        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
-				        <div class="weui-dialog__bd">啊哦，操作失败，稍后重试呗~</div>
-				        <div class="weui-dialog__ft">
-				            <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" v-tap.prevent="{methods: closeDialog}">确定</a>
-				        </div>
-				    </div>
-				</div>
+			</div>
+			<div v-show="collectIsFail">
+			    <div class="weui-mask"></div>
+			    <div class="weui-dialog">
+			        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
+			        <div class="weui-dialog__bd">啊哦，操作失败，稍后重试呗~</div>
+			        <div class="weui-dialog__ft">
+			            <a href="javascript:;" class="weui-dialog__btn weui-dialog__btn_primary" v-tap.prevent="{methods: closeDialog}">确定</a>
+			        </div>
+				   </div>
 			</div>
 			<div class="weui-loadmore" v-show="isLoading">
 			    <i class="weui-loading"></i>
 			    <span class="weui-loadmore__tips">正在加载</span>
 			</div>
 			<div class="weui-loadmore weui-loadmore_line" v-show="noMore">
-			    <span class="weui-loadmore__tips">没有更多消息了</span>
+			    <span class="weui-loadmore__tips">没有啦</span>
 			</div>
 		</main>		
 
@@ -81,7 +68,7 @@
 
 	<fis:block name="style">
 		<fis:parent />
-		<fis:require id="static/scss/hall.scss" />
+		<fis:require id="static/scss/myProject.scss" />
 	</fis:block>
 
 	<fis:block name="jsPre">
@@ -95,12 +82,12 @@
 	<fis:block name="js">
 		<fis:parent />
 		
-		<fis:require id="static/js/hall/hall.js" />
+		<fis:require id="static/js/myProject/myProject.js" />
 
 		<script type="text/x-template" id="tic-project">
 			<div class="weui-panel weui-panel_access">
 				<div class="weui-panel__bd">
-				    <a :href="'<c:url value='/project' />?id='+project.proId+'&uid='+userid" class="weui-media-box weui-media-box_appmsg">
+				    <a :href="projectDetailLink +'?proId=' + project.proId" class="weui-media-box weui-media-box_appmsg">
 			         <div class="weui-media-box__hd">
 			             <img class="weui-media-box__thumb" src="<c:url value='/static/images/avatar.png' />" alt="">
 				        </div>
@@ -124,6 +111,9 @@
 				            </p>
 				            <p class="weui-media-box__desc">{{project.desc}}</p>
 				            <p class="tic-media-box__footer">
+				            	<span v-if="projectStatu.length != ''" class="tic-float-left tic-secondary">
+				            		{{projectStatu}}
+				            	</span>
 					        	<span class="tic-strong">{{project.username}}</span>
 					        	<span class="tic-secondary">{{project.date}}</span>
 					        </p>
@@ -136,5 +126,5 @@
 
  
   <%-- auto inject by fis3-preprocess-extlang--%>
-  <fis:require name="page/hall/hall.jsp" />
+  <fis:require name="page/myProject/myProject.jsp" />
 </fis:extends>

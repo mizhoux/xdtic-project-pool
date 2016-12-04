@@ -3,7 +3,7 @@
 var Promise = require('node_modules/es6-promise/dist/es6-promise').Promise;
 require('node_modules/whatwg-fetch/fetch');
 
-var urlValidUserName = '/xdtic/fn/valid/username';
+var urlValidUserName = urlPrefix + '/fn/valid/username';
 
 var formRegister = new Vue({
     el: '#formRegister',

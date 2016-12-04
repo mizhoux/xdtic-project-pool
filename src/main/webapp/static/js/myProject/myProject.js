@@ -6,28 +6,36 @@
 
 'use strict';
 
-var infiniteScroll = require('node_modules/vue-infinite-scroll/vue-infinite-scroll').infiniteScroll;
+var infiniteScroll = require('node_modules/vue-infinite-scroll/vue-infinite-scroll');
+Vue.use(infiniteScroll);
 
 var Promise = require('node_modules/es6-promise/dist/es6-promise').Promise;
 require('node_modules/whatwg-fetch/fetch');
 
-var urlSearchProject = urlPrefix + '/fn/get/project';
-
-var urlSearchHotProject = urlPrefix + '/fn/get/hotProject';
+var tools = require('static/js/module/tools');
 
 var urlCollect = urlPrefix + '/fn/project/collect';
 var urlUnCollect = urlPrefix + '/fn/project/uncollect';
+
+var urlLoadProjectMap = {
+	'post': urlPrefix + '/fn/get/project/myPost',
+	'join': urlPrefix + '/fn/get/project/myJoin',
+	'collect': urlPrefix + '/fn/get/project/myCollect'
+};
+
+var myProjectType = tools.getParams(window.location.href).type;
+var urlLoadProject = urlLoadProjectMap[myProjectType];
 
 //组件间通信，事件代理
 var bus = new Vue();
 
 //searchBar接收请求操作后通知projectBox
-bus.$on('loadProject', function (keyWords) {
-	projectBox.pageNum = 1;
-	projectBox.keyWords = keyWords;
+bus.$on('loadProject', function (type) {
+	projectBox.pageNum = 0;
 
+	projectBox.myProjectType = type;
+	projectBox.urlLoadProject = urlLoadProjectMap[type];
 	projectBox.projects.splice(0, projectBox.projects.length);
-	projectBox.hotProjects.splice(0, projectBox.hotProjects.length);
 
 	projectBox.noMore = false;
 	projectBox.busy = false;
@@ -37,19 +45,17 @@ bus.$on('loadProject', function (keyWords) {
 	projectBox.collectIsFail = false;
 
 	projectBox.loadProject();
-	projectBox.loadHotProject();
 });
 
 Vue.component('tic-project', {
 	template: '#tic-project',
 
-	props: ['project', 'index', 'userid'],
+	props: ['project', 'index', 'userid', 'projecttype'],
 
 	methods: {
 		collect: function collect(params) {
-			//假装收藏成功，这样给用户的反馈快一点，收藏失败再回滚
+			//假装收藏成功，这样给用户的反馈快一点，失败再回滚
 			this.$emit('collect', params.projectIndex);
-			// this.project.isCollected = true;
 			var self = this;
 
 			var url = urlCollect + '?userid=' + params.userid + '&proId=' + this.project.proId;
@@ -63,16 +69,14 @@ Vue.component('tic-project', {
 			}).then(function (data) {
 				if (data.code === 'error') {
 					self.$emit('uncollect', params.projectIndex);
-					// this.project.isCollected = false;
-					self.$emit('collectFail');
+					self.$emit('collectfail');
 				}
 			});
 		},
 
 		uncollect: function uncollect(params) {
-			//假装收藏成功，这样给用户的反馈快一点，收藏失败再回滚
+			//假装取消收藏，这样给用户的反馈快一点，失败再回滚
 			this.$emit('uncollect', params.projectIndex);
-			// this.project.isCollected = false;
 
 			var self = this;
 
@@ -87,10 +91,32 @@ Vue.component('tic-project', {
 			}).then(function (data) {
 				if (data.code === 'error') {
 					self.$emit('collect', params.projectIndex);
-					// this.project.isCollected = false;
-					self.$emit('collectFail');
+					self.$emit('collectfail');
 				}
 			});
+		}
+	},
+
+	computed: {
+		projectStatu: function projectStatu() {
+			if (this.project.statu) {
+				return this.project.statu === 'pass' ? '审核已通过~' : '审核中...';
+			}
+			return '';
+		},
+
+		projectDetailLink: function projectDetailLink() {
+			if (this.projecttype === 'post') {
+				return urlPrefix + '/myProject/myPost/detail';
+			}
+
+			if (this.projecttype === 'collect') {
+				return urlPrefix + '/myProject/myCollect/detail';
+			}
+
+			if (this.projecttype === 'join') {
+				return urlPrefix + '/myProject/myJoin/detail';
+			}
 		}
 	}
 });
@@ -99,7 +125,6 @@ var projectBox = new Vue({
 	el: '#appBody',
 	data: {
 		projects: [],
-		hotProjects: [],
 
 		busy: false,
 		noMore: false,
@@ -110,36 +135,26 @@ var projectBox = new Vue({
 
 		pageNum: 0,
 		pageSize: 5,
-		hotSize: 2,
 
-		keyWords: '',
+		myProjectType: myProjectType,
+		urlLoadProject: urlLoadProject,
 
 		user: userInfo
 	},
 
 	beforeMount: function beforeMount() {
-		this.loadHotProject();
 		this.loadProject();
 	},
 
 	methods: {
 		loadProject: loadProject,
-		loadHotProject: loadHotProject,
 
 		collect: function collect(index) {
 			this.projects[index].isCollected = true;
 		},
 
-		collectHot: function collectHot(index) {
-			this.hotProjects[index].isCollected = true;
-		},
-
 		uncollect: function uncollect(index) {
 			this.projects[index].isCollected = false;
-		},
-
-		uncollectHot: function uncollectHot(index) {
-			this.hotProjects[index].isCollected = false;
 		},
 
 		closeDialog: function closeDialog() {
@@ -149,46 +164,23 @@ var projectBox = new Vue({
 		openDialog: function openDialog() {
 			this.collectIsFail = true;
 		}
-	},
-
-	directives: { infiniteScroll: infiniteScroll }
+	}
 });
 
-var searchBar = new Vue({
-	el: '#searchBar',
-	data: {
-		keyWords: '',
+var myProjectNav = new Vue({
+	el: '#myProjectNav',
 
-		isFocusing: false
+	data: {
+		currentLink: myProjectType
 	},
 
 	methods: {
-		showInput: function showInput() {
-			this.isFocusing = true;
+		switchType: function switchType(params) {
+			var event = params.event,
+			    target = event.target;
 
-			this.$nextTick(function () {
-				this.$el.querySelector('#searchInput').focus();
-			});
-		},
-
-		inputBlur: function inputBlur() {
-			if (!this.keyWords.length) {
-				this.isFocusing = false;
-			}
-		},
-
-		clearInput: function clearInput() {
-			this.keyWords = '';
-		},
-
-		cancelSearch: function cancelSearch() {
-			this.keyWords = '';
-			this.isFocusing = false;
-		},
-
-		search: function search() {
-			//通知projectBox
-			bus.$emit('loadProject', this.keyWords);
+			this.currentLink = target.dataset.type;
+			bus.$emit('loadProject', target.dataset.type);
 		}
 	}
 });
@@ -203,7 +195,7 @@ function loadProject() {
 		return;
 	}
 
-	var url = urlSearchProject + '?pageNum=' + this.pageNum + '&pageSize=' + this.pageSize + '&keyWords=' + this.keyWords + '&userid=' + this.user.id;
+	var url = this.urlLoadProject + '?pageNum=' + this.pageNum + '&pageSize=' + this.pageSize + '&uid=' + this.user.id;
 
 	this.busy = true;
 	this.isLoading = true;
@@ -231,30 +223,5 @@ function loadProject() {
 
 		self.pageNum++;
 		self.busy = false;
-	});
-}
-
-/**
- * [loadHotProject description]
- * @fileOverview 加载Hot-project列表
- */
-function loadHotProject() {
-	var url = urlSearchHotProject + '?hotSize=' + this.hotSize + '&keyWords=' + this.keyWords + '&userid=' + this.user.id;
-
-	self = this;
-
-	fetch(url, {
-		method: 'GET',
-		headers: {
-			'Accept': 'application/json'
-		}
-	}).then(function (response) {
-		return response.json();
-	}).then(function (data) {
-		data.projects.map(function (el, index) {
-			el.isHot = true;
-			return el;
-		});
-		self.hotProjects = data.projects;
 	});
 }

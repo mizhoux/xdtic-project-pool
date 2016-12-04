@@ -1,5 +1,11 @@
 define('static/js/module/tools', function(require, exports, module) {
 
+  /**
+   * @fileOverview tools
+   * @Author       adoug
+   * @DateTime     2016-11-24
+   */
+  
   "use strict";
   
   function serialize(form) {
@@ -70,9 +76,29 @@ define('static/js/module/tools', function(require, exports, module) {
       return s;
   }
   
+  /**
+   * @fileOverview 获取url中GET类型的参数
+   * @param        {[String]}   url 
+   * @return       {[Object]}   params
+   */
+  function getParams(url) {
+      var urlQuery = url.split('?')[1];
+      var params = {};
+  
+      var parts = urlQuery.split('&');
+      for (var i = 0, len = parts.length; i < len; i++) {
+          var part = parts[i].split('=');
+  
+          params[part[0]] = part[1];
+      }
+  
+      return params;
+  }
+  
   module.exports = {
       formSerialize: serialize,
-      SaferHTML: SaferHTML
+      SaferHTML: SaferHTML,
+      getParams: getParams
   };
 
 });

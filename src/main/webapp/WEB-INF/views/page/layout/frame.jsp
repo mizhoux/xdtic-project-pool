@@ -19,6 +19,13 @@
             <fis:require id="static/scss/weui.css" />
             <fis:require id="static/scss/common.scss" />
         </fis:block>
+
+        <fis:block name="js">
+            <fis:require id="static/libs/common.js" />
+            <fis:require id="static/libs/vue.js" />
+            <fis:require id="static/libs/vue-tap.js" />
+            <fis:require id="static/libs/mod.js" />
+        </fis:block>
         
         <fis:block name="jsPre">
         </fis:block>
@@ -30,11 +37,7 @@
         </div>
         
     </fis:body>
-    
-    <fis:block name="js">
-        <fis:require id="static/libs/vue.js" />
-        <fis:require id="static/libs/vue-tap.js" />
-    </fis:block>
+
  
   <%-- auto inject by fis3-preprocess-extlang--%>
   <fis:require name="page/layout/frame.jsp" />

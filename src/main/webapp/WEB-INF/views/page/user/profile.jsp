@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=utf-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/fis" prefix="fis"%>
+<<<<<<< HEAD
 <%@page import="wenjing.xdtic.model.User"%>
 <%
     User user = (User)session.getAttribute("user");
@@ -8,6 +9,9 @@
         System.out.println("user name -> " + user.getName());
     }
 %>
+=======
+
+>>>>>>> 26e626a4df22b14ca886232c486bc946ba02fd88
 <fis:extends name="page/layout/frame.jsp">
 	<fis:block name="body">
 		<div id="appProfile">
@@ -150,7 +154,7 @@
 
 	<fis:block name="js">
 		<fis:parent />
-		<fis:require id="static/libs/mod.js" />
+		
 		<fis:require id="static/js/user/profile.js" />
 	</fis:block>
  

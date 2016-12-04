@@ -22,20 +22,25 @@
 						<c:set var="notice" value="" />
                                                 <c:if test="${user.hasMsg}">
 							<c:set var="notice" value="notice" />
+<<<<<<< HEAD
 						</c:if> 
 						<a href="/xdtic/user/msgs?userid=<c:out value="${user.id}" />" v-tap class="grid <c:out value="${notice}" />">
+=======
+						</c:if>
+						<a href="<c:url value='/user/msgs' />?userid=<c:out value="${user.id}" />" v-tap class="grid <c:out value="${notice}" />">
+>>>>>>> 26e626a4df22b14ca886232c486bc946ba02fd88
 							<img src="/xdtic/static/images/sys-msg.png" alt="系统消息">
 							<p>系统消息</p>
 						</a>
-						<a class="grid" href="/xdtic/user/profile?userid=<c:out value="${user.id}" />" v-tap>
+						<a class="grid" href="<c:url value='/user/profile' />?userid=<c:out value="${user.id}" />" v-tap>
 							<img src="/xdtic/static/images/profile.png" alt="个人信息">
 							<p>个人信息</p>
 						</a>
-						<a class="grid" href="/xdtic/logout" v-tap>
+						<a class="grid" href="<c:url value='/logout' />" v-tap>
 							<img src="/xdtic/static/images/switch-account.png" alt="切换账号">
 							<p>切换账号</p>
 						</a>
-						<a class="grid" href="/xdtic/user/resetPass" v-tap>
+						<a class="grid" href="<c:url value='/user/resetPass' />" v-tap>
 							<img src="/xdtic/static/images/change-pass.png" alt="修改密码">
 							<p>修改密码</p>
 						</a>

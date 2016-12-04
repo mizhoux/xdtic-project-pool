@@ -24,7 +24,7 @@
 							</div>
 							<div class="weui-cell">
 							    <div class="weui-cell__bd">
-							        <textarea class="weui-textarea" name="pdesc" placeholder="项目详情介绍" rows="5"></textarea>
+							        <textarea class="weui-textarea" name="promassage" placeholder="项目详情介绍" rows="5"></textarea>
 							    </div>
 							</div>
 						</div>
@@ -121,7 +121,7 @@
 
 	<fis:block name="js">
 		<fis:parent />
-		<fis:require id="static/libs/mod.js" />
+		
 		<fis:require id="static/js/myProject/postProject.js" />
 	</fis:block>
  

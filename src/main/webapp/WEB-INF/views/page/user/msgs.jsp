@@ -43,17 +43,17 @@
 
 	<fis:block name="js">
 		<fis:parent />
-		<fis:require id="static/libs/mod.js" />
+		
 		<fis:require id="static/js/user/msgs.js" />
 		<script type="text/x-template" id="tic-msg">
 			<div class="tic-msg">
 				<div class="tic-msg-two">
 					<div class="tic-msg-left">
-						<img v-if="msg.type === 'join'" src="/xdtic/static/images/msg-dialog-red.png" alt="">
-						<img v-else src="/xdtic/static/images/msg-dialog.png" alt="">
+						<img v-if="msg.type === 'join'" src="<c:url value='/static/images/msg-dialog-red.png' />" alt="">
+						<img v-else src="<c:url value='/static/images/msg-dialog.png' />" alt="">
 					</div>
 					<div class="tic-msg-right">
-						<a :href="'/xdtic/user/msg?id=' + msg.mid" class="tic-msg-link" v-tap>
+						<a :href="'<c:url value='/user/msg' />?id=' + msg.mid" class="tic-msg-link" v-tap>
 							<p>
 								{{msg.massage}}
 							</p>

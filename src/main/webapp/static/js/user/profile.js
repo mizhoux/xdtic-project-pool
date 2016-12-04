@@ -11,7 +11,7 @@ require('node_modules/whatwg-fetch/fetch');
 
 var formSerialize = require('static/js/module/formSerialize');
 
-var urlUpdateProfile = '/xdtic/fn/update/profile';
+var urlUpdateProfile = urlPrefix + '/fn/update/profile';
 
 var appProfile = new Vue({
 	el: '#appProfile',
