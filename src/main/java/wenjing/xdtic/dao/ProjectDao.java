@@ -24,6 +24,12 @@ public class ProjectDao {
     @Autowired
     private UserDao userDao;
 
+    public Project getProject(Integer proId) {
+        String SQL = "SELECT * FROM project WHERE proId = ?";
+        Project project = jdbcTemplate.query(SQL, rs -> rs.next() ? parseProject(rs, 0) : null, proId);
+        return project;
+    }
+
     public List<Project> getPostedProjects(Integer userid, Integer offset, Integer pageSize) {
         String SQL = "SELECT * FROM project WHERE userid = ? LIMIT ?, ?";
         List<Project> projects = jdbcTemplate.query(SQL, this::parseProject, userid, offset, pageSize);
@@ -93,7 +99,7 @@ public class ProjectDao {
      * @param pid 项目ID
      * @return
      */
-    private boolean isProjectCollected(Integer uid, Integer pid) {
+    public boolean isProjectCollected(Integer uid, Integer pid) {
         String SQL = "SELECT COUNT(*) FROM collect_project WHERE uid = ? AND pid = ?";
         long count = jdbcTemplate.query(SQL, rs -> rs.next() ? rs.getLong(1) : 0, uid, pid);
         return count == 1;
@@ -106,14 +112,13 @@ public class ProjectDao {
         project.setProname(rs.getString("proname"));
         project.setPromassage(rs.getString("promassage"));
         project.setProwant(rs.getString("prowant"));
-        project.setPhone(rs.getString("phone"));
+        project.setConcat(rs.getString("concat"));
         project.setStatu(rs.getString("statu"));
 
         LocalDateTime creationDateTime = rs.getTimestamp("date").toLocalDateTime();
         project.setDate(creationDateTime.format(DateTimeFormatter.ofPattern("yyyy.MM.dd")));
 
         project.setDesc(project.getPromassage());
-
         String tag = rs.getString("tag");
         if (tag != null) {
             project.setTag(tag);
@@ -125,15 +130,31 @@ public class ProjectDao {
     }
 
     public boolean addProject(Integer userid, String tag, String proname,
-            String promassage, String prowant, String phone) {
+            String promassage, String prowant, String concat) {
 
         String SQL = "INSERT INTO project "
-                + "(userid, proname, promassage, prowant, tag, phone, date) "
+                + "(userid, proname, promassage, prowant, tag, concat, date) "
                 + "VALUES (?, ?, ?, ?, ?, ?, NOW())";
 
         int result = jdbcTemplate.update(SQL,
-                userid, proname, promassage, prowant, tag, phone);
+                userid, proname, promassage, prowant, tag, concat);
         return result == 1;
+    }
+
+    public boolean collectProject(Integer userid, Integer proId) {
+        String SQL = "INSERT INTO collect_project SET uid = ?, pid = ?";
+        return jdbcTemplate.update(SQL, userid, proId) == 1;
+    }
+
+    public boolean uncollectProject(Integer userid, Integer proId) {
+        String SQL = "DELETE FROM collect_project WHERE uid = ? AND pid = ?";
+        return jdbcTemplate.update(SQL, userid, proId) == 1;
+    }
+
+    public boolean updateProject(Integer userid, Integer proId,
+            String promassage, String prowant, String concat) {
+        String SQL = "UPDATE project SET promassage = ?, prowant = ?, concat = ? WHERE userid = ? AND proId = ?";
+        return jdbcTemplate.update(SQL, promassage, prowant, concat, userid, proId) == 1;
     }
 
 }

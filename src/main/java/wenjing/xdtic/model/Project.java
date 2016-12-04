@@ -15,16 +15,24 @@ public class Project {
     private String prowant;
     private String tag;
     private String date;
-    private String phone;
+    private String concat;
     private String statu;
 
     private boolean isCollected;
-    
+
     private List<String> tags;
     private String username;
     private String desc;
     
     public Project() {
+    }
+
+    public String getConcat() {
+        return concat;
+    }
+
+    public void setConcat(String concat) {
+        this.concat = concat;
     }
 
     public String getStatu() {
@@ -97,14 +105,6 @@ public class Project {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public boolean isIsCollected() {

@@ -5,7 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import wenjing.xdtic.dao.ProjectDao;
 import wenjing.xdtic.dao.UserDao;
+import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.User;
 
 /**
@@ -17,6 +21,9 @@ public class HomeController {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private ProjectDao projectDao;
 
     @RequestMapping({"/", "index", "home", "login"})
     public String index() {
@@ -36,8 +43,24 @@ public class HomeController {
         return "/page/myProject/myProject";
     }
 
-    @RequestMapping("{pageFolder}/{pageName}")
-    public String route(@PathVariable String pageFolder, @PathVariable String pageName) {
-        return "page/" + pageFolder + "/" + pageName;
+    @RequestMapping("myProject/{myProjectType}/detail")
+    public ModelAndView getProjectDetailPage(HttpSession session,
+            @PathVariable String myProjectType, @RequestParam Integer proId) {
+        Project project = projectDao.getProject(proId);
+        User user = (User) session.getAttribute("user");
+        boolean isCollected = projectDao.isProjectCollected(user.getId(), proId);
+        project.setIsCollected(isCollected);
+        return new ModelAndView("/page/myProject/myPost/detail", "project", project);
     }
+    
+    @RequestMapping("myProject/{myProjectType}/editDetail")
+    public ModelAndView getProjectEditDetailPage(HttpSession session,
+            @PathVariable String myProjectType, @RequestParam Integer proId) {
+        Project project = projectDao.getProject(proId);
+        User user = (User) session.getAttribute("user");
+        boolean isCollected = projectDao.isProjectCollected(user.getId(), proId);
+        project.setIsCollected(isCollected);
+        return new ModelAndView("/page/myProject/myPost/editDetail", "project", project);
+    }
+    
 }

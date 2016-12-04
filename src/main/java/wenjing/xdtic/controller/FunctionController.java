@@ -211,29 +211,54 @@ public class FunctionController {
     public RespCode postProject(
             @RequestParam(name = "uid") Integer userid,
             @RequestParam(name = "title") String proname,
-            @RequestParam(name = "concat") String phone,
-            @RequestParam String tag, @RequestParam String promassage, @RequestParam String prowant) {
+            @RequestParam String concat, @RequestParam String tag,
+            @RequestParam String promassage, @RequestParam String prowant) {
         if (userid == null) {
             return RespCode.ERROR;
         }
 
         //调用dao中addproject()方法向数据库中插入数据
         boolean addProjectSucc
-                = projectDao.addProject(userid, tag, proname, promassage, prowant, phone);
+                = projectDao.addProject(userid, tag, proname, promassage, prowant, concat);
         return addProjectSucc ? RespCode.OK : RespCode.ERROR;
     }
 
     @ResponseBody
-    @RequestMapping("get/project/myPost")
-    public PagingProjects getMyPostedProjects(@RequestParam Integer uid,
+    @RequestMapping(value = "project/update", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    public RespCode updateProject(
+            @RequestParam(name = "uid") Integer userid,
+            @RequestParam Integer proId, @RequestParam String concat,
+            @RequestParam String promassage, @RequestParam String prowant) {
+        boolean addProjectSucc
+                = projectDao.updateProject(userid, proId, promassage, prowant, concat);
+        return addProjectSucc ? RespCode.OK : RespCode.ERROR;
+    }
+
+    @ResponseBody
+    @RequestMapping("project/collect")
+    public RespCode collectProject(@RequestParam Integer userid, @RequestParam Integer proId) {
+        boolean success = projectDao.collectProject(userid, proId);
+        return success ? RespCode.OK : RespCode.ERROR;
+    }
+
+    @ResponseBody
+    @RequestMapping("project/uncollect")
+    public RespCode uncollectProject(@RequestParam Integer userid, @RequestParam Integer proId) {
+        boolean success = projectDao.uncollectProject(userid, proId);
+        return success ? RespCode.OK : RespCode.ERROR;
+    }
+
+    @ResponseBody
+    @RequestMapping("get/project/myJoin")
+    public PagingProjects getMyJoiningProjects(@RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         int offset = pageNum * pageSize;
-        List<Project> projects = projectDao.getPostedProjects(uid, offset, pageSize);
+        List<Project> projects = projectDao.getJoiningProjects(uid, offset, pageSize);
 
         PagingProjects pagingProject = new PagingProjects();
         pagingProject.setProjects(projects);
 
-        long count = projectDao.getPostedProjectsCount(uid);
+        long count = projectDao.getJoiningProjectsCount(uid);
         if ((pageNum + 1) * pageSize >= count) {
             pagingProject.setHasMore(false);
         } else {
@@ -270,16 +295,16 @@ public class FunctionController {
     }
 
     @ResponseBody
-    @RequestMapping("get/project/myJoin")
-    public PagingProjects getMyJoiningProjects(@RequestParam Integer uid,
+    @RequestMapping("get/project/myPost")
+    public PagingProjects getMyPostedProjects(@RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
         int offset = pageNum * pageSize;
-        List<Project> projects = projectDao.getJoiningProjects(uid, offset, pageSize);
+        List<Project> projects = projectDao.getPostedProjects(uid, offset, pageSize);
 
         PagingProjects pagingProject = new PagingProjects();
         pagingProject.setProjects(projects);
 
-        long count = projectDao.getJoiningProjectsCount(uid);
+        long count = projectDao.getPostedProjectsCount(uid);
         if ((pageNum + 1) * pageSize >= count) {
             pagingProject.setHasMore(false);
         } else {
@@ -291,5 +316,4 @@ public class FunctionController {
 
         return pagingProject;
     }
-
 }
