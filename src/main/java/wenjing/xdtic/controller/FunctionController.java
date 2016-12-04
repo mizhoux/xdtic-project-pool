@@ -1,4 +1,5 @@
 package wenjing.xdtic.controller;
+
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
@@ -16,9 +17,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wenjing.xdtic.dao.ProjectDao;
 import wenjing.xdtic.dao.SystemassageDao;
 import wenjing.xdtic.dao.UserDao;
+import wenjing.xdtic.model.PagingMessages;
+import wenjing.xdtic.model.PagingProjects;
 import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.RespCode;
-import wenjing.xdtic.model.RespMsgs;
 import wenjing.xdtic.model.Systemassage;
 import wenjing.xdtic.model.User;
 
@@ -37,8 +39,9 @@ public class FunctionController {
 
     @Autowired
     private SystemassageDao systemassageDao;
+
     @Autowired
-    private  ProjectDao projectDao;
+    private ProjectDao projectDao;
 
     /**
      * 根据用户名和密码进行注册（以 Form 提交）
@@ -75,6 +78,8 @@ public class FunctionController {
 
         User user = userDao.getUser(username, password);
         if (user != null) {
+            int msgCount = systemassageDao.countMessages(user.getId());
+            user.setHasMsg(msgCount > 0);
             session.setAttribute("user", user);
             return "page/user/center";
         }
@@ -171,64 +176,120 @@ public class FunctionController {
      * 根据用户的 id 获取系统消息列表
      *
      * @param uid 用户 id
-     * @param pageNum
-     * @param size
+     * @param pageNum 当前页索引
+     * @param size 请求的消息数量
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "/get/msg", method = GET)
-    public RespMsgs getmassage(
+    @RequestMapping(value = "get/msg", method = GET)
+    public PagingMessages getMessages(
             @RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer size) {
 
-        System.out.println("uid: " + uid);    //api中request请求参数中与三个uid，pageNum，size
-        System.out.println("pageNum: " + pageNum);
-        System.out.println("size: " + size);
-
-        int offset = pageNum * size;   
+        int offset = pageNum * size;
         List<Systemassage> systemassages = systemassageDao.getSystemassageid(uid, offset, size);
-        
-        RespMsgs respMsgs = new RespMsgs();
-        respMsgs.setPageNum(pageNum);
-        respMsgs.setSize(size); // 设置返回的 size 为本次返回消息的数量
-        
-        respMsgs.setMsgs(systemassages);
+
+        PagingMessages pagingMsgs = new PagingMessages();
+        pagingMsgs.setPageNum(pageNum);
+        pagingMsgs.setSize(size); // 设置返回的 size 为本次返回消息的数量
+
+        pagingMsgs.setMsgs(systemassages);
         int count = systemassageDao.countMessages(uid);
         if ((pageNum + 1) * size >= count) {
-            respMsgs.setHasMore(false);
+            pagingMsgs.setHasMore(false);
         } else {
-            respMsgs.setHasMore(true);
+            pagingMsgs.setHasMore(true);
         }
 
-        respMsgs.setMsgs(systemassages);
+        pagingMsgs.setMsgs(systemassages);
 
-        return respMsgs;}
-    
+        return pagingMsgs;
+    }
 
-    
     @ResponseBody
-    @RequestMapping(value = "/project/post ",method =POST)
-    public  Project postproject(@RequestParam Integer userid,
-            @RequestParam String tag,@RequestParam String title,
-             @RequestParam String pdesc,@RequestParam String prowant,
-             @RequestParam String  concat)
-    {
-        
-        
-        Project project=new Project();
-        //调用dao中addproject()方法向数据库中插入数据
-        boolean  addProject = projectDao.addProject(userid, tag, title, pdesc, prowant, concat);
-        //将数据返回页面
-        if(addProject){
-        project.setUserid(userid);
-        project.setTag(tag);
-        project.setProname(title);
-        project.setPromassage(pdesc);
-        project.setPhone(concat);
-        project.setProwant(prowant);     
-        return project;
+    @RequestMapping(value = "project/post", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    public RespCode postProject(
+            @RequestParam(name = "uid") Integer userid,
+            @RequestParam(name = "title") String proname,
+            @RequestParam(name = "concat") String phone,
+            @RequestParam String tag, @RequestParam String promassage, @RequestParam String prowant) {
+        if (userid == null) {
+            return RespCode.ERROR;
         }
-        else{return null;}
+
+        //调用dao中addproject()方法向数据库中插入数据
+        boolean addProjectSucc
+                = projectDao.addProject(userid, tag, proname, promassage, prowant, phone);
+        return addProjectSucc ? RespCode.OK : RespCode.ERROR;
+    }
+
+    @ResponseBody
+    @RequestMapping("get/project/myPost")
+    public PagingProjects getMyPostedProjects(@RequestParam Integer uid,
+            @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+        int offset = pageNum * pageSize;
+        List<Project> projects = projectDao.getPostedProjects(uid, offset, pageSize);
+
+        PagingProjects pagingProject = new PagingProjects();
+        pagingProject.setProjects(projects);
+
+        long count = projectDao.getPostedProjectsCount(uid);
+        if ((pageNum + 1) * pageSize >= count) {
+            pagingProject.setHasMore(false);
+        } else {
+            pagingProject.setHasMore(true);
+        }
+
+        pagingProject.setPageNum(pageNum);
+        pagingProject.setSize(projects.size());
+
+        return pagingProject;
+    }
+
+    @ResponseBody
+    @RequestMapping("get/project/myCollect")
+    public PagingProjects getMyCollectedProjects(@RequestParam Integer uid,
+            @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+        int offset = pageNum * pageSize;
+        List<Project> projects = projectDao.getCollectedProjects(uid, offset, pageSize);
+
+        PagingProjects pagingProject = new PagingProjects();
+        pagingProject.setProjects(projects);
+
+        long count = projectDao.getCollectedProjectsCount(uid);
+        if ((pageNum + 1) * pageSize >= count) {
+            pagingProject.setHasMore(false);
+        } else {
+            pagingProject.setHasMore(true);
+        }
+
+        pagingProject.setPageNum(pageNum);
+        pagingProject.setSize(projects.size());
+
+        return pagingProject;
+    }
+
+    @ResponseBody
+    @RequestMapping("get/project/myJoin")
+    public PagingProjects getMyJoiningProjects(@RequestParam Integer uid,
+            @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+        int offset = pageNum * pageSize;
+        List<Project> projects = projectDao.getJoiningProjects(uid, offset, pageSize);
+
+        PagingProjects pagingProject = new PagingProjects();
+        pagingProject.setProjects(projects);
+
+        long count = projectDao.getJoiningProjectsCount(uid);
+        if ((pageNum + 1) * pageSize >= count) {
+            pagingProject.setHasMore(false);
+        } else {
+            pagingProject.setHasMore(true);
+        }
+
+        pagingProject.setPageNum(pageNum);
+        pagingProject.setSize(projects.size());
+
+        return pagingProject;
     }
 
 }

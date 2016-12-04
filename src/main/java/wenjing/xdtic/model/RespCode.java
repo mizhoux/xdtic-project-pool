@@ -6,8 +6,14 @@ package wenjing.xdtic.model;
  */
 public class RespCode {
 
+    /**
+     * {"code" : "ok"}
+     */
     public static RespCode OK = new RespCode("ok");
-    
+
+    /**
+     * {"code" : "error"}
+     */
     public static RespCode ERROR = new RespCode("error");
 
     private final String code;

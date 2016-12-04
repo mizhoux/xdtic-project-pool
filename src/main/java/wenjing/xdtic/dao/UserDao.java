@@ -27,9 +27,16 @@ public class UserDao {
      * @return 查询的用户
      */
     public User getUser(Integer id) {
-        String SQL = "SELECT * FROM user WHERE id = " + id;
-        User user = jdbcTemplate.query(SQL, this::parseUser);
+        String SQL = "SELECT * FROM user WHERE id = ?";
+        User user = jdbcTemplate.query(SQL, this::parseUser, id);
         return user;
+    }
+
+    public String getUsername(Integer id) {
+        String username = jdbcTemplate.query(
+                "SELECT username FROM user WHERE id = ?",
+                rs -> rs.next() ? rs.getString(1) : null, id);
+        return username;
     }
 
     /**
@@ -142,11 +149,11 @@ public class UserDao {
     }
 
     public User getUserByMap(Integer id) {
-        String SQL = "SELECT * FROM user WHERE id = " + id;
+        String SQL = "SELECT * FROM user WHERE id = ?";
 
         try {
             //Map数据集，此时 键为String类型，值为 Object 类型
-            Map<String, Object> map = jdbcTemplate.queryForMap(SQL);
+            Map<String, Object> map = jdbcTemplate.queryForMap(SQL, id);
             User user = new User();
             user.setId((Integer) map.get("id"));//将得到的数据赋值，并返回
             user.setUsername((String) map.get("username"));

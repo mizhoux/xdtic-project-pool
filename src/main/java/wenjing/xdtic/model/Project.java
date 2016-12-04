@@ -1,33 +1,46 @@
 package wenjing.xdtic.model;
 
+import java.util.List;
+
 /**
  *
- * @author admin
+ * @author wenjing
  */
 public class Project {
-   
-    private Integer  userid;
-    private  Integer proid;
-    private  String  proname;
-    private  String  promassage;
-    private  String  prowant;
-    private  String  phone;
-    private  String  tag;
-    private  String  date;
 
-    public Project(Integer userid, Integer proid, String proname, String promassage, String prowant,String phone, String tag, String date) {
-        this.userid = userid;
-        this.proid = proid;
-        this.proname = proname;
-        this.promassage = promassage;
-        this.prowant = prowant;
-        this.phone=phone;
-        this.tag = tag;
-        this.date = date;
+    private Integer userid;
+    private Integer proId;
+    private String proname;
+    private String promassage;
+    private String prowant;
+    private String tag;
+    private String date;
+    private String phone;
+    private String statu;
+
+    private boolean isCollected;
+    
+    private List<String> tags;
+    private String username;
+    private String desc;
+    
+    public Project() {
     }
 
-    public Project() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public String getStatu() {
+        return statu;
+    }
+
+    public void setStatu(String statu) {
+        this.statu = statu;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
     }
 
     public Integer getUserid() {
@@ -38,12 +51,12 @@ public class Project {
         this.userid = userid;
     }
 
-    public Integer getProid() {
-        return proid;
+    public Integer getProId() {
+        return proId;
     }
 
-    public void setProid(Integer proid) {
-        this.proid = proid;
+    public void setProId(Integer proId) {
+        this.proId = proId;
     }
 
     public String getProname() {
@@ -70,14 +83,6 @@ public class Project {
         this.prowant = prowant;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getTag() {
         return tag;
     }
@@ -93,7 +98,37 @@ public class Project {
     public void setDate(String date) {
         this.date = date;
     }
-    
-    
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public boolean isIsCollected() {
+        return isCollected;
+    }
+
+    public void setIsCollected(boolean isCollected) {
+        this.isCollected = isCollected;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
 
 }
