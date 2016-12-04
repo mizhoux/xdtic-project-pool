@@ -1,5 +1,4 @@
 package wenjing.xdtic.controller;
-
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
@@ -14,8 +13,10 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import wenjing.xdtic.dao.ProjectDao;
 import wenjing.xdtic.dao.SystemassageDao;
 import wenjing.xdtic.dao.UserDao;
+import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.RespCode;
 import wenjing.xdtic.model.RespMsgs;
 import wenjing.xdtic.model.Systemassage;
@@ -36,6 +37,8 @@ public class FunctionController {
 
     @Autowired
     private SystemassageDao systemassageDao;
+    @Autowired
+    private  ProjectDao projectDao;
 
     /**
      * 根据用户名和密码进行注册（以 Form 提交）
@@ -178,13 +181,18 @@ public class FunctionController {
             @RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer size) {
 
-        int offset = pageNum * size;
-        List<Systemassage> msgs = systemassageDao.getSystemassageByUserId(uid, offset, size);
+        System.out.println("uid: " + uid);    //api中request请求参数中与三个uid，pageNum，size
+        System.out.println("pageNum: " + pageNum);
+        System.out.println("size: " + size);
 
+        int offset = pageNum * size;   
+        List<Systemassage> systemassages = systemassageDao.getSystemassageid(uid, offset, size);
+        
         RespMsgs respMsgs = new RespMsgs();
         respMsgs.setPageNum(pageNum);
-        respMsgs.setSize(msgs.size()); // 设置返回的 size 为本次返回消息的数量
-
+        respMsgs.setSize(size); // 设置返回的 size 为本次返回消息的数量
+        
+        respMsgs.setMsgs(systemassages);
         int count = systemassageDao.countMessages(uid);
         if ((pageNum + 1) * size >= count) {
             respMsgs.setHasMore(false);
@@ -192,9 +200,35 @@ public class FunctionController {
             respMsgs.setHasMore(true);
         }
 
-        respMsgs.setMsgs(msgs);
+        respMsgs.setMsgs(systemassages);
 
-        return respMsgs;
+        return respMsgs;}
+    
+
+    
+    @ResponseBody
+    @RequestMapping(value = "/project/post ",method =POST)
+    public  Project postproject(@RequestParam Integer userid,
+            @RequestParam String tag,@RequestParam String title,
+             @RequestParam String pdesc,@RequestParam String prowant,
+             @RequestParam String  concat)
+    {
+        
+        
+        Project project=new Project();
+        //调用dao中addproject()方法向数据库中插入数据
+        boolean  addProject = projectDao.addProject(userid, tag, title, pdesc, prowant, concat);
+        //将数据返回页面
+        if(addProject){
+        project.setUserid(userid);
+        project.setTag(tag);
+        project.setProname(title);
+        project.setPromassage(pdesc);
+        project.setPhone(concat);
+        project.setProwant(prowant);     
+        return project;
+        }
+        else{return null;}
     }
 
 }

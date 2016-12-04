@@ -20,10 +20,15 @@
 				<main>
 					<div class="tic-four-grid">
 						<c:set var="notice" value="" />
-						<c:if test="${user.hasMsg}">
+                                                <c:if test="${user.hasMsg}">
 							<c:set var="notice" value="notice" />
+<<<<<<< HEAD
+						</c:if> 
+						<a href="/xdtic/user/msgs?userid=<c:out value="${user.id}" />" v-tap class="grid <c:out value="${notice}" />">
+=======
 						</c:if>
 						<a href="<c:url value='/user/msgs' />?userid=<c:out value="${user.id}" />" v-tap class="grid <c:out value="${notice}" />">
+>>>>>>> 26e626a4df22b14ca886232c486bc946ba02fd88
 							<img src="/xdtic/static/images/sys-msg.png" alt="系统消息">
 							<p>系统消息</p>
 						</a>

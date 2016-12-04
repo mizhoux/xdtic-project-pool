@@ -18,6 +18,7 @@ public class User {
     private String phone;
     private String profile;
     private String pexperice;
+    private boolean hasMsg;
 
     public User() {
     }
@@ -117,10 +118,18 @@ public class User {
     public void setPexperice(String pexperice) {
         this.pexperice = pexperice;
     }
+   public boolean isHasMsg() {
+        return hasMsg;
+    }
 
+    public void setHasMsg(boolean hasMsg) {
+        this.hasMsg = hasMsg;
+    }
     @Override
     public String toString() {
         return "User{" + "id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", name=" + name + ", nickname=" + nickname + ", sex=" + sex + ", profe=" + profe + ", stunum=" + stunum + ", phone=" + phone + ", profile=" + profile + ", pexperice=" + pexperice + '}';
     }
+
+ 
 
 }
