@@ -36,15 +36,13 @@ public class SystemassageDao {
         return count.intValue();
     }
 
-    public List<Systemassage> getSystemassageByUserId(Integer uid, Integer offset, Integer size) {
+    public List<Systemassage> getSystemassageid(Integer uid, Integer offset, Integer size) {
         String SQL = "SELECT * FROM  systemassage WHERE uid = ? LIMIT ?, ?";
         //limit 后加限制条件
 
         List<Systemassage> messages = new ArrayList<>();
         try {
             List<Map<String, Object>> maps = jdbcTemplate.queryForList(SQL, uid, offset, size);
-
-<<<<<<< HEAD
             for (Map<String, Object> map : maps) {
                 //Map数据集返回对象名为string类型的值
                 Systemassage systemassage = new Systemassage();
@@ -58,19 +56,20 @@ public class SystemassageDao {
                 String dateStr = dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));//设施时间格式
                 systemassage.setDate(dateStr); //加入map
                 messages.add(systemassage);
-=======
-            for (Map<String, Object> map : maps) { // 返回的 Map 数据集，键为 String 类型
-                messages.add(parseMessage(map));
->>>>>>> d9191a7c32cf56f695a5da1591bb544564ae2e35
-            }
-        } catch (EmptyResultDataAccessException ex) {// 捕获异常 
+          
+               }
+
+            
+        } 
+            catch (EmptyResultDataAccessException ex) {// 捕获异常 
             //  Spring 查询不到数据时抛出异常，此时返回 空
+                   // return  null;
         }
 
         return messages;
     }
 
-    private Systemassage parseMessage(Map<String, Object> map) {
+   /* private Systemassage parseMessage(Map<String, Object> map) {
         Systemassage systemassage = new Systemassage();
 
         systemassage.setUid((Integer) map.get("uid"));//将得到的数据赋值，并返回
@@ -85,4 +84,8 @@ public class SystemassageDao {
 
         return systemassage;
     }
+*/
+   // public List<Systemassage> getSystemassageid(Integer uid, int offset, Integer size) {
+    //    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    //}
 }

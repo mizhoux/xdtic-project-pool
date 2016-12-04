@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=utf-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/fis" prefix="fis"%>
-
+<%@page import="wenjing.xdtic.model.User"%>
 <%
     User user = (User)session.getAttribute("user");
     if (user != null) {
