@@ -35,6 +35,20 @@
                 "isPage": true
             }
         },
+        "page/myProject/myPost/signDetail.jsp": {
+            "uri": "/page/myProject/myPost/signDetail.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/myProject/myPost/signInfo.jsp": {
+            "uri": "/page/myProject/myPost/signInfo.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
         "page/myProject/myProject.jsp": {
             "uri": "/page/myProject/myProject.jsp",
             "type": "jsp",
@@ -120,6 +134,13 @@
         "page/widget/header/projectDetailHeader.scss": {
             "uri": "/xdtic/static/page/widget/header/projectDetailHeader.css",
             "type": "css"
+        },
+        "page/widget/header/signInfoHeader.jsp": {
+            "uri": "/page/widget/header/signInfoHeader.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
         },
         "page/widget/main/projectDetail.jsp": {
             "uri": "/page/widget/main/projectDetail.jsp",
@@ -280,6 +301,14 @@
         },
         "static/scss/register.scss": {
             "uri": "/xdtic/static/scss/register.css",
+            "type": "css"
+        },
+        "static/scss/signDetail.scss": {
+            "uri": "/xdtic/static/scss/signDetail.css",
+            "type": "css"
+        },
+        "static/scss/signInfo.scss": {
+            "uri": "/xdtic/static/scss/signInfo.css",
             "type": "css"
         },
         "static/scss/weui.css": {

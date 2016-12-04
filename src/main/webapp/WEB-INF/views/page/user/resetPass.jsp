@@ -6,7 +6,9 @@
 	<fis:block name="body">
 		<header>
 			<div class="tic-header-three">
-				<span v-tap="{methods:navBack}">&lt;</span>
+				<a href="javascript:window.history.go(-1);" v-tap class="tic-header-three-aside">
+        			<img src="/xdtic/static/images/arrow_prev.png" alt="后退">
+    			</a>
 				<h2>修改密码</h2>
 				<span></span>
 			</div>

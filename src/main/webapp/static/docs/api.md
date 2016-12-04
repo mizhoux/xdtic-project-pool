@@ -156,6 +156,45 @@
    }
    ```
 
+#### 报名信息汇总页面
+- url: /xdtic/myProject/myPost/signInfo?proId=p001
+- jsp: /page/myProject/myPost/signInfo
+
+- jsp页面所需变量
+   ```
+   {
+        "signInfos": [{
+    		"sid": "s001",
+    		"username": "小草",
+    		"career": "UI设计师",
+    		"date": "2015.12.31",
+    		"time": "19:00"
+    	}, {
+    		"sid": "s002",
+    		"username": "脸狐",
+    		"career": "前端工程师",
+    		"date": "2015.12.31",
+    		"time": "21:00"
+    	}],
+    
+    	"project": {
+    		"proname": "时间典当铺",
+    		"proId": "p001"
+    	}
+   }
+   ```
+
+#### 报名信息详情页面
+- url: /xdtic/signInfo?sid=s001
+- jsp: /page/myProject/myPost/signDetail
+
+- jsp页面所需变量
+```
+{
+    
+}
+```
+
 #### 我的收藏页面
 - url: /xdtic/myProject?type=collect
 - jsp: /page/myProject/myProject.jsp

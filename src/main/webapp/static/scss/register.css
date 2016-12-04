@@ -104,3 +104,10 @@ main {
   text-align: left;
   margin-bottom: .6rem;
 }
+
+.tic-form-para {
+  color: #f05979;
+  text-decoration: underline;
+  display: block;
+  padding: 1rem 0;
+}
