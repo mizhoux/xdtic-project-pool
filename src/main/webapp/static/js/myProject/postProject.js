@@ -99,7 +99,9 @@ var appPostProject = new Vue({
 			}).then(function (data) {
 				if (data.code === 'ok') {
 					self.postIsSucc = true;
-					window.location.href = '/xdtic/myProject?type=post';
+					setTimeout(function () {
+						window.location.href = urlPrefix + '/myProject?type=post';
+					}, 500);
 				} else {
 					self.postIsFail = true;
 				}

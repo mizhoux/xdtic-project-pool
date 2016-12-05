@@ -18,7 +18,9 @@ var appProfile = new Vue({
 	data: {
 		isEditing: false,
 		user: userInfo,
-		editFail: false
+
+		editFail: false,
+		editIsSucc: false
 	},
 	computed: {
 		userSex: function userSex() {
@@ -42,7 +44,12 @@ var appProfile = new Vue({
 			}).then(function (data) {
 				if (data.code === 'ok') {
 					var _self = this;
-					appProfile.isEditing = false;
+					appProfile.editIsSucc = true;
+
+					setTimeout(function () {
+						appProfile.isEditing = false;
+						appProfile.editIsSucc = false;
+					}, 500);
 				} else {
 					appProfile.editFail = true;
 				}

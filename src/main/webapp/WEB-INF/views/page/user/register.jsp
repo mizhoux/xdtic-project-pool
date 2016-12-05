@@ -30,9 +30,9 @@
 						 v-model="passConfirm"/>
 				</div>
 				<div class="tic-field">
-					<a class="weui-btn weui-btn_primary" id="btnRegister" v-tap.prevent="{ methods: validRegister }">注册</a>
+					<button class="weui-btn weui-btn_primary" id="btnRegister" v-tap.prevent="{ methods: validRegister }">注册</button>
 				</div>
-				<a href="<c:url value='/user/login' />" class="tic-form-para">
+				<a href="<c:url value='/user/register' />" class="tic-form-para">
 					已经有账号？快快登录
 				</a>
 			</form>

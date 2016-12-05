@@ -33,13 +33,18 @@
 		</header>
 
 		<main id="appBody">
+			<c:set var="userId" value="" />
+			<c:if test="${user != null && user.id != ''}">
+				<c:set var="userId" value="${user.id}" />
+			</c:if>
+
 			<div class="tic-project-box" id="projectBox" v-infinite-scroll="loadProject" infinite-scroll-disabled="busy" infinite-scroll-distance="10" infinite-scroll-immediate-check="checkImmediately">
 				<div id="hotProjectBox">
 					<tic-project
 					 v-for="(hotProject, index) in hotProjects"
 					 v-bind:project="hotProject"
 					 v-bind:index="index"
-					 userid="<c:out value='${user.id}' />"
+					 userid="<c:out value='${userId}' />"
 					 @collect="collectHot"
 					 @uncollect="uncollectHot"
 					 @collectFail="openDialog">
@@ -50,7 +55,7 @@
 					 v-for="(project, index) in projects"
 					 :project="project"
 					 :index="index"
-					 userid="<c:out value='${user.id}' />"
+					 userid="<c:out value='${userId}' />"
 					 @collect="collect"
 					 @uncollect="uncollect"
 					 @collectFail="openDialog">

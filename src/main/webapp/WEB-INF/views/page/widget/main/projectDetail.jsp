@@ -10,15 +10,17 @@
             <img src="/xdtic/static/images/avatar.png" alt="adoug">     
         </div>
         <div class="tic-article-header-center">
-            <p class="tic-title-strong"><c:out value='${user.username}' /></p>
+            <p class="tic-title-strong"><c:out value='${projectCreator.username}' /></p>
             <p class="tic-title-secondary"><c:out value='${project.date}' /></p>
         </div>
 
-        <c:set var="projectStatu" value="审核中" />
-        <c:if test="${project.statu} == 'pass'">
-            <c:set var="projectStatu" value="审核通过" />
+        <c:if test="${project.statu}">
+            <c:set var="projectStatu" value="审核中" />
+            <c:if test="${project.statu} == 'pass'">
+                <c:set var="projectStatu" value="审核通过" />
+            </c:if>
+            <p class="tic-article-header-right tic-title-em">状态：<c:out value="${projectStatu}" /></p>
         </c:if>
-        <p class="tic-article-header-right tic-title-em">状态：<c:out value="${projectStatu}" /></p>
     </div>
     <section class="tic-article-section">
         <p>

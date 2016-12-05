@@ -53,7 +53,7 @@
 						</div>
 						<input type="hidden" name="uid" value="<c:out value='${user.id}' />">
 						<input type="hidden" name="proId" value="<c:out value='${project.proId}' />">
-						<a class="weui-btn weui-btn_primary" id="btnConfirm" v-tap.prevent="{methods: editDetail}">保存</a>
+						<button class="weui-btn weui-btn_primary" id="btnConfirm" v-tap.prevent="{methods: editDetail}">保存</button>
 					</form>
 				</div>
 			</main>

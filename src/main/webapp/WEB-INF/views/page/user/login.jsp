@@ -24,7 +24,7 @@
 						 v-model="password"/>
 				</div>
 				<div class="tic-field">
-					<a class="weui-btn weui-btn_primary" id="btnLogin" v-tap.prevent="{ methods: validUser }">登录</a>
+					<button class="weui-btn weui-btn_primary" id="btnLogin" v-tap.prevent="{ methods: validUser }">登录</button>
 				</div>
 				<a href="<c:url value='/user/register' />" class="tic-form-para">
 					还没有账号？注册一个呗

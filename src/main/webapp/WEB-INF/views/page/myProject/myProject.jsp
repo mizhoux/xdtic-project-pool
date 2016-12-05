@@ -87,7 +87,7 @@
 		<script type="text/x-template" id="tic-project">
 			<div class="weui-panel weui-panel_access">
 				<div class="weui-panel__bd">
-				    <a :href="projectDetailLink +'?proId=' + project.proId" class="weui-media-box weui-media-box_appmsg">
+				    <a :href="projectDetailLink +'?proId=' + project.proId + '&uid=' + userid" class="weui-media-box weui-media-box_appmsg">
 			         <div class="weui-media-box__hd">
 			             <img class="weui-media-box__thumb" src="<c:url value='/static/images/avatar.png' />" alt="">
 				        </div>

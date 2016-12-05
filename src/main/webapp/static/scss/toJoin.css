@@ -85,6 +85,10 @@
   box-sizing: border-box;
 }
 
+.tic-table .tic-tr-two .tic-td-content > input.tic-error-input {
+  border-color: #f05979;
+}
+
 .tic-table-head {
   padding: .8rem .5rem;
 }
@@ -96,4 +100,27 @@
 .tic-table-head > p {
   font-size: .8rem;
   padding: .8rem 0;
+}
+
+.tic-form-error {
+  padding: 1rem;
+  color: #f05979;
+}
+
+/*reset*/
+.tic-cells-nomargin {
+  margin-top: 0;
+}
+
+.weui-btn_primary {
+  background-color: #2b9ddc;
+}
+
+.weui-btn_primary:not(.weui-btn_disabled):active {
+  color: rgba(255, 255, 255, 0.6);
+  background-color: #237cad;
+}
+
+.tic-header-three > .tic-header-three-aside:nth-child(3) {
+  visibility: hidden;
 }

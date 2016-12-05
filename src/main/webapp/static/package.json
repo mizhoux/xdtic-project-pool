@@ -28,6 +28,7 @@
     "fis3-packager-deps-pack": "~0.0.1",
     "fis3-preprocessor-autoprefixer": "0.1.1",
     "process": "^0.11.9",
+    "vue-form": "^0.3.1",
     "vue-infinite-scroll": "^2.0.0",
     "whatwg-fetch": "^2.0.1"
   }

@@ -21,6 +21,20 @@
                 "isPage": true
             }
         },
+        "page/myProject/myCollect/detail.jsp": {
+            "uri": "/page/myProject/myCollect/detail.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/myProject/myCollect/toJoin.jsp": {
+            "uri": "/page/myProject/myCollect/toJoin.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
         "page/myProject/myPost/detail.jsp": {
             "uri": "/page/myProject/myPost/detail.jsp",
             "type": "jsp",
@@ -176,6 +190,15 @@
                 "moduleId": "static/js/module/tools"
             }
         },
+        "static/js/myProject/myCollect/toJoin.js": {
+            "uri": "/xdtic/static/js/myProject/myCollect/toJoin.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "static/js/module/tools.js"
+            ]
+        },
         "static/js/myProject/myPost/editDetail.js": {
             "uri": "/xdtic/static/js/myProject/myPost/editDetail.js",
             "type": "js",
@@ -309,6 +332,10 @@
         },
         "static/scss/signInfo.scss": {
             "uri": "/xdtic/static/scss/signInfo.css",
+            "type": "css"
+        },
+        "static/scss/toJoin.scss": {
+            "uri": "/xdtic/static/scss/toJoin.css",
             "type": "css"
         },
         "static/scss/weui.css": {

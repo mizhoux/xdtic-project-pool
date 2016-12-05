@@ -87,7 +87,7 @@
     }
    ```
 
-#### 我的发布-收藏详情页
+#### 我的发布-项目详情页
 - url: /xdtic/myProject/myPost/detail?proId=p001
 - jsp: /page/myProject/myPost/detail
 
@@ -106,10 +106,14 @@
             "concat": "邮箱：yuqingyaa@163.com 如有疑问，敬请用以上方式咨询~",
             "date": "2016.01.28"
     	},
-    
-    	"user": {
+    	
+    	"projectCreator": {
     		"id": "u001",
     		"username": "adoug"
+    	},
+    
+    	"user": {
+    		"id": "u002"
     	}
     }
    ```
@@ -191,7 +195,31 @@
 - jsp页面所需变量
 ```
 {
-    
+    "user": {
+		"id": "u001",
+		"username": "adoug",
+		"email": "942434869@qq.com",
+		"name": "张骥",
+		"sex": "boy",
+		"profe": "软件工程",
+		"phone": "15029679086",
+		"stunum": "1603121451",
+		"profile": "ps,c++,ui设计",
+		"pexperice": "人脸识别系统"
+	},
+
+    "signInfo": {
+        "sid": "s001",
+        "username": "小草",
+        "career": "UI设计师",
+        "date": "2015.12.31",
+        "time": "19:00"
+    },
+
+    "project": {
+        "proname": "时间典当铺",
+        "proId": "p001"
+    }
 }
 ```
 
@@ -243,6 +271,97 @@
         		"tags": ["Web", "情感"],
         		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
         	}]
+    }
+   ```
+
+#### 项目详情页-我的收藏 & 项目详情页-我的参与 & 项目大厅点击进入的项目详情页
+
+- url
+
+   - /xdtic/myProject/myCollect/detail?uid=u001&proId=p001
+   - /xdtic/myPorject/myJoin/detail?uid=u001&proId=p001
+   - /xdtic/project?proId=p001&uid=u001
+
+- jsp：/page/myProject/myCollect/detail.jsp
+- jsp页面所需变量：
+   ```
+   {
+    	"project": {
+    		"userIsJoined": false,
+    		"proname": "时间典当铺",
+    		"tag": ["Web", "情感"],
+    		"isCollected": true,
+    		"proId": "p001",
+    		"concat":         
+            "邮箱：yuqingyaa@163.com 如有疑问，敬请用以上方式咨询~",
+    		"prowant": "产品经理：2名 UI设计：1名 前端：1名",
+    		"promassage": 
+    		"这里就是项目的详情了，文字就不限	量了，感觉应该加上可以添加图片的功能，这里的文字颜色是#222222，字号15。",
+            "date": "2016.01.28"
+    	},
+    
+    	"projectCreator": {
+    		"id": "u001",
+    		"username": "adoug"
+    	},
+    
+    	"user": {
+    		"id": "u002"
+    	}
+    }
+   ```
+
+#### 我要报名页面
+- url：/xdtic/project/toJoin?proId=p001&uid=u001
+- jsp：/page/myProject/myCollect/toJoin.jsp
+
+- jsp页面所需变量
+   ```
+   {
+    	"project": {
+    		"proname": "时间典当铺",
+    		"tag": ["Web", "情感"],
+    		"isCollected": true,
+    		"proId": "p001",
+            "date": "2016.01.28"
+    	},
+    
+        "user": {
+        	"id": "u001",
+        	"username": "adoug",
+        	"email": "942434869@qq.com",
+        	"name": "张骥",
+    		"sex": "boy",
+    		"profe": "软件工程",
+    		"phone": "15029679086",
+    		"stunum": "1603121451",
+    		"profile": "ps,c++,ui设计",
+    		"pexperice": "人脸识别系统"
+        }
+    }
+   ```
+
+- api: /xdtic/fn/project/toJoin
+
+   - request `[POST]` `[Form]`
+   ```
+   {
+        name:张骥
+        sex:boy
+        apply:UI设计师
+        profe:软件工程
+        phone:15029679086
+        stunum:1603121451
+        profile:ps,c++,ui设计
+        pexperice:人脸识别系统
+        proId:p001
+        uid:u001
+   }
+   ```
+   - response `[JSON]`
+   ```
+    {
+        code: 'ok'/'error'
     }
    ```
 
@@ -313,8 +432,8 @@
    ```
    {
         userid: 'u001',
-        pageNum: 1,
-        pageSize: 8,
+        pageNum: 0,
+        pageSize: 5,
         keyWords: 'web 情感'
    }
    ```
@@ -364,31 +483,7 @@
 		"date": "2016.02.05",
 		"tags": ["Web", "情感"],
 		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
-	}, {
-		"proId": "p006",
-		"proname": "时间典当铺APP",
-		"isCollected": false,
-		"username": "adoug",
-		"date": "2016.02.05",
-		"tags": ["Web", "情感"],
-		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
-	}, {
-		"proId": "p007",
-		"proname": "时间典当铺APP",
-		"isCollected": false,
-		"username": "adoug",
-		"date": "2016.02.05",
-		"tags": ["Web", "情感"],
-		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
-	}, {
-		"proId": "p008",
-		"proname": "时间典当铺APP",
-		"isCollected": false,
-		"username": "adoug",
-		"date": "2016.02.05",
-		"tags": ["Web", "情感"],
-		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
-	}]
+	}}]
     }
    ```
    

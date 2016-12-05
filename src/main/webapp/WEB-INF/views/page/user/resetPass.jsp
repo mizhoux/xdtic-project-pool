@@ -41,7 +41,7 @@
 						 v-model="passNewConfirm"/>
 				</div>
 				<div class="tic-field">
-					<a class="weui-btn weui-btn_primary" id="btnRestPass" v-tap.prevent="{ methods: validForm }">确认修改</a>
+					<button class="weui-btn weui-btn_primary" id="btnRestPass" v-tap.prevent="{ methods: validForm }">确认修改</button>
 				</div>
 			</form>
 		</main>

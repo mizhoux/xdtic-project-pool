@@ -54,7 +54,7 @@ define('static/js/module/tools', function(require, exports, module) {
               default:
                   if (field.name.length) {
                       opValue = field.value;
-                      parts.push(encodeURIComponent(field.name) + '=' + encodeURIComponent(opValue));
+                      parts.push(encodeURIComponent(field.name) + '=' + encodeURIComponent(opValue.trim()));
                   }
                   break;
           }
