@@ -21,7 +21,7 @@
    {
         tag: "安卓&硬件"
         title: "我的天"
-        pdesc: 记录生活中的新鲜事
+        promassage: 记录生活中的新鲜事
         prowant: "前端 2名"
         concat: "电话：15029679086",
         uid: "u001"

@@ -2,6 +2,7 @@ package wenjing.xdtic.test;
 
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -11,6 +12,30 @@ import wenjing.xdtic.model.User;
 public class RestClient {
 
     public static void main(String[] args) throws Exception {
+        String url = "http://localhost:9090/xdtic/fn/project/post";
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("uid", "3");
+        params.add("tag", "Web");
+        params.add("title", "xdtic项目池");
+        params.add("promassage", "发布自己的项目；\n参与他人的项目。");
+        params.add("prowant", "Web 前端一名");
+        params.add("concat", "18079430525");
+
+        testPost(url, params);
+    }
+
+    public static void testPost(String url, MultiValueMap<String, String> params) {
+        RestTemplate template = new RestTemplate();
+        ResponseEntity<String> respEntity = template.postForEntity(url, params, String.class);
+        printEntity(respEntity);
+    }
+
+    public static <T> void printEntity(ResponseEntity<T> entity) {
+        T body = entity.getBody();
+        HttpStatus status = entity.getStatusCode();
+        int statusValue = entity.getStatusCodeValue();
+        System.out.format("status: %d %s\nbody: %s\n", statusValue, status, body.toString());
     }
 
     public static void testLogin(String username, String password) {

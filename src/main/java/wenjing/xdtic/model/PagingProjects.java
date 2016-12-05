@@ -4,23 +4,17 @@ import java.util.List;
 
 /**
  *
- * @author admin
+ * @author Michael Chow <mizhoux@gmail.com>
+ * @param <T>
  */
-public class RespMsgs {
+public class PagingProjects {
 
     private Integer pageNum;
     private Integer size;
     private boolean hasMore;
-    List<Systemassage> msgs;
+    List<Project> projects;
 
-    public RespMsgs() {
-    }
-
-    public RespMsgs(Integer pageNum, Integer size, boolean hasMore, List<Systemassage> msgs) {
-        this.pageNum = pageNum;
-        this.size = size;
-        this.hasMore = hasMore;
-        this.msgs = msgs;
+    public PagingProjects() {
     }
 
     public Integer getPageNum() {
@@ -47,12 +41,12 @@ public class RespMsgs {
         this.hasMore = hasMore;
     }
 
-    public List<Systemassage> getMsgs() {
-        return msgs;
+    public List<Project> getProjects() {
+        return projects;
     }
 
-    public void setMsgs(List<Systemassage> msgs) {
-        this.msgs = msgs;
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
     }
 
 }

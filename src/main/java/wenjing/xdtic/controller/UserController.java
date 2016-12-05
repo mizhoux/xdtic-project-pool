@@ -24,8 +24,7 @@ public class UserController {
 
     @RequestMapping("profile")
     public String getUserProfilePage(
-            @RequestParam("userid") Integer id,
-            HttpSession session) {
+            @RequestParam("userid") Integer id, HttpSession session) {
         User user = userDao.getUser(id);
         session.setAttribute("user", user);
 
@@ -33,7 +32,7 @@ public class UserController {
     }
 
     @RequestMapping("{pageName}")
-    public String index(@PathVariable String pageName) {
+    public String route(@PathVariable String pageName) {
         return "page/user/" + pageName;
     }
 
