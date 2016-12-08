@@ -111,11 +111,11 @@ Vue.component('tic-project', {
 			}
 
 			if (this.projecttype === 'collect') {
-				return urlPrefix + '/myProject/myCollect/detail';
+				return urlPrefix + '/project';
 			}
 
 			if (this.projecttype === 'join') {
-				return urlPrefix + '/myProject/myJoin/detail';
+				return urlPrefix + '/project';
 			}
 		}
 	}

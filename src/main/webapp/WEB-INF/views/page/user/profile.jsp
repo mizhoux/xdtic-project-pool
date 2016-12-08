@@ -110,7 +110,7 @@
 					</form>
 				</div>
 			</main>
-			<div v-show="editFail">
+			<div v-show="editFail" v-cloak>
 			    <div class="weui-mask"></div>
 			    <div class="weui-dialog">
 			        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>

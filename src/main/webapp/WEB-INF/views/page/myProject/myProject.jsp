@@ -44,7 +44,7 @@
 					</tic-project>
 				</div>
 			</div>
-			<div v-show="collectIsFail">
+			<div v-show="collectIsFail" class="tic-dialog" v-cloak>
 			    <div class="weui-mask"></div>
 			    <div class="weui-dialog">
 			        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>

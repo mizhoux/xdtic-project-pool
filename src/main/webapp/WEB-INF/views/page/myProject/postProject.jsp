@@ -50,7 +50,7 @@
 					</form>
 				</div>
 			</main>
-			<div v-show="postIsFail">
+			<div v-show="postIsFail" v-cloak>
 			    <div class="weui-mask"></div>
 			    <div class="weui-dialog">
 			        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>
@@ -96,7 +96,7 @@
 					<span class="tic-tag tic-tag-selected"
 					 v-for="tag in selected">{{tag}}</span>
 				</div>
-				<div id="addTag" v-show="isShowTagAdd">
+				<div id="addTag" v-show="isShowTagAdd" v-cloak>
 				    <div class="weui-mask"></div>
 				    <div class="weui-dialog">
 				        <div class="weui-dialog__hd"><strong class="weui-dialog__title">添加标签</strong></div>

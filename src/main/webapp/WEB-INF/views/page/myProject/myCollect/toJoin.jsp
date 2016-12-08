@@ -101,7 +101,7 @@
 						<button class="weui-btn weui-btn_primary" id="btnConfirm" v-tap.prevent="{methods: joinProject}">确认加入</button>
 					</form>
 				</div>
-				<div v-show="editFail">
+				<div v-show="editFail" v-cloak>
 				    <div class="weui-mask"></div>
 				    <div class="weui-dialog">
 				        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>

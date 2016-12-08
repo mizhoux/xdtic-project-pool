@@ -13,7 +13,7 @@
 		</main>
 
 		<c:choose>
-			<c:when test="${project.userIsJoined}">
+			<c:when test="${userIsJoined}">
 				<footer class="tic-detail-footer">
 					<a href="javascript:;" v-tap>
 						<img src="/xdtic/static/images/myProject/checking.png" alt="等待审核">

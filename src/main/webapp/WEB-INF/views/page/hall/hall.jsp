@@ -61,7 +61,7 @@
 					 @collectFail="openDialog">
 					</tic-project>
 				</div>
-				<div v-show="collectIsFail">
+				<div v-show="collectIsFail" v-cloak>
 				    <div class="weui-mask"></div>
 				    <div class="weui-dialog">
 				        <div class="weui-dialog__hd"><strong class="weui-dialog__title">提示</strong></div>

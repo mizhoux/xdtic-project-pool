@@ -21,7 +21,7 @@
    {
         tag: "安卓&硬件"
         title: "我的天"
-        promassage: 记录生活中的新鲜事
+        pdesc: 记录生活中的新鲜事
         prowant: "前端 2名"
         concat: "电话：15029679086",
         uid: "u001"
@@ -276,18 +276,14 @@
 
 #### 项目详情页-我的收藏 & 项目详情页-我的参与 & 项目大厅点击进入的项目详情页
 
-- url
-
-   - /xdtic/myProject/myCollect/detail?uid=u001&proId=p001
-   - /xdtic/myPorject/myJoin/detail?uid=u001&proId=p001
-   - /xdtic/project?proId=p001&uid=u001
+- url：/xdtic/project?proId=p001&uid=u001
 
 - jsp：/page/myProject/myCollect/detail.jsp
 - jsp页面所需变量：
    ```
    {
+        "userIsJoined": false,
     	"project": {
-    		"userIsJoined": false,
     		"proname": "时间典当铺",
     		"tag": ["Web", "情感"],
     		"isCollected": true,

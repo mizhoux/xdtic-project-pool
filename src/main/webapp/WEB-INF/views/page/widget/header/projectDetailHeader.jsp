@@ -25,7 +25,7 @@
          v-show="project.isCollected"
          v-tap="{methods: uncollect}" >
     </span>
-    <div v-show="collectIsFail">
+    <div v-show="collectIsFail" v-cloak>
         <div class="weui-mask"></div>
         <div class="weui-dialog">
              <div class="weui-dialog__hd"><strong class="weui-dialog__title">提</strong></div>
