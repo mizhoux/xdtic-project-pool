@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import wenjing.xdtic.model.Project;
+import wenjing.xdtic.model.User;
 
 /**
  *
@@ -155,6 +156,18 @@ public class ProjectDao {
             String promassage, String prowant, String concat) {
         String SQL = "UPDATE project SET promassage = ?, prowant = ?, concat = ? WHERE userid = ? AND proId = ?";
         return jdbcTemplate.update(SQL, promassage, prowant, concat, userid, proId) == 1;
+    }
+
+    public User getCreator(Project project) {
+        Integer userId = project.getUserid();
+        if (userId != null) {
+            return userDao.getUser(userId);
+        }
+        return null;
+    }
+
+    public boolean isUserJoined(User user, Project project) {
+        return false;
     }
 
 }
