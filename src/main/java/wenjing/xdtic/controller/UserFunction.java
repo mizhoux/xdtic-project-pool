@@ -29,7 +29,7 @@ import wenjing.xdtic.model.User;
  */
 @Controller
 @RequestMapping("fn") // 和 "/fn" 作用一样，SpringMVC 会自动在前面添加上 /
-public class FunctionController {
+public class UserFunction {
 
     @Autowired
     private UserDao userDao;
