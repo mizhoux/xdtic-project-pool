@@ -18,7 +18,7 @@ import wenjing.xdtic.model.User;
 public class UserDao {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTmpl;
 
     /**
      * 根据 用户id 数据库中查询出用户
@@ -28,12 +28,12 @@ public class UserDao {
      */
     public User getUser(Integer id) {
         String SQL = "SELECT * FROM user WHERE id = ?";
-        User user = jdbcTemplate.query(SQL, this::parseUser, id);
+        User user = jdbcTmpl.query(SQL, this::parseUser, id);
         return user;
     }
 
     public String getUsername(Integer id) {
-        String username = jdbcTemplate.query(
+        String username = jdbcTmpl.query(
                 "SELECT username FROM user WHERE id = ?",
                 rs -> rs.next() ? rs.getString(1) : null, id);
         return username;
@@ -48,7 +48,7 @@ public class UserDao {
      */
     public User getUser(String username, String password) {
         String SQL = "SELECT * FROM  user WHERE username=? AND password= ?";
-        User user = jdbcTemplate.query(SQL, this::parseUser, username, password);
+        User user = jdbcTmpl.query(SQL, this::parseUser, username, password);
 
         //查询并返回对象
         return user;
@@ -62,7 +62,7 @@ public class UserDao {
      */
     public boolean containsUsername(String username) {
         String SQL = "SELECT * FROM user WHERE username = ?";
-        User user = jdbcTemplate.query(SQL, this::parseUser, username);
+        User user = jdbcTmpl.query(SQL, this::parseUser, username);
         return user != null;
     }
 
@@ -103,7 +103,7 @@ public class UserDao {
      */
     public boolean addUser(String username, String password) {
         String SQL = "INSERT INTO user SET username = ?, password = ?";
-        int result = jdbcTemplate.update(SQL, username, password);
+        int result = jdbcTmpl.update(SQL, username, password);
 
         return result == 1;
     }
@@ -118,7 +118,7 @@ public class UserDao {
         String SQL = "UPDATE user SET username = ?, name = ?, nickname= ?, email = ?, "
                 + "sex = ?, profe = ?, phone = ?, stunum = ?, profile= ?, pexperice = ? "
                 + "WHERE id = ?";
-        int result = jdbcTemplate.update(SQL,
+        int result = jdbcTmpl.update(SQL,
                 user.getUsername(),
                 user.getName(),
                 user.getNickname(),
@@ -144,7 +144,7 @@ public class UserDao {
      */
     public boolean updatePassword(String username, String passOld, String passNew) {
         String SQL = "UPDATE user SET password = ? WHERE username = ? AND password = ?";
-        int result = jdbcTemplate.update(SQL, passNew, username, passOld);
+        int result = jdbcTmpl.update(SQL, passNew, username, passOld);
         return result == 1;
     }
 
@@ -153,7 +153,7 @@ public class UserDao {
 
         try {
             //Map数据集，此时 键为String类型，值为 Object 类型
-            Map<String, Object> map = jdbcTemplate.queryForMap(SQL, id);
+            Map<String, Object> map = jdbcTmpl.queryForMap(SQL, id);
             User user = new User();
             user.setId((Integer) map.get("id"));//将得到的数据赋值，并返回
             user.setUsername((String) map.get("username"));

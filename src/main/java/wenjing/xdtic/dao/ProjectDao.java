@@ -20,20 +20,20 @@ import wenjing.xdtic.model.User;
 public class ProjectDao {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTmpl;
 
     @Autowired
     private UserDao userDao;
 
     public Project getProject(Integer proId) {
         String SQL = "SELECT * FROM project WHERE proId = ?";
-        Project project = jdbcTemplate.query(SQL, rs -> rs.next() ? parseProject(rs, 0) : null, proId);
+        Project project = jdbcTmpl.query(SQL, rs -> rs.next() ? parseProject(rs, 0) : null, proId);
         return project;
     }
 
     public List<Project> getPostedProjects(Integer userid, Integer offset, Integer pageSize) {
         String SQL = "SELECT * FROM project WHERE userid = ? LIMIT ?, ?";
-        List<Project> projects = jdbcTemplate.query(SQL, this::parseProject, userid, offset, pageSize);
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userid, offset, pageSize);
 
         String username = userDao.getUsername(userid);
         projects.forEach(project -> {
@@ -47,14 +47,14 @@ public class ProjectDao {
 
     public long getPostedProjectsCount(Integer userid) {
         String SQL = "SELECT COUNT(*) FROM project WHERE userid = ?";
-        long count = jdbcTemplate.query(SQL, rs -> rs.next() ? rs.getLong(1) : 0, userid);
+        long count = jdbcTmpl.query(SQL, rs -> rs.next() ? rs.getLong(1) : 0, userid);
         return count;
     }
 
     public List<Project> getJoiningProjects(Integer userid, Integer offset, Integer pageSize) {
         String SQL = "SELECT p.* FROM project AS p WHERE p.proId IN "
                 + "(SELECT jp.pid FROM join_project AS jp WHERE jp.uid = ?) LIMIT ?, ?";
-        List<Project> projects = jdbcTemplate.query(SQL, this::parseProject, userid, offset, pageSize);
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userid, offset, pageSize);
 
         String username = userDao.getUsername(userid);
         projects.forEach(project -> {
@@ -68,14 +68,14 @@ public class ProjectDao {
     public long getJoiningProjectsCount(Integer userid) {
         String SQL = "SELECT COUNT(*) FROM project AS p WHERE p.proId IN "
                 + "(SELECT jp.pid FROM join_project AS jp WHERE jp.uid = ?)";
-        long count = jdbcTemplate.query(SQL, rs -> rs.next() ? rs.getLong(1) : 0, userid);
+        long count = jdbcTmpl.query(SQL, rs -> rs.next() ? rs.getLong(1) : 0, userid);
         return count;
     }
 
     public List<Project> getCollectedProjects(Integer userid, Integer offset, Integer pageSize) {
         String SQL = "SELECT p.* FROM project AS p WHERE p.proId IN "
                 + "(SELECT cp.pid FROM collect_project AS cp WHERE cp.uid = ?) LIMIT ?, ?";
-        List<Project> projects = jdbcTemplate.query(SQL, this::parseProject, userid, offset, pageSize);
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userid, offset, pageSize);
 
         String username = userDao.getUsername(userid);
         projects.forEach(project -> {
@@ -89,7 +89,7 @@ public class ProjectDao {
     public long getCollectedProjectsCount(Integer userid) {
         String SQL = "SELECT COUNT(*) FROM project AS p WHERE p.proId IN "
                 + "(SELECT cp.pid FROM collect_project AS cp WHERE cp.uid = ?)";
-        long count = jdbcTemplate.query(SQL, rs -> rs.next() ? rs.getLong(1) : 0, userid);
+        long count = jdbcTmpl.query(SQL, rs -> rs.next() ? rs.getLong(1) : 0, userid);
         return count;
     }
 
@@ -102,7 +102,7 @@ public class ProjectDao {
      */
     public boolean isProjectCollected(Integer uid, Integer pid) {
         String SQL = "SELECT COUNT(*) FROM collect_project WHERE uid = ? AND pid = ?";
-        long count = jdbcTemplate.query(SQL, rs -> rs.next() ? rs.getLong(1) : 0, uid, pid);
+        long count = jdbcTmpl.query(SQL, rs -> rs.next() ? rs.getLong(1) : 0, uid, pid);
         return count == 1;
     }
 
@@ -137,25 +137,25 @@ public class ProjectDao {
                 + "(userid, proname, promassage, prowant, tag, concat, date) "
                 + "VALUES (?, ?, ?, ?, ?, ?, NOW())";
 
-        int result = jdbcTemplate.update(SQL,
+        int result = jdbcTmpl.update(SQL,
                 userid, proname, promassage, prowant, tag, concat);
         return result == 1;
     }
 
     public boolean collectProject(Integer userid, Integer proId) {
         String SQL = "INSERT INTO collect_project SET uid = ?, pid = ?";
-        return jdbcTemplate.update(SQL, userid, proId) == 1;
+        return jdbcTmpl.update(SQL, userid, proId) == 1;
     }
 
     public boolean uncollectProject(Integer userid, Integer proId) {
         String SQL = "DELETE FROM collect_project WHERE uid = ? AND pid = ?";
-        return jdbcTemplate.update(SQL, userid, proId) == 1;
+        return jdbcTmpl.update(SQL, userid, proId) == 1;
     }
 
     public boolean updateProject(Integer userid, Integer proId,
             String promassage, String prowant, String concat) {
         String SQL = "UPDATE project SET promassage = ?, prowant = ?, concat = ? WHERE userid = ? AND proId = ?";
-        return jdbcTemplate.update(SQL, promassage, prowant, concat, userid, proId) == 1;
+        return jdbcTmpl.update(SQL, promassage, prowant, concat, userid, proId) == 1;
     }
 
     public User getCreator(Project project) {

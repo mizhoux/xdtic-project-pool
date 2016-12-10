@@ -8,6 +8,7 @@ import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.User;
 
 /**
+ * 基本的路由控制器
  *
  * @author mizhou
  */

@@ -14,13 +14,13 @@ import wenjing.xdtic.model.Systemassage;
 
 /**
  *
- * @author admin
+ * @author wenjing
  */
 @Repository
 public class SystemassageDao {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTmpl;
 
     /**
      * 获得用户的消息总数
@@ -30,7 +30,7 @@ public class SystemassageDao {
      */
     public int countMessages(Integer uid) {
         String SQL = "SELECT COUNT(*) FROM systemassage";
-        Map<String, Object> map = jdbcTemplate.queryForMap(SQL);
+        Map<String, Object> map = jdbcTmpl.queryForMap(SQL);
         Long count = (Long) map.get("COUNT(*)");
 
         return count.intValue();
@@ -42,7 +42,7 @@ public class SystemassageDao {
 
         List<Systemassage> messages = new ArrayList<>();
         try {
-            List<Map<String, Object>> maps = jdbcTemplate.queryForList(SQL, uid, offset, size);
+            List<Map<String, Object>> maps = jdbcTmpl.queryForList(SQL, uid, offset, size);
             for (Map<String, Object> map : maps) {
                 //Map数据集返回对象名为string类型的值
                 Systemassage systemassage = new Systemassage();
