@@ -34,7 +34,7 @@
 							<span class="tic-td-label">姓名</span>
 							<span class="tic-td-content" v-show="!isEditing">{{user.name}}</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<input type="text" name="name" v-model="user.realName" />
+								<input type="text" name="name" v-model="user.name" />
 							</span>
 						</div>
 						<div class="tic-tr-two">
@@ -74,7 +74,7 @@
 							<span class="tic-td-label">专业</span>
 							<span class="tic-td-content" v-show="!isEditing">{{user.profe}}</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<input type="text" name="profe" v-model="user.major" />
+								<input type="text" name="profe" v-model="user.profe" />
 							</span>
 						</div>
 						<div class="tic-tr-two">
@@ -88,21 +88,21 @@
 							<span class="tic-td-label">学号</span>
 							<span class="tic-td-content" v-show="!isEditing">{{user.stunum}}</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<input type="text" name="stunum" v-model="user.studentNo" />
+								<input type="text" name="stunum" v-model="user.stunum" />
 							</span>
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">个人能力</span>
 							<span class="tic-td-content" v-show="!isEditing">{{user.profile}}</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<textarea name="profile" v-model="user.ability"></textarea>
+								<textarea name="profile" v-model="user.profile"></textarea>
 							</span>
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">项目经历</span>
 							<span class="tic-td-content" v-show="!isEditing">{{user.pexperice}}</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<textarea name="pexperice" v-model="user.projectDesc"></textarea>
+								<textarea name="pexperice" v-model="user.pexperice"></textarea>
 							</span>
 						</div>
 						<input type="hidden" name="id" value="<c:out value="${user.id}" />">
@@ -120,7 +120,7 @@
 			        </div>
 			    </div>
 			</div>
-			<div id="toast" v-show="editIsSucc">
+			<div id="toast" v-show="editIsSucc" v-cloak>
 			    <div class="weui-mask_transparent"></div>
 			    <div class="weui-toast">
 			        <i class="weui-icon-success-no-circle weui-icon_toast"></i>
