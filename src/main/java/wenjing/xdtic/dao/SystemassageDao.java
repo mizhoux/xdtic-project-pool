@@ -44,48 +44,25 @@ public class SystemassageDao {
         try {
             List<Map<String, Object>> maps = jdbcTmpl.queryForList(SQL, uid, offset, size);
             for (Map<String, Object> map : maps) {
-                //Map数据集返回对象名为string类型的值
                 Systemassage systemassage = new Systemassage();
                 systemassage.setUid((Integer) map.get("uid"));//将得到的数据赋值，并返回
                 systemassage.setMid((Integer) map.get("mid"));
                 systemassage.setMassage((String) map.get("massage"));
                 systemassage.setType((String) map.get("type"));
-                
+
                 Timestamp timestamp = (java.sql.Timestamp) map.get("date");    //获取时间
                 LocalDateTime dateTime = timestamp.toLocalDateTime();
                 String dateStr = dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));//设施时间格式
                 systemassage.setDate(dateStr); //加入map
                 messages.add(systemassage);
-          
-               }
+            }
 
-            
-        } 
-            catch (EmptyResultDataAccessException ex) {// 捕获异常 
+        } catch (EmptyResultDataAccessException ex) {// 捕获异常 
             //  Spring 查询不到数据时抛出异常，此时返回 空
-                   // return  null;
+            // return  null;
         }
 
         return messages;
     }
 
-   /* private Systemassage parseMessage(Map<String, Object> map) {
-        Systemassage systemassage = new Systemassage();
-
-        systemassage.setUid((Integer) map.get("uid"));//将得到的数据赋值，并返回
-        systemassage.setMid((Integer) map.get("mid"));
-        systemassage.setMassage((String) map.get("massage"));
-        systemassage.setType((String) map.get("type"));
-
-        Timestamp timestamp = (Timestamp) map.get("date");
-        LocalDateTime dateTime = timestamp.toLocalDateTime();
-        String dateStr = dateTime.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        systemassage.setDate(dateStr);
-
-        return systemassage;
-    }
-*/
-   // public List<Systemassage> getSystemassageid(Integer uid, int offset, Integer size) {
-    //    throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    //}
 }
