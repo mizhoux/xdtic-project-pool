@@ -72,7 +72,7 @@ public class UserFunction {
 
         User user = userDao.getUser(username, password);
         if (user != null) {
-            int msgCount = systemassageDao.countMessages(user.getId());
+            long msgCount = systemassageDao.getUserMessagesCount(user.getId());
             user.setHasMsg(msgCount > 0);
             session.setAttribute("user", user);
             return "page/user/center";
@@ -181,14 +181,14 @@ public class UserFunction {
             @RequestParam Integer pageNum, @RequestParam Integer size) {
 
         int offset = pageNum * size;
-        List<Systemassage> systemassages = systemassageDao.getSystemassageid(uid, offset, size);
+        List<Systemassage> systemassages = systemassageDao.getUserMessages(uid, offset, size);
 
         PagingMessages pagingMsgs = new PagingMessages();
         pagingMsgs.setPageNum(pageNum);
         pagingMsgs.setSize(size); // 设置返回的 size 为本次返回消息的数量
 
         pagingMsgs.setMsgs(systemassages);
-        int count = systemassageDao.countMessages(uid);
+        long count = systemassageDao.getUserMessagesCount(uid);
         if ((pageNum + 1) * size >= count) {
             pagingMsgs.setHasMore(false);
         } else {

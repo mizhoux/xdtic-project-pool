@@ -64,8 +64,8 @@ public class UserDao {
      * @return 查询的用户
      */
     public User getUser(String username, String password) {
-        String SQL = "";
-        User user = jdbcTmpl.query(SQL, this::parseUser, username, password);
+        User user = jdbcTmpl.query(
+                SQL_GET_USER_BY_USERNAME_AND_PASSWORD, this::parseUser, username, password);
 
         //查询并返回对象
         return user;
