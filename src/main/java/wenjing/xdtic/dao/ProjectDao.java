@@ -95,9 +95,7 @@ public class ProjectDao {
      * @return 用户发布的项目数量
      */
     public long getPostedProjectsCount(Integer userid) {
-        long count = jdbcTmpl.query(
-                SQL_GET_POSTED_PROJECTS_COUNT, rs -> rs.next() ? rs.getLong(1) : 0, userid);
-        return count;
+        return jdbcTmpl.queryForObject(SQL_GET_POSTED_PROJECTS_COUNT, Long.class, userid);
     }
 
     public List<Project> getJoiningProjects(Integer userid, Integer offset, Integer pageSize) {
@@ -121,9 +119,7 @@ public class ProjectDao {
      * @return 用户参加的项目数量
      */
     public long getJoiningProjectsCount(Integer userid) {
-        long count = jdbcTmpl.query(
-                SQL_GET_JOINING_PORJECTS_COUNT, rs -> rs.next() ? rs.getLong(1) : 0, userid);
-        return count;
+        return jdbcTmpl.queryForObject(SQL_GET_JOINING_PORJECTS_COUNT, Long.class, userid);
     }
 
     public List<Project> getCollectedProjects(Integer userid, Integer offset, Integer pageSize) {
@@ -147,10 +143,7 @@ public class ProjectDao {
      * @return 用户收藏的项目数量
      */
     public long getCollectedProjectsCount(Integer userid) {
-
-        long count = jdbcTmpl.query(
-                SQL_GET_COLLECTED_PROJECTS_COUNT, rs -> rs.next() ? rs.getLong(1) : 0, userid);
-        return count;
+        return jdbcTmpl.queryForObject(SQL_GET_COLLECTED_PROJECTS_COUNT, Long.class, userid);
     }
 
     /**
@@ -161,9 +154,7 @@ public class ProjectDao {
      * @return
      */
     public boolean isProjectCollected(Integer uid, Integer pid) {
-        long count = jdbcTmpl.query(
-                SQL_IS_PROJECT_COLLECTED, rs -> rs.next() ? rs.getLong(1) : 0, uid, pid);
-        return count == 1;
+        return jdbcTmpl.queryForObject(SQL_IS_PROJECT_COLLECTED, Long.class, uid, pid) == 1;
     }
 
     private Project parseProject(ResultSet rs, int row) throws SQLException {
@@ -192,7 +183,7 @@ public class ProjectDao {
 
     public boolean addProject(Integer userid, String tag, String proname,
             String promassage, String prowant, String concat) {
-        return jdbcTmpl.update(SQL_ADD_PROJECT, 
+        return jdbcTmpl.update(SQL_ADD_PROJECT,
                 userid, proname, promassage, prowant, tag, concat) == 1;
     }
 

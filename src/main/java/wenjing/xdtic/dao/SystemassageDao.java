@@ -35,8 +35,7 @@ public class SystemassageDao {
      * @return 数据库中对应用户消息的数量
      */
     public long getUserMessagesCount(Integer uid) {
-        return jdbcTmpl.query(SQL_GET_USER_MESSAGE_COUNT,
-                rs -> rs.next() ? rs.getLong(1) : 0, uid);
+        return jdbcTmpl.queryForObject(SQL_GET_USER_MESSAGE_COUNT, Long.class, uid);
     }
 
     public List<Systemassage> getUserMessages(Integer uid, Integer offset, Integer size) {
