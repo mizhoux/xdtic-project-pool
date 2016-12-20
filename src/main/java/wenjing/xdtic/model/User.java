@@ -2,7 +2,7 @@ package wenjing.xdtic.model;
 
 /**
  *
- * @author admin
+ * @author wenjing
  */
 public class User {
 

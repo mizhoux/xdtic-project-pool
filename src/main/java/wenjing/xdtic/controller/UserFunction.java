@@ -14,11 +14,11 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wenjing.xdtic.dao.SystemassageDao;
+import wenjing.xdtic.dao.MessageDao;
 import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.PagingMessages;
 import wenjing.xdtic.model.RespCode;
-import wenjing.xdtic.model.Systemassage;
+import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.User;
 
 /**
@@ -35,7 +35,7 @@ public class UserFunction {
     private UserDao userDao;
 
     @Autowired
-    private SystemassageDao systemassageDao;
+    private MessageDao messageDao;
 
     /**
      * 根据用户名和密码进行注册（以 Form 提交）
@@ -72,7 +72,7 @@ public class UserFunction {
 
         User user = userDao.getUser(username, password);
         if (user != null) {
-            long msgCount = systemassageDao.getUserMessagesCount(user.getId());
+            long msgCount = messageDao.getUserMessagesCount(user.getId());
             user.setHasMsg(msgCount > 0);
             session.setAttribute("user", user);
             return "page/user/center";
@@ -181,14 +181,14 @@ public class UserFunction {
             @RequestParam Integer pageNum, @RequestParam Integer size) {
 
         int offset = pageNum * size;
-        List<Systemassage> systemassages = systemassageDao.getUserMessages(uid, offset, size);
+        List<Message> systemassages = messageDao.getUserMessages(uid, offset, size);
 
         PagingMessages pagingMsgs = new PagingMessages();
         pagingMsgs.setPageNum(pageNum);
         pagingMsgs.setSize(size); // 设置返回的 size 为本次返回消息的数量
 
         pagingMsgs.setMsgs(systemassages);
-        long count = systemassageDao.getUserMessagesCount(uid);
+        long count = messageDao.getUserMessagesCount(uid);
         if ((pageNum + 1) * size >= count) {
             pagingMsgs.setHasMore(false);
         } else {

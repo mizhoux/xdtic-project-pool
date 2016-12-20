@@ -10,14 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import wenjing.xdtic.model.Systemassage;
+import wenjing.xdtic.model.Message;
 
 /**
  *
  * @author wenjing
  */
 @Repository
-public class SystemassageDao {
+public class MessageDao {
 
     private static final String SQL_GET_USER_MESSAGE_COUNT
             = "SELECT COUNT(*) FROM systemassage WHERE uid = ?";
@@ -38,9 +38,9 @@ public class SystemassageDao {
         return jdbcTmpl.queryForObject(SQL_GET_USER_MESSAGE_COUNT, Long.class, uid);
     }
 
-    public List<Systemassage> getUserMessages(Integer uid, Integer offset, Integer size) {
+    public List<Message> getUserMessages(Integer uid, Integer offset, Integer size) {
 
-        List<Systemassage> messages = new ArrayList<>();
+        List<Message> messages = new ArrayList<>();
         try {
             List<Map<String, Object>> maps
                     = jdbcTmpl.queryForList(SQL_GET_USER_MESSAGES, uid, offset, size);
@@ -48,7 +48,7 @@ public class SystemassageDao {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
             for (Map<String, Object> map : maps) {
-                Systemassage systemassage = new Systemassage();
+                Message systemassage = new Message();
                 systemassage.setUid((Integer) map.get("uid"));//将得到的数据赋值，并返回
                 systemassage.setMid((Integer) map.get("mid"));
                 systemassage.setMassage((String) map.get("massage"));

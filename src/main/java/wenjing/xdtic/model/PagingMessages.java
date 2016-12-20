@@ -11,12 +11,12 @@ public class PagingMessages {
     private Integer pageNum;
     private Integer size;
     private boolean hasMore;
-    List<Systemassage> msgs;
+    List<Message> msgs;
 
     public PagingMessages() {
     }
 
-    public PagingMessages(Integer pageNum, Integer size, boolean hasMore, List<Systemassage> msgs) {
+    public PagingMessages(Integer pageNum, Integer size, boolean hasMore, List<Message> msgs) {
         this.pageNum = pageNum;
         this.size = size;
         this.hasMore = hasMore;
@@ -47,11 +47,11 @@ public class PagingMessages {
         this.hasMore = hasMore;
     }
 
-    public List<Systemassage> getMsgs() {
+    public List<Message> getMsgs() {
         return msgs;
     }
 
-    public void setMsgs(List<Systemassage> msgs) {
+    public void setMsgs(List<Message> msgs) {
         this.msgs = msgs;
     }
 

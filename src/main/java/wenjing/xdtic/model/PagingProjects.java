@@ -5,7 +5,6 @@ import java.util.List;
 /**
  *
  * @author Michael Chow <mizhoux@gmail.com>
- * @param <T>
  */
 public class PagingProjects {
 
