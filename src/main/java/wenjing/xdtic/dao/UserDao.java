@@ -1,10 +1,10 @@
 package wenjing.xdtic.dao;
 
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import wenjing.xdtic.model.User;
@@ -17,43 +17,23 @@ import wenjing.xdtic.model.User;
 @Repository
 public class UserDao {
 
-    private static final String SQL_GET_USER_BY_ID
-            = "SELECT * FROM user WHERE id = ?";
-
-    private static final String SQL_GET_USERNAME_BY_ID
-            = "SELECT username FROM user WHERE id = ?";
-
-    private static final String SQL_GET_USER_BY_USERNAME_AND_PASSWORD
-            = "SELECT * FROM  user WHERE username = ? AND password = ?";
-
-    private static final String SQL_ADD_USER_BY_USERNAME_AND_PASSWORD
-            = "INSERT INTO user SET username = ?, password = ?";
-
-    private static final String SQL_UPDATE_USER
-            = "UPDATE user SET username = ?, name = ?, nickname= ?, email = ?, sex = ?, "
-            + "profe = ?, phone = ?, stunum = ?, profile= ?, pexperice = ? WHERE id = ?";
-
-    private static final String SQL_UPDATE_PASSWORD
-            = "UPDATE user SET password = ? WHERE username = ? AND password = ?";
-
     @Autowired
     private JdbcTemplate jdbcTmpl;
 
     /**
      * 根据 用户id 数据库中查询出用户
      *
-     * @param id 用户id
+     * @param userId 用户id
      * @return 查询的用户
      */
-    public User getUser(Integer id) {
-        User user = jdbcTmpl.query(SQL_GET_USER_BY_ID, this::parseUser, id);
-        return user;
+    public User getUser(Integer userId) {
+        String SQL = "SELECT * FROM user WHERE id = ?";
+        return jdbcTmpl.query(SQL, this::extractUser, userId);
     }
 
-    public String getUsername(Integer id) {
-        String username = jdbcTmpl.query(SQL_GET_USERNAME_BY_ID,
-                rs -> rs.next() ? rs.getString(1) : null, id);
-        return username;
+    public String getUsername(Integer userId) {
+        String SQL = "SELECT username FROM user WHERE id = ?";
+        return jdbcTmpl.queryForObject(SQL, String.class, userId);
     }
 
     /**
@@ -64,11 +44,8 @@ public class UserDao {
      * @return 查询的用户
      */
     public User getUser(String username, String password) {
-        User user = jdbcTmpl.query(
-                SQL_GET_USER_BY_USERNAME_AND_PASSWORD, this::parseUser, username, password);
-
-        //查询并返回对象
-        return user;
+        String SQL = "SELECT * FROM  user WHERE username = ? AND password = ?";
+        return jdbcTmpl.query(SQL, this::extractUser, username, password);
     }
 
     /**
@@ -78,37 +55,45 @@ public class UserDao {
      * @return 用户名是否已经存在
      */
     public boolean containsUsername(String username) {
-        User user = jdbcTmpl.query(
-                SQL_GET_USER_BY_USERNAME_AND_PASSWORD, this::parseUser, username);
-        return user != null;
+        String SQL = "SELECT id FROM user WHERE username = ?";
+        return jdbcTmpl.query(SQL, rs -> rs.next() ? TRUE : FALSE);
     }
 
     /**
-     * 将 ResultSet 中的数据转换为用户
+     * 将 ResultSet 中的数据转换为用户（用于 ResultSetExtractor）
      *
      * @param rs ResultSet
      * @return 用户
      * @throws SQLException
      */
-    public User parseUser(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            User user = new User();
-            user.setId(rs.getInt("id"));
-            user.setUsername(rs.getString("username"));
-            user.setPassword(rs.getString("password"));
-            user.setName(rs.getString("name"));
-            user.setNickname(rs.getString("nickname"));
-            user.setEmail(rs.getString("email"));
-            user.setSex(rs.getString("sex"));
-            user.setProfe(rs.getString("profe"));
-            user.setPhone(rs.getString("phone"));
-            user.setStunum(rs.getString("stunum"));
-            user.setProfile(rs.getString("profile"));
-            user.setPexperice(rs.getString("pexperice"));
+    private User extractUser(ResultSet rs) throws SQLException {
+        return rs.next() ? parseUser(rs, 1) : null;
+    }
 
-            return user;
-        }
-        return null;
+    /**
+     * 将 ResultSet 中的数据转换为用户（用于 RowMapper）
+     *
+     * @param rs
+     * @param rowNum
+     * @return 用户
+     * @throws SQLException
+     */
+    private User parseUser(ResultSet rs, int rowNum) throws SQLException {
+        User user = new User();
+        user.setId(rs.getInt("id"));
+        user.setUsername(rs.getString("username"));
+        user.setPassword(rs.getString("password"));
+        user.setName(rs.getString("name"));
+        user.setNickname(rs.getString("nickname"));
+        user.setEmail(rs.getString("email"));
+        user.setSex(rs.getString("sex"));
+        user.setProfe(rs.getString("profe"));
+        user.setPhone(rs.getString("phone"));
+        user.setStunum(rs.getString("stunum"));
+        user.setProfile(rs.getString("profile"));
+        user.setPexperice(rs.getString("pexperice"));
+
+        return user;
     }
 
     /**
@@ -119,10 +104,8 @@ public class UserDao {
      * @return 是否添加成功
      */
     public boolean addUser(String username, String password) {
-        int result = jdbcTmpl.update(
-                SQL_ADD_USER_BY_USERNAME_AND_PASSWORD, username, password);
-
-        return result == 1;
+        String SQL = "INSERT INTO user SET username = ?, password = ?";
+        return jdbcTmpl.update(SQL, username, password) == 1;
     }
 
     /**
@@ -132,8 +115,9 @@ public class UserDao {
      * @return 是否更新成功
      */
     public boolean updateUser(User user) {
-
-        int result = jdbcTmpl.update(SQL_UPDATE_USER,
+        String SQL = "UPDATE user SET username = ?, name = ?, nickname= ?, email = ?, sex = ?,"
+                + " profe = ?, phone = ?, stunum = ?, profile= ?, pexperice = ? WHERE id = ?";
+        int result = jdbcTmpl.update(SQL,
                 user.getUsername(), user.getName(), user.getNickname(),
                 user.getEmail(), user.getSex(), user.getProfe(), user.getPhone(),
                 user.getStunum(), user.getProfile(), user.getPexperice(), user.getId());
@@ -150,33 +134,7 @@ public class UserDao {
      * @return 是否更新成功
      */
     public boolean updatePassword(String username, String passOld, String passNew) {
-        int result = jdbcTmpl.update(SQL_UPDATE_PASSWORD, passNew, username, passOld);
-        return result == 1;
+        String SQL = "UPDATE user SET password = ? WHERE username = ? AND password = ?";
+        return jdbcTmpl.update(SQL, passNew, username, passOld) == 1;
     }
-
-    public User getUserByMap(Integer id) {
-
-        try {
-            //Map数据集，此时 键为String类型，值为 Object 类型
-            Map<String, Object> map = jdbcTmpl.queryForMap(SQL_GET_USER_BY_ID, id);
-            User user = new User();
-            user.setId((Integer) map.get("id"));//将得到的数据赋值，并返回
-            user.setUsername((String) map.get("username"));
-            user.setPassword((String) map.get("password"));
-            user.setEmail((String) map.get("email"));
-            user.setNickname((String) map.get("nickname"));
-            user.setProfe((String) map.get("profe"));
-            user.setSex((String) map.get("sex"));
-            user.setPhone((String) map.get("phone"));
-            user.setStunum((String) map.get("stunum"));
-            user.setPexperice((String) map.get("pexperice"));
-            user.setProfile((String) map.get("profile"));
-
-            return user;
-
-        } catch (EmptyResultDataAccessException ex) { // 捕获异常
-            return null;    //  Spring 查询不到输入数据时抛出异常，此时返回 null
-        }
-    }
-
 }

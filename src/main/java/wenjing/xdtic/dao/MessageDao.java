@@ -1,13 +1,11 @@
 package wenjing.xdtic.dao;
 
-import java.sql.Timestamp;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import wenjing.xdtic.model.Message;
@@ -19,11 +17,8 @@ import wenjing.xdtic.model.Message;
 @Repository
 public class MessageDao {
 
-    private static final String SQL_GET_USER_MESSAGE_COUNT
-            = "SELECT COUNT(*) FROM systemassage WHERE uid = ?";
-
-    private static final String SQL_GET_USER_MESSAGES
-            = "SELECT * FROM  systemassage WHERE uid = ? LIMIT ?, ?";
+    private static final DateTimeFormatter 
+            DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     private JdbcTemplate jdbcTmpl;
@@ -35,38 +30,27 @@ public class MessageDao {
      * @return 数据库中对应用户消息的数量
      */
     public long getUserMessagesCount(Integer uid) {
-        return jdbcTmpl.queryForObject(SQL_GET_USER_MESSAGE_COUNT, Long.class, uid);
+        String SQL = "SELECT COUNT(*) FROM systemassage WHERE uid = ?";
+        return jdbcTmpl.queryForObject(SQL, Long.class, uid);
     }
 
     public List<Message> getUserMessages(Integer uid, Integer offset, Integer size) {
+        String SQL = "SELECT * FROM systemassage WHERE uid = ? LIMIT ?, ?";
+        return jdbcTmpl.query(SQL, this::parseMessage, uid, offset, size);
+    }
 
-        List<Message> messages = new ArrayList<>();
-        try {
-            List<Map<String, Object>> maps
-                    = jdbcTmpl.queryForList(SQL_GET_USER_MESSAGES, uid, offset, size);
+    private Message parseMessage(ResultSet rs, int rowNum) throws SQLException {
+        Message message = new Message();
+        message.setUid(rs.getInt("uid"));
+        message.setMid(rs.getInt("mid"));
+        message.setMassage(rs.getString("massage"));
+        message.setType(rs.getString("type"));
 
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTime = rs.getTimestamp("date").toLocalDateTime(); //获取时间
+        String dateStr = dateTime.format(DATE_TIME_FORMATTER);//设施时间格式
+        message.setDate(dateStr);
 
-            for (Map<String, Object> map : maps) {
-                Message systemassage = new Message();
-                systemassage.setUid((Integer) map.get("uid"));//将得到的数据赋值，并返回
-                systemassage.setMid((Integer) map.get("mid"));
-                systemassage.setMassage((String) map.get("massage"));
-                systemassage.setType((String) map.get("type"));
-
-                Timestamp timestamp = (java.sql.Timestamp) map.get("date");    //获取时间
-                LocalDateTime dateTime = timestamp.toLocalDateTime();
-                String dateStr = dateTime.format(formatter);//设施时间格式
-                systemassage.setDate(dateStr); //加入map
-                messages.add(systemassage);
-            }
-
-        } catch (EmptyResultDataAccessException ex) {// 捕获异常 
-            //  Spring 查询不到数据时抛出异常，此时返回 空
-            // return  null;
-        }
-
-        return messages;
+        return message;
     }
 
 }
