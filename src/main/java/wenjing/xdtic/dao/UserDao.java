@@ -115,8 +115,9 @@ public class UserDao {
      * @return 是否更新成功
      */
     public boolean updateUser(User user) {
-        String SQL = "UPDATE user SET username = ?, name = ?, nickname= ?, email = ?, sex = ?,"
-                + " profe = ?, phone = ?, stunum = ?, profile= ?, pexperice = ? WHERE id = ?";
+        String SQL 
+                = "UPDATE user SET username = ?, name = ?, nickname= ?, email = ?, sex = ?, "
+                + "profe = ?, phone = ?, stunum = ?, profile= ?, pexperice = ? WHERE id = ?";
         int result = jdbcTmpl.update(SQL,
                 user.getUsername(), user.getName(), user.getNickname(),
                 user.getEmail(), user.getSex(), user.getProfe(), user.getPhone(),

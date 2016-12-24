@@ -30,19 +30,17 @@ public class ProjectDao {
 
     public Project getProject(Integer proId) {
         String SQL = "SELECT * FROM project WHERE proId = ?";
-        Project project = jdbcTmpl.query(SQL, this::extractProject, proId);
-        return project;
+        return jdbcTmpl.query(SQL, this::extractProject, proId);
     }
 
-    public List<Project> getPostedProjects(Integer userid, Integer offset, Integer size) {
+    public List<Project> getPostedProjects(Integer userId, Integer offset, Integer size) {
         String SQL = "SELECT * FROM project WHERE userid = ? LIMIT ?, ?";
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userid, offset, size);
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
 
-        String username = userDao.getUsername(userid);
+        String username = userDao.getUsername(userId);
         projects.forEach(project -> {
             project.setUsername(username);
-            boolean isCollected = isProjectCollected(userid, project.getProId());
-            project.setIsCollected(isCollected);
+            project.setIsCollected(isProjectCollected(userId, project.getProId()));
         });
 
         return projects;
@@ -60,8 +58,10 @@ public class ProjectDao {
     }
 
     public List<Project> getJoiningProjects(Integer userId, Integer offset, Integer size) {
-        String SQL = "SELECT p.* FROM project AS p WHERE p.proId IN "
-                + "(SELECT jp.pid FROM join_project AS jp WHERE jp.uid = ?) LIMIT ?, ?";
+        String SQL
+                = "SELECT p.* FROM project AS p WHERE p.proId IN "
+                + "(SELECT jp.pid FROM join_project AS jp WHERE jp.uid = ?) "
+                + "LIMIT ?, ?";
         List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
 
         String username = userDao.getUsername(userId);
@@ -76,22 +76,26 @@ public class ProjectDao {
     /**
      * 获得用户参加的项目数量
      *
-     * @param userid 用户 ID
+     * @param userId 用户 ID
      * @return 用户参加的项目数量
      */
-    public long getJoiningProjectsCount(Integer userid) {
-        String SQL = "SELECT COUNT(*) FROM project AS p WHERE p.proId IN "
+    public long getJoiningProjectsCount(Integer userId) {
+        String SQL
+                = "SELECT COUNT(*) FROM project AS p WHERE p.proId IN "
                 + "(SELECT jp.pid FROM join_project AS jp WHERE jp.uid = ?)";
-        return jdbcTmpl.queryForObject(SQL, Long.class, userid);
+
+        return jdbcTmpl.queryForObject(SQL, Long.class, userId);
     }
 
-    public List<Project> getCollectedProjects(Integer userid, Integer offset, Integer size) {
-        String SQL = "SELECT p.* FROM project AS p WHERE p.proId IN "
-                + "(SELECT cp.pid FROM collect_project AS cp WHERE cp.uid = ?) LIMIT ?, ?";
+    public List<Project> getCollectedProjects(Integer userId, Integer offset, Integer size) {
+        String SQL
+                = "SELECT p.* FROM project AS p WHERE p.proId IN "
+                + "(SELECT cp.pid FROM collect_project AS cp WHERE cp.uid = ?) "
+                + "LIMIT ?, ?";
 
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userid, offset, size);
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
 
-        String username = userDao.getUsername(userid);
+        String username = userDao.getUsername(userId);
         projects.forEach(project -> {
             project.setUsername(username);
             project.setIsCollected(true);
@@ -103,13 +107,15 @@ public class ProjectDao {
     /**
      * 获得用户收藏的项目数量
      *
-     * @param userid 用户 ID
+     * @param userId 用户 ID
      * @return 用户收藏的项目数量
      */
-    public long getCollectedProjectsCount(Integer userid) {
-        String SQL = "SELECT COUNT(*) FROM project AS p WHERE p.proId IN "
+    public long getCollectedProjectsCount(Integer userId) {
+        String SQL
+                = "SELECT COUNT(*) FROM project AS p WHERE p.proId IN "
                 + "(SELECT cp.pid FROM collect_project AS cp WHERE cp.uid = ?)";
-        return jdbcTmpl.queryForObject(SQL, Long.class, userid);
+
+        return jdbcTmpl.queryForObject(SQL, Long.class, userId);
     }
 
     /**
@@ -167,29 +173,33 @@ public class ProjectDao {
         return project;
     }
 
-    public boolean addProject(Integer userid, String tag, String proname,
+    public boolean addProject(Integer userId, String tag, String proname,
             String promassage, String prowant, String concat) {
-
-        String SQL = "INSERT INTO project "
+        String SQL
+                = "INSERT INTO project "
                 + "(userid, proname, promassage, prowant, tag, concat, date) "
                 + "VALUES (?, ?, ?, ?, ?, ?, NOW())";
-        return jdbcTmpl.update(SQL, userid, proname, promassage, prowant, tag, concat) == 1;
+
+        return jdbcTmpl.update(SQL, userId, proname, promassage, prowant, tag, concat) == 1;
     }
 
-    public boolean collectProject(Integer userid, Integer proId) {
+    public boolean collectProject(Integer userId, Integer proId) {
         String SQL = "INSERT INTO collect_project SET uid = ?, pid = ?";
-        return jdbcTmpl.update(SQL, userid, proId) == 1;
+        return jdbcTmpl.update(SQL, userId, proId) == 1;
     }
 
-    public boolean uncollectProject(Integer userid, Integer proId) {
+    public boolean uncollectProject(Integer userId, Integer proId) {
         String SQL = "DELETE FROM collect_project WHERE uid = ? AND pid = ?";
-        return jdbcTmpl.update(SQL, userid, proId) == 1;
+        return jdbcTmpl.update(SQL, userId, proId) == 1;
     }
 
-    public boolean updateProject(Integer userid, Integer proId,
+    public boolean updateProject(Integer userId, Integer proId,
             String promassage, String prowant, String concat) {
-        String SQL = "UPDATE project SET promassage = ?, prowant = ?, concat = ? WHERE userid = ? AND proId = ?";
-        return jdbcTmpl.update(SQL, promassage, prowant, concat, userid, proId) == 1;
+        String SQL
+                = "UPDATE project SET promassage = ?, prowant = ?, concat = ? "
+                + "WHERE userid = ? AND proId = ?";
+
+        return jdbcTmpl.update(SQL, promassage, prowant, concat, userId, proId) == 1;
     }
 
     public User getCreator(Project project) {
