@@ -7,6 +7,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,17 +47,12 @@ public class ProjectController {
             @RequestParam(required = false) Integer id,
             @RequestParam(required = false) Integer uid) {
 
-        User user = (User) session.getAttribute("user");
-        if (user == null && uid != null) { // 主要调试时候用，重新部署时候会重置 session
-            user = userDao.getUser(uid);
-            session.setAttribute("user", user);
-            System.out.println("getProjectDetailPage: get User: " + user);
-        }
+        User user = getUser(session, uid);
 
         if (proId == null) {
             proId = id;
         }
-        
+
         Project project = projectDao.getProject(proId);
         boolean isCollected = projectDao.isProjectCollected(user.getId(), proId);
         project.setIsCollected(isCollected);
@@ -102,4 +98,32 @@ public class ProjectController {
         List<SignInfo> signInfos = new ArrayList<>();
         return new ModelAndView("page/myProject/myPost/signInfo", "signInfos", signInfos);
     }
+
+    @GetMapping("project/toJoin")
+    public ModelAndView getToJoinPage(HttpSession session,
+            @RequestParam Integer proId, @RequestParam Integer uid) {
+
+        ModelAndView mav = new ModelAndView("page/myProject/myCollect/toJoin");
+
+        Project project = projectDao.getProject(proId);
+        project.setIsCollected(projectDao.isProjectCollected(uid, proId));
+
+        User user = getUser(session, uid);
+
+        mav.addObject("project", project);
+        mav.addObject("user", user);
+
+        return mav;
+    }
+
+    private User getUser(HttpSession session, Integer uid) {
+        User user = (User) session.getAttribute("user");
+        if (user == null && uid != null) { // 主要调试时候用，重新部署时候会重置 session
+            user = userDao.getUser(uid);
+            session.setAttribute("user", user);
+        }
+        
+        return user;
+    }
+    
 }

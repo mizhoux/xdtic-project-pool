@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -38,7 +37,9 @@ public class ProjectDao {
         String SQL = "SELECT * FROM project LIMIT ?, ?";
         List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, offset, size);
 
+        String username = userDao.getUsername(userId);
         projects.forEach(project -> {
+            project.setUsername(username);
             project.setIsCollected(isProjectCollected(userId, project.getProId()));
         });
 
@@ -48,16 +49,15 @@ public class ProjectDao {
     // userId 用来判断项目是否已经被该用户收藏
     public List<Project> getHotProjects(Integer userId, Integer hotSize) {
 
-        String SQL = "SELECT pid, COUNT(*) AS c FROM collect_project GROUP BY pid ORDER BY c DESC LIMIT ?";
-        StringJoiner sqlCondition = new StringJoiner(", ", "(", ")");
-        jdbcTmpl.query(SQL, rs -> {
-            sqlCondition.add(String.valueOf(rs.getInt("pid")));
-        }, hotSize);
+        String SQL = "SELECT * FROM project AS t, "
+                + "(SELECT pid, COUNT(*) AS num FROM collect_project GROUP BY pid ORDER BY num DESC LIMIT ?) AS s "
+                + "WHERE t.`proId` = s.pid";
 
-        SQL = "SELECT * FROM project WHERE proId IN " + sqlCondition;
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject);
-
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, hotSize);
+        String username = userDao.getUsername(userId);
+        
         projects.forEach(project -> {
+            project.setUsername(username);
             project.setIsCollected(isProjectCollected(userId, project.getProId()));
         });
 
