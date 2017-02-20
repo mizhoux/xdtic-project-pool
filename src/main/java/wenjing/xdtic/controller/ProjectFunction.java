@@ -10,7 +10,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wenjing.xdtic.dao.ProjectDao;
-import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.HotProjects;
 import wenjing.xdtic.model.PagingProjects;
 import wenjing.xdtic.model.Project;
@@ -23,9 +22,6 @@ import wenjing.xdtic.model.RespCode;
 @Controller
 @RequestMapping("fn")
 public class ProjectFunction {
-
-    @Autowired
-    private UserDao userDao;
 
     @Autowired
     private ProjectDao projectDao;

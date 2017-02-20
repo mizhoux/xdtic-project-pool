@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ControllerLogger {
 
-    @Pointcut("execution(* wenjing.xdtic.controller.*Function.*(..))")
+    @Pointcut("execution(* wenjing.xdtic.controller.*.*(..))")
     public void advice() {
 
     }
