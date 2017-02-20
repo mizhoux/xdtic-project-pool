@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -19,8 +20,7 @@ import wenjing.xdtic.model.User;
 @Repository
 public class ProjectDao {
 
-    private static final DateTimeFormatter 
-            DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
 
     @Autowired
     private JdbcTemplate jdbcTmpl;
@@ -31,6 +31,37 @@ public class ProjectDao {
     public Project getProject(Integer proId) {
         String SQL = "SELECT * FROM project WHERE proId = ?";
         return jdbcTmpl.query(SQL, this::extractProject, proId);
+    }
+
+    // userId 用来判断项目是否已经被该用户收藏
+    public List<Project> getProjects(Integer userId, Integer offset, Integer size) {
+        String SQL = "SELECT * FROM project LIMIT ?, ?";
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, offset, size);
+
+        projects.forEach(project -> {
+            project.setIsCollected(isProjectCollected(userId, project.getProId()));
+        });
+
+        return projects;
+    }
+
+    // userId 用来判断项目是否已经被该用户收藏
+    public List<Project> getHotProjects(Integer userId, Integer hotSize) {
+
+        String SQL = "SELECT pid, COUNT(*) AS c FROM collect_project GROUP BY pid ORDER BY c DESC LIMIT ?";
+        StringJoiner sqlCondition = new StringJoiner(", ", "(", ")");
+        jdbcTmpl.query(SQL, rs -> {
+            sqlCondition.add(String.valueOf(rs.getInt("pid")));
+        }, hotSize);
+
+        SQL = "SELECT * FROM project WHERE proId IN " + sqlCondition;
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject);
+
+        projects.forEach(project -> {
+            project.setIsCollected(isProjectCollected(userId, project.getProId()));
+        });
+
+        return projects;
     }
 
     public List<Project> getPostedProjects(Integer userId, Integer offset, Integer size) {
@@ -55,6 +86,11 @@ public class ProjectDao {
     public long getPostedProjectsCount(Integer userId) {
         String SQL = "SELECT COUNT(*) FROM project WHERE userid = ?";
         return jdbcTmpl.queryForObject(SQL, Long.class, userId);
+    }
+
+    public long getProjectsCount() {
+        String SQL = "SELECT COUNT(*) FROM project";
+        return jdbcTmpl.queryForObject(SQL, Long.class);
     }
 
     public List<Project> getJoiningProjects(Integer userId, Integer offset, Integer size) {

@@ -42,7 +42,8 @@ public class ProjectController {
 
     @RequestMapping("project")
     public ModelAndView getProjectDetailPage(HttpSession session,
-            @RequestParam Integer proId,
+            @RequestParam(required = false) Integer proId,
+            @RequestParam(required = false) Integer id,
             @RequestParam(required = false) Integer uid) {
 
         User user = (User) session.getAttribute("user");
@@ -52,6 +53,10 @@ public class ProjectController {
             System.out.println("getProjectDetailPage: get User: " + user);
         }
 
+        if (proId == null) {
+            proId = id;
+        }
+        
         Project project = projectDao.getProject(proId);
         boolean isCollected = projectDao.isProjectCollected(user.getId(), proId);
         project.setIsCollected(isCollected);

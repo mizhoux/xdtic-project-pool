@@ -4,12 +4,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wenjing.xdtic.dao.ProjectDao;
 import wenjing.xdtic.dao.UserDao;
+import wenjing.xdtic.model.HotProjects;
 import wenjing.xdtic.model.PagingProjects;
 import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.RespCode;
@@ -123,19 +125,53 @@ public class ProjectFunction {
         int offset = pageNum * pageSize;
         List<Project> projects = projectDao.getPostedProjects(uid, offset, pageSize);
 
-        PagingProjects pagingProject = new PagingProjects();
-        pagingProject.setProjects(projects);
+        PagingProjects pagingProjects = new PagingProjects();
+        pagingProjects.setProjects(projects);
 
         long count = projectDao.getPostedProjectsCount(uid);
         if ((pageNum + 1) * pageSize >= count) {
-            pagingProject.setHasMore(false);
+            pagingProjects.setHasMore(false);
         } else {
-            pagingProject.setHasMore(true);
+            pagingProjects.setHasMore(true);
         }
 
-        pagingProject.setPageNum(pageNum);
-        pagingProject.setSize(projects.size());
+        pagingProjects.setPageNum(pageNum);
+        pagingProjects.setSize(projects.size());
 
-        return pagingProject;
+        return pagingProjects;
     }
+
+    @ResponseBody
+    @GetMapping("get/project")
+    public PagingProjects getProjects(@RequestParam Integer userid,
+            @RequestParam Integer pageNum, @RequestParam Integer pageSize, @RequestParam String keyWords) {
+        int offset = pageNum * pageSize;
+        List<Project> projects = projectDao.getProjects(userid, offset, pageSize);
+
+        PagingProjects pagingProjects = new PagingProjects();
+        pagingProjects.setProjects(projects);
+
+        long count = projectDao.getProjectsCount();
+        if ((pageNum + 1) * pageSize >= count) {
+            pagingProjects.setHasMore(false);
+        } else {
+            pagingProjects.setHasMore(true);
+        }
+
+        pagingProjects.setPageNum(pageNum);
+        pagingProjects.setSize(projects.size());
+
+        return pagingProjects;
+    }
+
+    @ResponseBody
+    @GetMapping("get/hotProject")
+    public HotProjects getHotProjects(@RequestParam Integer userid,
+            @RequestParam Integer hotSize, @RequestParam String keyWords) {
+        List<Project> projects = projectDao.getHotProjects(userid, hotSize);
+        
+        HotProjects hotProjects = new HotProjects(projects.size(), projects);
+        return hotProjects;
+    }
+
 }

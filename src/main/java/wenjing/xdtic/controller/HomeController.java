@@ -37,8 +37,9 @@ public class HomeController {
         return "page/user/center";
     }
 
-    @RequestMapping({"hall", "project/toJoin"})
-    public String getNotImplPage() {
-        return "not_impl";
+    @RequestMapping("hall")
+    public String getHallPage() {
+        return "page/hall/hall";
     }
+    
 }
