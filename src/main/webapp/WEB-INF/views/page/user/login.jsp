@@ -12,7 +12,7 @@
 
 			<form action="<c:url value='/fn/user/login' />" method="POST" class="tic-form" id="formLogin">
 				<p class="tic-error-tip" 
-				     v-show="hasError">用户名或密码错误</p>
+				     v-show="hasError" v-cloak>用户名或密码错误</p>
 				<div class="tic-field"
 					 :class="{ 'tic-error': hasError }">
 					<input type="text" name="username" placeholder="用户名" 

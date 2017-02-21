@@ -136,6 +136,12 @@
 	</fis:block>
 
 	<fis:block name="jsPre">
+		<script>
+			var getMultiline = function(f) {
+				return f.toString().replace(/^[^\/]+\/\*!?\s?/, '')
+							.replace(/\*\/[^\/]+$/, '');
+			};
+		</script>
         <script>
 			var userInfo = {
 				username: "<c:out value="${user.username}" />",
@@ -146,8 +152,11 @@
 				phone: "<c:out value="${user.phone}" />",
 				stunum: "<c:out value="${user.stunum}" />",
 				profile: "<c:out value="${user.profile}" />",
-				pexperice: "<c:out value="${user.pexperice}" />"
-			}
+				pexperice: getMultiline(function() {/*
+					<c:out value="${user.pexperice}" />
+				*/
+				})
+			};
 		</script>
     </fis:block>
 

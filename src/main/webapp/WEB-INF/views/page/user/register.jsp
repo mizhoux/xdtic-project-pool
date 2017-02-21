@@ -12,7 +12,7 @@
 
 			<form action="<c:url value='/fn/user/register' />" method="POST" class="tic-form" id="formRegister">
 				<p class="tic-error-tip" 
-				     v-show="hasError">{{errorMsg}}</p>
+				     v-show="hasError" v-cloak>{{errorMsg}}</p>
 				<div class="tic-field"
 					 :class="{ 'tic-error': usernameError }">
 					<input type="text" name="username" placeholder="用户名" 

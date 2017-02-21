@@ -187,11 +187,12 @@
             "pkg": "p1"
         },
         "static/js/module/tools.js": {
-            "uri": "/xdtic/static/js/module/tools_10226c3.js",
+            "uri": "/xdtic/static/js/module/tools_7d6eda7.js",
             "type": "js",
             "extras": {
                 "moduleId": "static/js/module/tools"
-            }
+            },
+            "pkg": "p1"
         },
         "static/js/myProject/myCollect/toJoin.js": {
             "uri": "/xdtic/static/js/myProject/myCollect/toJoin_6f4b491.js",
@@ -231,12 +232,13 @@
             ]
         },
         "static/js/user/login.js": {
-            "uri": "/xdtic/static/js/user/login_9756b9e.js",
+            "uri": "/xdtic/static/js/user/login_3e4854b.js",
             "type": "js",
             "deps": [
                 "node_modules/es6-promise/dist/es6-promise.js",
                 "node_modules/whatwg-fetch/fetch.js",
-                "static/js/module/formSerialize.js"
+                "static/js/module/formSerialize.js",
+                "static/js/module/tools.js"
             ],
             "pkg": "p3"
         },
@@ -404,14 +406,15 @@
             ]
         },
         "p1": {
-            "uri": "/xdtic/static/pkg/js/module_291faf0.js",
+            "uri": "/xdtic/static/pkg/js/module_76863af.js",
             "type": "js",
             "has": [
                 "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
                 "node_modules/process/browser.js",
                 "node_modules/es6-promise/dist/es6-promise.js",
                 "node_modules/whatwg-fetch/fetch.js",
-                "static/js/module/formSerialize.js"
+                "static/js/module/formSerialize.js",
+                "static/js/module/tools.js"
             ]
         },
         "p2": {
@@ -427,7 +430,7 @@
             ]
         },
         "p3": {
-            "uri": "/xdtic/static/pkg/js/user/login_70205c6.js",
+            "uri": "/xdtic/static/pkg/js/user/login_4b9fcf8.js",
             "type": "js",
             "has": [
                 "static/js/user/login.js"
@@ -435,7 +438,8 @@
             "deps": [
                 "node_modules/es6-promise/dist/es6-promise.js",
                 "node_modules/whatwg-fetch/fetch.js",
-                "static/js/module/formSerialize.js"
+                "static/js/module/formSerialize.js",
+                "static/js/module/tools.js"
             ]
         },
         "p4": {
