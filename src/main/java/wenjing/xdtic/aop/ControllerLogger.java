@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ControllerLogger {
 
-    @Pointcut("execution(* wenjing.xdtic.controller.*Function.*(..))")
+    @Pointcut("execution(* wenjing.xdtic.controller.*.*(..))")
     public void advice() {
 
     }
@@ -27,7 +27,7 @@ public class ControllerLogger {
     @Before("advice()")
     public void doBefore(JoinPoint jp) {
         String methodName = getMethodName(jp);
-        System.out.println("call method: " + methodName);
+        System.out.println("call: " + methodName);
     }
 
     public void doAround() {

@@ -16,7 +16,7 @@ import wenjing.xdtic.model.User;
  * @author wenjing
  */
 @Controller
-@RequestMapping("user") // 和 "/user" 作用一样，SpringMVC 会自动在前面添加上 /
+@RequestMapping("user")
 public class UserController {
 
     @Autowired

@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wenjing.xdtic.dao.MessageDao;
 import wenjing.xdtic.dao.UserDao;
+import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.PagingMessages;
 import wenjing.xdtic.model.RespCode;
-import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.User;
 
 /**
@@ -28,7 +28,7 @@ import wenjing.xdtic.model.User;
  * @author Michael Chow <mizhoux@gmail.com>
  */
 @Controller
-@RequestMapping("fn") // 和 "/fn" 作用一样，SpringMVC 会自动在前面添加上 /
+@RequestMapping("fn")
 public class UserFunction {
 
     @Autowired
