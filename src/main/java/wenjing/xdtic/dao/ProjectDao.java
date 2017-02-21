@@ -1,6 +1,7 @@
 package wenjing.xdtic.dao;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,14 +35,11 @@ public class ProjectDao {
 
     // userId 用来判断项目是否已经被该用户收藏
     public List<Project> getProjects(Integer userId, Integer offset, Integer size) {
-        String SQL = "SELECT * FROM project LIMIT ?, ?";
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, offset, size);
+        String SQL = "SELECT u.username, p.* FROM project AS p, USER AS u WHERE p.userid = u.id LIMIT ?, ?";
 
-        String username = userDao.getUsername(userId);
-        projects.forEach(project -> {
-            project.setUsername(username);
-            project.setIsCollected(isProjectCollected(userId, project.getProId()));
-        });
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProjectWithUsername, offset, size);
+
+        projects.forEach(project -> project.setIsCollected(isProjectCollected(userId, project.getProId())));
 
         return projects;
     }
@@ -49,17 +47,13 @@ public class ProjectDao {
     // userId 用来判断项目是否已经被该用户收藏
     public List<Project> getHotProjects(Integer userId, Integer hotSize) {
 
-        String SQL = "SELECT * FROM project AS t, "
-                + "(SELECT pid, COUNT(*) AS num FROM collect_project GROUP BY pid ORDER BY num DESC LIMIT ?) AS s "
-                + "WHERE t.`proId` = s.pid";
+        String SQL = "SELECT u.username, p.* FROM project AS p, USER AS u,"
+                + "(SELECT pid, COUNT(*) AS num FROM collect_project GROUP BY pid ORDER BY num DESC LIMIT ?) AS t "
+                + "WHERE p.proId = t.pid AND u.id = p.userid";
 
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, hotSize);
-        String username = userDao.getUsername(userId);
-        
-        projects.forEach(project -> {
-            project.setUsername(username);
-            project.setIsCollected(isProjectCollected(userId, project.getProId()));
-        });
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProjectWithUsername, hotSize);
+
+        projects.forEach(project -> project.setIsCollected(isProjectCollected(userId, project.getProId())));
 
         return projects;
     }
@@ -95,17 +89,13 @@ public class ProjectDao {
 
     public List<Project> getJoiningProjects(Integer userId, Integer offset, Integer size) {
         String SQL
-                = "SELECT p.* FROM project AS p WHERE p.proId IN "
-                + "(SELECT jp.pid FROM join_project AS jp WHERE jp.uid = ?) "
+                = "SELECT u.username, p.* FROM project AS p, user AS u WHERE p.proId IN "
+                + "(SELECT jp.pid FROM join_project AS jp WHERE jp.uid = ?) AND u.id = p.userid "
                 + "LIMIT ?, ?";
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProjectWithUsername, userId, offset, size);
 
-        String username = userDao.getUsername(userId);
-        projects.forEach(project -> {
-            project.setUsername(username);
-            boolean isCollected = isProjectCollected(userId, project.getProId());
-            project.setIsCollected(isCollected);
-        });
+        projects.forEach(project -> project.setIsCollected(isProjectCollected(userId, project.getProId())));
+
         return projects;
     }
 
@@ -125,17 +115,13 @@ public class ProjectDao {
 
     public List<Project> getCollectedProjects(Integer userId, Integer offset, Integer size) {
         String SQL
-                = "SELECT p.* FROM project AS p WHERE p.proId IN "
-                + "(SELECT cp.pid FROM collect_project AS cp WHERE cp.uid = ?) "
+                = "SELECT u.username, p.* FROM project AS p, user AS u WHERE p.proId IN "
+                + "(SELECT cp.pid FROM collect_project AS cp WHERE cp.uid = ?) AND u.id = p.userid "
                 + "LIMIT ?, ?";
 
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProjectWithUsername, userId, offset, size);
 
-        String username = userDao.getUsername(userId);
-        projects.forEach(project -> {
-            project.setUsername(username);
-            project.setIsCollected(true);
-        });
+        projects.forEach(project -> project.setIsCollected(true));
 
         return projects;
     }
@@ -209,6 +195,12 @@ public class ProjectDao {
         return project;
     }
 
+    private Project parseProjectWithUsername(ResultSet rs, int rowNum) throws SQLException {
+        Project project = parseProject(rs, rowNum);
+        project.setUsername(rs.getString("username"));
+        return project;
+    }
+
     public boolean addProject(Integer userId, String tag, String proname,
             String promassage, String prowant, String concat) {
         String SQL
@@ -247,6 +239,17 @@ public class ProjectDao {
     }
 
     public boolean isUserJoined(User user, Project project) {
+        return false;
+    }
+
+    private boolean isColumnExists(ResultSet rs, String column) throws SQLException {
+        ResultSetMetaData metaData = rs.getMetaData();
+        int columnCount = metaData.getColumnCount();
+        for (int i = 1; i <= columnCount; i++) {
+            if (column.equals(metaData.getColumnName(i))) {
+                return true;
+            }
+        }
         return false;
     }
 

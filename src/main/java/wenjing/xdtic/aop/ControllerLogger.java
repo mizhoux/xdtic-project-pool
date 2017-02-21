@@ -27,7 +27,7 @@ public class ControllerLogger {
     @Before("advice()")
     public void doBefore(JoinPoint jp) {
         String methodName = getMethodName(jp);
-        System.out.println("call method: " + methodName);
+        System.out.println("call: " + methodName);
     }
 
     public void doAround() {
