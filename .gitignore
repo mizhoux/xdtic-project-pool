@@ -7,3 +7,4 @@ release.properties
 nb-configuration.xml
 .idea
 *iml
+src/main/webapp/WEB-INF/server-.conf
