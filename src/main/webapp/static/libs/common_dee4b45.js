@@ -1,1 +1,1 @@
-var urlPrefix="/xdtic";
+var urlPrefix="";

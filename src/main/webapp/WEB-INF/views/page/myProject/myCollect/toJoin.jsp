@@ -11,26 +11,27 @@
 			<main id="appToJoin">
 				<div class="tic-table-head">
 					<h3>个人资料填写</h3>
-					<p>(在个人中心完善简历后，系统可帮您预填哦~)</p>
+					<p>(记得在个人中心完善简历，系统可帮您预填哦~)</p>
 				</div>
 				<div class="tic-table">
 					<form class="tic-form" id="formToJoin"
 					 @blur.capture="validateToJoin">
 						<div class="tic-form-error" v-if="hasError">
-							<p>还有必填项没有填哦~</p>
+							<p>还有必填项没有填~</p>
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">姓名</span>
 							<span class="tic-td-content">
-								<input type="text" name="name" v-model="user.name"
+								<!-- <input type="text" name="name" v-model="user.name"
 								 
-								 :class="{'tic-error-input': inputError['name']}" />
+								 :class="{'tic-error-input': inputError['name']}" /> -->
+								{{user.name}}
 							</span>
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">性别</span>
 							<span class="tic-td-content">
-								<div class="weui-cells weui-cells_checkbox tic-cells-nomargin">
+								<!-- <div class="weui-cells weui-cells_checkbox tic-cells-nomargin">
 								    <label class="weui-cell weui-check__label" for="radioBoy">
 								        <div class="weui-cell__hd">
 								            <input type="radio" value="boy" class="weui-check" id="radioBoy" name="sex" v-model="user.sex">
@@ -49,7 +50,35 @@
 								            <p>女</p>
 								        </div>
 								    </label>
-								</div>
+								</div> -->
+								{{user.sex === 'boy' ? '男' : '女'}}
+							</span>
+						</div>
+						<div class="tic-tr-two">
+							<span class="tic-td-label">专业</span>
+							<span class="tic-td-content">
+								<!-- <input type="text" name="profe" v-model="user.profe"
+								 
+								 :class="{'tic-error-input': inputError['profe']}" /> -->
+								 {{user.profe}}
+							</span>
+						</div>
+						<div class="tic-tr-two">
+							<span class="tic-td-label">手机</span>
+							<span class="tic-td-content">
+								<!-- <input type="text" name="phone" v-model="user.phone"
+								 
+								 :class="{'tic-error-input': inputError['phone']}" /> -->
+								 {{user.phone}}
+							</span>
+						</div>
+						<div class="tic-tr-two">
+							<span class="tic-td-label">学号</span>
+							<span class="tic-td-content">
+								<!-- <input type="text" name="stunum" v-model="user.stunum"
+								  
+								 :class="{'tic-error-input': inputError['stunum']}" /> -->
+								 {{user.stunum}}
 							</span>
 						</div>
 						<div class="tic-tr-two">
@@ -58,30 +87,6 @@
 								<input type="text" name="apply" v-model="userApply"
 								 
 								 :class="{'tic-error-input': inputError['apply']}" />
-							</span>
-						</div>
-						<div class="tic-tr-two">
-							<span class="tic-td-label">专业</span>
-							<span class="tic-td-content">
-								<input type="text" name="profe" v-model="user.profe"
-								 
-								 :class="{'tic-error-input': inputError['profe']}" />
-							</span>
-						</div>
-						<div class="tic-tr-two">
-							<span class="tic-td-label">手机</span>
-							<span class="tic-td-content">
-								<input type="text" name="phone" v-model="user.phone"
-								 
-								 :class="{'tic-error-input': inputError['phone']}" />
-							</span>
-						</div>
-						<div class="tic-tr-two">
-							<span class="tic-td-label">学号</span>
-							<span class="tic-td-content">
-								<input type="text" name="stunum" v-model="user.stunum"
-								  
-								 :class="{'tic-error-input': inputError['stunum']}" />
 							</span>
 						</div>
 						<div class="tic-tr-two">

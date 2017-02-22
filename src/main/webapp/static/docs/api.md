@@ -170,13 +170,13 @@
         "signInfos": [{
     		"sid": "s001",
     		"username": "小草",
-    		"career": "UI设计师",
+    		"apply": "UI设计师",
     		"date": "2015.12.31",
     		"time": "19:00"
     	}, {
     		"sid": "s002",
     		"username": "脸狐",
-    		"career": "前端工程师",
+    		"apply": "前端工程师",
     		"date": "2015.12.31",
     		"time": "21:00"
     	}],
@@ -211,7 +211,7 @@
     "signInfo": {
         "sid": "s001",
         "username": "小草",
-        "career": "UI设计师",
+        "apply": "UI设计师",
         "date": "2015.12.31",
         "time": "19:00"
     },
@@ -342,12 +342,7 @@
    - request `[POST]` `[Form]`
    ```
    {
-        name:张骥
-        sex:boy
         apply:UI设计师
-        profe:软件工程
-        phone:15029679086
-        stunum:1603121451
         profile:ps,c++,ui设计
         pexperice:人脸识别系统
         proId:p001
