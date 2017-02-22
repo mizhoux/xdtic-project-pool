@@ -1,6 +1,5 @@
 package wenjing.xdtic.controller;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,11 +7,11 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import wenjing.xdtic.dao.ProjectDao;
+import wenjing.xdtic.dao.SignInfoDao;
 import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.SignInfo;
@@ -30,6 +29,9 @@ public class ProjectController {
 
     @Autowired
     private ProjectDao projectDao;
+
+    @Autowired
+    private SignInfoDao signInfoDao;
 
     @RequestMapping("myProject")
     public String getMyProjectPage() {
@@ -92,11 +94,29 @@ public class ProjectController {
         return new ModelAndView("/page/myProject/myPost/editDetail", "project", project);
     }
 
-    @RequestMapping("myProject/{myProjectType}/signInfo")
-    public ModelAndView getSignInfosPage(HttpSession session,
-            @PathVariable String myProjectType, @RequestParam Integer proId) {
-        List<SignInfo> signInfos = new ArrayList<>();
-        return new ModelAndView("page/myProject/myPost/signInfo", "signInfos", signInfos);
+    @GetMapping("myProject/myPost/signInfo")
+    public ModelAndView getSignInfosPage(@RequestParam Integer proId) {
+        Project project = projectDao.getProject(proId);
+        List<SignInfo> signInfos = signInfoDao.getSignInfos(proId);
+
+        ModelAndView mav = new ModelAndView("page/myProject/myPost/signInfo");
+        mav.addObject("project", project);
+        mav.addObject("signInfos", signInfos);
+
+        return mav;
+    }
+
+    @GetMapping("signInfo")
+    public ModelAndView getSignInfoDetail(HttpSession session, @RequestParam Integer signId) {
+        ModelAndView mav = new ModelAndView("page/myProject/myPost/signDetail");
+        
+        SignInfo signInfo = signInfoDao.getSignInfo(signId);
+        User signUser = userDao.getUser(signInfo.getUid());
+
+        mav.addObject("signUser", signUser);
+        mav.addObject("signInfo", signInfo);
+
+        return mav;
     }
 
     @GetMapping("project/toJoin")
@@ -122,8 +142,8 @@ public class ProjectController {
             user = userDao.getUser(uid);
             session.setAttribute("user", user);
         }
-        
+
         return user;
     }
-    
+
 }

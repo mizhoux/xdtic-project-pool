@@ -195,7 +195,7 @@
 - jsp页面所需变量
 ```
 {
-    "user": {
+    "signUser": {
 		"id": "u001",
 		"username": "adoug",
 		"email": "942434869@qq.com",
@@ -416,7 +416,7 @@
 - url: /xdtic/hall
 - jsp: /page/hall/hall.jsp
 
-- api: /xdtic/get/project `[GET]`
+- api: /xdtic/fn/get/project `[GET]`
 
    - 说明：获取项目
    - request
