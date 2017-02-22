@@ -20,7 +20,7 @@
 								<p>
 									<span class="tic-font-strong"><c:out value="${signInfo.username}" /></span>
 									<span>报名了</span>
-									<span class="tic-font-strong"><c:out value="${signInfo.career}" /></span>
+									<span class="tic-font-strong"><c:out value="${signInfo.apply}" /></span>
 								</p>
 								<p class="tic-font-secondary">
 									<c:out value="${signInfo.date}" />
