@@ -416,7 +416,7 @@
 - url: /xdtic/hall
 - jsp: /page/hall/hall.jsp
 
-- api: /xdtic/get/project `[GET]`
+- api: /xdtic/fn/get/project `[GET]`
 
    - 说明：获取项目
    - request
