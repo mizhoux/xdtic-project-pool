@@ -11,6 +11,17 @@
 
 .tic-msg-box .tic-msg .tic-msg-two .tic-msg-left {
   flex: 1 0 20%;
+  position: relative;
+}
+
+.tic-msg-box .tic-msg .tic-msg-two .tic-msg-left.notice::before {
+  content: "";
+  position: absolute;
+  background-color: red;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  right: 34.714%;
 }
 
 .tic-msg-box .tic-msg .tic-msg-two .tic-msg-right {

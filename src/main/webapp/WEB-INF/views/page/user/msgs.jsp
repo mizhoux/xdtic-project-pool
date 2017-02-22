@@ -16,8 +16,11 @@
 		<main id="appBody">
 			<div class="tic-msg-box" id="msgBox" v-infinite-scroll="loadMore" infinite-scroll-disabled="busy" infinite-scroll-distance="10" infinite-scroll-immediate-check="checkImmediately">
 				<tic-msg
-				 v-for="msg in msgs"
-				 :msg="msg">
+				 @read="readMsg"
+				 @unread="unreadMsg"
+				 v-for="(msg, index) in msgs"
+				 :msg="msg"
+				 :index="index">
 				</tic-msg>
 			</div>
 			<div class="weui-loadmore" v-show="isLoading">
@@ -50,12 +53,12 @@
 		<script type="text/x-template" id="tic-msg">
 			<div class="tic-msg">
 				<div class="tic-msg-two">
-					<div class="tic-msg-left">
+					<div class="tic-msg-left" :class="{notice: !msg.read}">
 						<img v-if="msg.type === 'join'" src="<c:url value='/static/images/msg-dialog-red.png' />" alt="">
 						<img v-else src="<c:url value='/static/images/msg-dialog.png' />" alt="">
 					</div>
 					<div class="tic-msg-right">
-						<a :href="'<c:url value='/user/msg' />?id=' + msg.mid" class="tic-msg-link" v-tap>
+						<a href="" class="tic-msg-link" v-tap.prevent='{methods: readMsg, msgIndex: index}'>
 							<p>
 								{{msg.massage}}
 							</p>
