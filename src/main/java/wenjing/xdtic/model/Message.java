@@ -6,11 +6,14 @@ package wenjing.xdtic.model;
  */
 public class Message {
 
-    private Integer uid;
     private Integer mid;
-    private String type ;
+    private Integer uid;
+
+    private String type;
     private String massage;
     private String date;
+
+    private boolean read;
 
     public Message() {
     }
@@ -53,6 +56,14 @@ public class Message {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public boolean isRead() {
+        return read;
+    }
+
+    public void setRead(boolean read) {
+        this.read = read;
     }
 
 }

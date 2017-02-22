@@ -107,13 +107,13 @@ public class ProjectController {
     }
 
     @GetMapping("signInfo")
-    public ModelAndView getSignInfoDetail(HttpSession session, @RequestParam Integer sid) {
+    public ModelAndView getSignInfoDetail(HttpSession session, @RequestParam Integer signId) {
         ModelAndView mav = new ModelAndView("page/myProject/myPost/signDetail");
+        
+        SignInfo signInfo = signInfoDao.getSignInfo(signId);
+        User signUser = userDao.getUser(signInfo.getUid());
 
-        User user = (User) session.getAttribute("user");
-        SignInfo signInfo = signInfoDao.getSignInfo(sid);
-
-        mav.addObject("user", user);
+        mav.addObject("signUser", signUser);
         mav.addObject("signInfo", signInfo);
 
         return mav;

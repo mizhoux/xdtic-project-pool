@@ -141,7 +141,6 @@ public class ProjectFunction {
 
         int offset = pageNum * pageSize;
         List<Project> projects = projectDao.getProjects(userid, keyWords, offset, pageSize);
-        System.out.println("projects.size: " + projects.size());
 
         PagingProjects pagingProjects = new PagingProjects();
         pagingProjects.setProjects(projects);

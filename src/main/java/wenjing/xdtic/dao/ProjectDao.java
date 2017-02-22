@@ -39,9 +39,8 @@ public class ProjectDao {
                 = "SELECT u.username, p.* FROM project AS p, user AS u "
                 + "WHERE p.userid = u.id AND p.tag LIKE ? LIMIT ?, ?";
 
-        keywords = "%" + keywords + "%";
         List<Project> projects = jdbcTmpl.query(
-                SQL, this::parseProjectWithUsername, keywords, offset, size);
+                SQL, this::parseProjectWithUsername, getMysqlLikeKey(keywords), offset, size);
 
         projects.forEach(project
                 -> project.setIsCollected(isProjectCollected(userId, project.getProId())));
@@ -55,8 +54,8 @@ public class ProjectDao {
                 + "(SELECT pid, COUNT(*) AS num FROM collect_project GROUP BY pid ORDER BY num DESC LIMIT ?) AS t "
                 + "WHERE p.proId = t.pid AND p.tag LIKE ? AND u.id = p.userid";
 
-        keywords = "%" + keywords + "%";
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProjectWithUsername, hotSize, keywords);
+        List<Project> projects = jdbcTmpl.query(
+                SQL, this::parseProjectWithUsername, hotSize, getMysqlLikeKey(keywords));
 
         projects.forEach(project -> project.setIsCollected(isProjectCollected(userId, project.getProId())));
 
@@ -89,13 +88,13 @@ public class ProjectDao {
 
     public long getProjectsCount(String keywords) {
         String SQL = "SELECT COUNT(*) FROM project WHERE tag LIKE ?";
-        return jdbcTmpl.queryForObject(SQL, Long.class, "%" + keywords + "%");
+        return jdbcTmpl.queryForObject(SQL, Long.class, getMysqlLikeKey(keywords));
     }
 
     public List<Project> getJoiningProjects(Integer userId, Integer offset, Integer size) {
         String SQL
                 = "SELECT u.username, p.* FROM project AS p, user AS u WHERE p.proId IN "
-                + "(SELECT jp.pid FROM join_project AS jp WHERE jp.uid = ?) AND u.id = p.userid "
+                + "(SELECT s.proId FROM sign_info AS s WHERE s.uid = ?) AND u.id = p.userid "
                 + "LIMIT ?, ?";
         List<Project> projects = jdbcTmpl.query(SQL, this::parseProjectWithUsername, userId, offset, size);
 
@@ -113,7 +112,7 @@ public class ProjectDao {
     public long getJoiningProjectsCount(Integer userId) {
         String SQL
                 = "SELECT COUNT(*) FROM project AS p WHERE p.proId IN "
-                + "(SELECT jp.pid FROM join_project AS jp WHERE jp.uid = ?)";
+                + "(SELECT s.proId FROM sign_info AS s WHERE s.uid = ?)";
 
         return jdbcTmpl.queryForObject(SQL, Long.class, userId);
     }
@@ -148,13 +147,13 @@ public class ProjectDao {
     /**
      * 判断一个项目是否被给定的用户收藏
      *
-     * @param uid 用户ID
-     * @param pid 项目ID
+     * @param userId 用户ID
+     * @param proId 项目ID
      * @return
      */
-    public boolean isProjectCollected(Integer uid, Integer pid) {
+    public boolean isProjectCollected(Integer userId, Integer proId) {
         String SQL = "SELECT COUNT(*) FROM collect_project WHERE uid = ? AND pid = ?";
-        return jdbcTmpl.queryForObject(SQL, Long.class, uid, pid) == 1;
+        return jdbcTmpl.queryForObject(SQL, Long.class, userId, proId) == 1;
     }
 
     /**
@@ -244,7 +243,13 @@ public class ProjectDao {
     }
 
     public boolean isUserJoined(User user, Project project) {
-        return false;
+        String SQL = "SELECT COUNT(*) FROM sign_info WHERE uid = ? AND proId = ?";
+        long result = jdbcTmpl.queryForObject(SQL, Long.class, user.getId(), project.getProId());
+        return result == 1;
+    }
+
+    private String getMysqlLikeKey(String keyword) {
+        return "%" + keyword + "%";
     }
 
     private boolean isColumnExists(ResultSet rs, String column) throws SQLException {

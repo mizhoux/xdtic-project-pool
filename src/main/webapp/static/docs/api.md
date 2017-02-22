@@ -195,7 +195,7 @@
 - jsp页面所需变量
 ```
 {
-    "user": {
+    "signUser": {
 		"id": "u001",
 		"username": "adoug",
 		"email": "942434869@qq.com",

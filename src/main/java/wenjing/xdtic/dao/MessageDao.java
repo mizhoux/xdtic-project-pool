@@ -17,8 +17,7 @@ import wenjing.xdtic.model.Message;
 @Repository
 public class MessageDao {
 
-    private static final DateTimeFormatter 
-            DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Autowired
     private JdbcTemplate jdbcTmpl;
@@ -26,17 +25,22 @@ public class MessageDao {
     /**
      * 获得用户的消息总数
      *
-     * @param uid 用户的 id
+     * @param userId 用户的 id
      * @return 数据库中对应用户消息的数量
      */
-    public long getUserMessagesCount(Integer uid) {
-        String SQL = "SELECT COUNT(*) FROM systemassage WHERE uid = ?";
-        return jdbcTmpl.queryForObject(SQL, Long.class, uid);
+    public long getUserMessagesCount(Integer userId) {
+        String SQL = "SELECT COUNT(*) FROM message WHERE uid = ?";
+        return jdbcTmpl.queryForObject(SQL, Long.class, userId);
     }
 
-    public List<Message> getUserMessages(Integer uid, Integer offset, Integer size) {
-        String SQL = "SELECT * FROM systemassage WHERE uid = ? LIMIT ?, ?";
-        return jdbcTmpl.query(SQL, this::parseMessage, uid, offset, size);
+    public List<Message> getUserMessages(Integer userId, Integer offset, Integer size) {
+        String SQL = "SELECT * FROM message WHERE uid = ? LIMIT ?, ?";
+        return jdbcTmpl.query(SQL, this::parseMessage, userId, offset, size);
+    }
+
+    public Message getMessage(Integer id) {
+        String SQL = "SELECT * FROM message WHERE mid = ?";
+        return jdbcTmpl.query(SQL, rs -> rs.next() ? parseMessage(rs, 0) : null, id);
     }
 
     private Message parseMessage(ResultSet rs, int rowNum) throws SQLException {
@@ -45,6 +49,7 @@ public class MessageDao {
         message.setMid(rs.getInt("mid"));
         message.setMassage(rs.getString("massage"));
         message.setType(rs.getString("type"));
+        message.setRead(rs.getBoolean("read"));
 
         LocalDateTime dateTime = rs.getTimestamp("date").toLocalDateTime(); //获取时间
         String dateStr = dateTime.format(DATE_TIME_FORMATTER);//设施时间格式
