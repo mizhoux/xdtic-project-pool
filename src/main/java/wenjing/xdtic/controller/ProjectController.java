@@ -55,7 +55,7 @@ public class ProjectController {
             proId = id;
         }
 
-        Project project = projectDao.getProject(proId);
+        Project project = projectDao.get(proId);
         
         project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
 
@@ -76,7 +76,7 @@ public class ProjectController {
             HttpSession session, @RequestParam Integer proId,
             @RequestParam(required = false) Integer uid) {
 
-        Project project = projectDao.getProject(proId);
+        Project project = projectDao.get(proId);
         User user = (User) session.getAttribute("user");
 
         project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
@@ -87,7 +87,7 @@ public class ProjectController {
     @RequestMapping("myProject/myPost/editDetail")
     public ModelAndView getProjectEditDetailPage(HttpSession session, @RequestParam Integer proId) {
         
-        Project project = projectDao.getProject(proId);
+        Project project = projectDao.get(proId);
         User user = (User) session.getAttribute("user");
         project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
         
@@ -96,7 +96,7 @@ public class ProjectController {
 
     @GetMapping("myProject/myPost/signInfo")
     public ModelAndView getSignInfosPage(@RequestParam Integer proId) {
-        Project project = projectDao.getProject(proId);
+        Project project = projectDao.get(proId);
         List<SignInfo> signInfos = signInfoDao.getSignInfos(proId);
 
         ModelAndView mav = new ModelAndView("page/myProject/myPost/signInfo");
@@ -125,7 +125,7 @@ public class ProjectController {
 
         ModelAndView mav = new ModelAndView("page/myProject/myCollect/toJoin");
 
-        Project project = projectDao.getProject(proId);
+        Project project = projectDao.get(proId);
         project.setIsCollected(projectDao.isProjectCollected(uid, proId));
 
         User user = (User) session.getAttribute("user");

@@ -42,9 +42,8 @@ public class ProjectFunction {
             return RespCode.ERROR;
         }
 
-        boolean addProjectSucc
-                = projectDao.addProject(userId, tag, proname, promassage, prowant, concat);
-        return addProjectSucc ? RespCode.OK : RespCode.ERROR;
+        boolean success = projectDao.add(userId, tag, proname, promassage, prowant, concat);
+        return success ? RespCode.OK : RespCode.ERROR;
     }
 
     @RequestMapping(value = "project/update", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
@@ -72,7 +71,7 @@ public class ProjectFunction {
     @RequestMapping("get/project/myJoin")
     public PagingProjects getMyJoiningProjects(@RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
-        
+
         int offset = pageNum * pageSize;
         List<Project> projects = projectDao.getJoiningProjects(uid, offset, pageSize);
 
@@ -95,7 +94,7 @@ public class ProjectFunction {
     @RequestMapping("get/project/myCollect")
     public PagingProjects getMyCollectedProjects(@RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
-        
+
         int offset = pageNum * pageSize;
         List<Project> projects = projectDao.getCollectedProjects(uid, offset, pageSize);
 
@@ -118,7 +117,7 @@ public class ProjectFunction {
     @RequestMapping("get/project/myPost")
     public PagingProjects getMyPostedProjects(@RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
-        
+
         int offset = pageNum * pageSize;
         List<Project> projects = projectDao.getPostedProjects(uid, offset, pageSize);
 
@@ -164,7 +163,7 @@ public class ProjectFunction {
     @GetMapping("get/hotProject")
     public HotProjects getHotProjects(@RequestParam Integer userid,
             @RequestParam Integer hotSize, @RequestParam String keyWords) {
-        
+
         List<Project> projects = projectDao.getHotProjects(userid, keyWords, hotSize);
 
         HotProjects hotProjects = new HotProjects(projects.size(), projects);

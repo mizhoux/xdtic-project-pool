@@ -1,5 +1,6 @@
 package wenjing.xdtic.dao;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -9,7 +10,10 @@ import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
+import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.User;
 
@@ -28,7 +32,10 @@ public class ProjectDao {
     @Autowired
     private UserDao userDao;
 
-    public Project getProject(Integer proId) {
+    @Autowired
+    private MessageDao messageDao;
+
+    public Project get(Integer proId) {
         String SQL = "SELECT * FROM project WHERE proId = ?";
         return jdbcTmpl.query(SQL, this::extractProject, proId);
     }
@@ -205,14 +212,32 @@ public class ProjectDao {
         return project;
     }
 
-    public boolean addProject(Integer userId, String tag, String proname,
-            String promassage, String prowant, String concat) {
+    public boolean add(Integer userId, String tag,
+            String proname, String promassage, String prowant, String concat) {
+
         String SQL
                 = "INSERT INTO project "
                 + "(userid, proname, promassage, prowant, tag, concat, date) "
                 + "VALUES (?, ?, ?, ?, ?, ?, NOW())";
 
-        return jdbcTmpl.update(SQL, userId, proname, promassage, prowant, tag, concat) == 1;
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        int result = jdbcTmpl.update(conn -> {
+            PreparedStatement pstmt = conn.prepareStatement(SQL, new String[]{"proId"});
+            pstmt.setInt(1, userId);
+            pstmt.setString(2, proname);
+            pstmt.setString(3, promassage);
+            pstmt.setString(4, prowant);
+            pstmt.setString(5, tag);
+            pstmt.setString(6, concat);
+            return pstmt;
+        }, keyHolder);
+
+        if (result == 1) {
+            Integer proId = keyHolder.getKey().intValue();
+            messageDao.add(userId, proId, proname, Message.Type.POST);
+            return true;
+        }
+        return false;
     }
 
     public boolean collectProject(Integer userId, Integer proId) {

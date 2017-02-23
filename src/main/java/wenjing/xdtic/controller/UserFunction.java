@@ -9,6 +9,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -69,7 +70,7 @@ public class UserFunction {
     @RequestMapping(value = "user/login", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public String userLogin(HttpSession session,
             @RequestParam String username, @RequestParam String password) {
-        
+
         User user = userDao.getUser(username, password);
         if (user != null) {
             long msgCount = messageDao.getMessagesCount(user.getId());
@@ -80,14 +81,14 @@ public class UserFunction {
 
         return "page/user/register";
     }
-    
+
     @GetMapping(value = "loginBySession")
     public String userLoginBySession(HttpSession session) {
-        
+
         if (session.getAttribute("user") != null) {
             return "page/user/center";
         }
-        
+
         return "page/user/login";
     }
 
@@ -216,5 +217,17 @@ public class UserFunction {
         boolean success = messageDao.setMessageRead(mid);
         return success ? RespCode.OK : RespCode.ERROR;
     }
-    
+
+    /**
+     * 获得消息实体，用于调试
+     *
+     * @param mid
+     * @return
+     */
+    @ResponseBody
+    @GetMapping("msg/{mid}")
+    public Message getMessage(@PathVariable Integer mid) {
+        return messageDao.get(mid);
+    }
+
 }

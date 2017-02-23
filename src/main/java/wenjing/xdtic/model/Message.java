@@ -6,11 +6,18 @@ package wenjing.xdtic.model;
  */
 public class Message {
 
+    public static enum Type {
+        POST, PASS, JOIN
+    }
+
     private Integer mid;
     private Integer uid;
 
-    private String type;
     private String massage;
+
+    private Integer proId;
+    private String type;
+
     private String date;
 
     private boolean read;
@@ -64,6 +71,14 @@ public class Message {
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    public Integer getProId() {
+        return proId;
+    }
+
+    public void setProId(Integer proId) {
+        this.proId = proId;
     }
 
 }
