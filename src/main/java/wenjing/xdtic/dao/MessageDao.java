@@ -28,12 +28,23 @@ public class MessageDao {
      * @param userId 用户的 id
      * @return 数据库中对应用户消息的数量
      */
-    public long getUserMessagesCount(Integer userId) {
+    public long getMessagesCount(Integer userId) {
         String SQL = "SELECT COUNT(*) FROM message WHERE uid = ?";
         return jdbcTmpl.queryForObject(SQL, Long.class, userId);
     }
 
-    public List<Message> getUserMessages(Integer userId, Integer offset, Integer size) {
+    /**
+     * 获得用户未读的消息总数
+     *
+     * @param userId 用户的 id
+     * @return 数据库中对应用户消息的数量
+     */
+    public long getUnreadMessagesCount(Integer userId) {
+        String SQL = "SELECT COUNT(*) FROM message AS m WHERE m.uid = ? AND m.read = FALSE";
+        return jdbcTmpl.queryForObject(SQL, Long.class, userId);
+    }
+
+    public List<Message> getMessages(Integer userId, Integer offset, Integer size) {
         String SQL = "SELECT * FROM message WHERE uid = ? LIMIT ?, ?";
         return jdbcTmpl.query(SQL, this::parseMessage, userId, offset, size);
     }
@@ -51,11 +62,16 @@ public class MessageDao {
         message.setType(rs.getString("type"));
         message.setRead(rs.getBoolean("read"));
 
-        LocalDateTime dateTime = rs.getTimestamp("date").toLocalDateTime(); //获取时间
-        String dateStr = dateTime.format(DATE_TIME_FORMATTER);//设施时间格式
+        LocalDateTime dateTime = rs.getTimestamp("date").toLocalDateTime();
+        String dateStr = dateTime.format(DATE_TIME_FORMATTER);
         message.setDate(dateStr);
 
         return message;
+    }
+
+    public boolean setMessageRead(Integer mid) {
+        String SQL = "UPDATE message m SET m.read = TRUE WHERE m.mid = ?";
+        return jdbcTmpl.update(SQL, mid) == 1;
     }
 
 }

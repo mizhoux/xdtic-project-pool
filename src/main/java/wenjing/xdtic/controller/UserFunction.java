@@ -72,16 +72,16 @@ public class UserFunction {
         
         User user = userDao.getUser(username, password);
         if (user != null) {
-            long msgCount = messageDao.getUserMessagesCount(user.getId());
+            long msgCount = messageDao.getMessagesCount(user.getId());
             user.setHasMsg(msgCount > 0);
             session.setAttribute("user", user);
-            return "page/user/center";
+            return "redirect:/fn/loginBySession";
         }
 
         return "page/user/register";
     }
     
-    @GetMapping(value = "user/login")
+    @GetMapping(value = "loginBySession")
     public String userLoginBySession(HttpSession session) {
         
         if (session.getAttribute("user") != null) {
@@ -191,23 +191,30 @@ public class UserFunction {
             @RequestParam Integer pageNum, @RequestParam Integer size) {
 
         int offset = pageNum * size;
-        List<Message> systemassages = messageDao.getUserMessages(uid, offset, size);
+        List<Message> messages = messageDao.getMessages(uid, offset, size);
 
         PagingMessages pagingMsgs = new PagingMessages();
         pagingMsgs.setPageNum(pageNum);
         pagingMsgs.setSize(size); // 设置返回的 size 为本次返回消息的数量
 
-        pagingMsgs.setMsgs(systemassages);
-        long count = messageDao.getUserMessagesCount(uid);
+        pagingMsgs.setMsgs(messages);
+        long count = messageDao.getMessagesCount(uid);
         if ((pageNum + 1) * size >= count) {
             pagingMsgs.setHasMore(false);
         } else {
             pagingMsgs.setHasMore(true);
         }
 
-        pagingMsgs.setMsgs(systemassages);
+        pagingMsgs.setMsgs(messages);
 
         return pagingMsgs;
     }
 
+    @ResponseBody
+    @GetMapping("read/msg")
+    public RespCode readMessage(@RequestParam Integer mid) {
+        boolean success = messageDao.setMessageRead(mid);
+        return success ? RespCode.OK : RespCode.ERROR;
+    }
+    
 }

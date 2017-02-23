@@ -33,27 +33,27 @@ public class ProjectFunction {
 
     @RequestMapping(value = "project/post", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode postProject(
-            @RequestParam(name = "uid") Integer userid,
+            @RequestParam(name = "uid") Integer userId,
             @RequestParam(name = "title") String proname,
             @RequestParam String concat, @RequestParam String tag,
             @RequestParam String promassage, @RequestParam String prowant) {
-        if (userid == null) {
+
+        if (userId == null) {
             return RespCode.ERROR;
         }
 
-        //调用dao中addproject()方法向数据库中插入数据
         boolean addProjectSucc
-                = projectDao.addProject(userid, tag, proname, promassage, prowant, concat);
+                = projectDao.addProject(userId, tag, proname, promassage, prowant, concat);
         return addProjectSucc ? RespCode.OK : RespCode.ERROR;
     }
 
     @RequestMapping(value = "project/update", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode updateProject(
-            @RequestParam(name = "uid") Integer userid,
+            @RequestParam(name = "uid") Integer userId,
             @RequestParam Integer proId, @RequestParam String concat,
             @RequestParam String promassage, @RequestParam String prowant) {
         boolean addProjectSucc
-                = projectDao.updateProject(userid, proId, promassage, prowant, concat);
+                = projectDao.updateProject(userId, proId, promassage, prowant, concat);
         return addProjectSucc ? RespCode.OK : RespCode.ERROR;
     }
 
@@ -72,6 +72,7 @@ public class ProjectFunction {
     @RequestMapping("get/project/myJoin")
     public PagingProjects getMyJoiningProjects(@RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+        
         int offset = pageNum * pageSize;
         List<Project> projects = projectDao.getJoiningProjects(uid, offset, pageSize);
 
@@ -94,6 +95,7 @@ public class ProjectFunction {
     @RequestMapping("get/project/myCollect")
     public PagingProjects getMyCollectedProjects(@RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+        
         int offset = pageNum * pageSize;
         List<Project> projects = projectDao.getCollectedProjects(uid, offset, pageSize);
 
@@ -116,6 +118,7 @@ public class ProjectFunction {
     @RequestMapping("get/project/myPost")
     public PagingProjects getMyPostedProjects(@RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
+        
         int offset = pageNum * pageSize;
         List<Project> projects = projectDao.getPostedProjects(uid, offset, pageSize);
 
@@ -161,6 +164,7 @@ public class ProjectFunction {
     @GetMapping("get/hotProject")
     public HotProjects getHotProjects(@RequestParam Integer userid,
             @RequestParam Integer hotSize, @RequestParam String keyWords) {
+        
         List<Project> projects = projectDao.getHotProjects(userid, keyWords, hotSize);
 
         HotProjects hotProjects = new HotProjects(projects.size(), projects);

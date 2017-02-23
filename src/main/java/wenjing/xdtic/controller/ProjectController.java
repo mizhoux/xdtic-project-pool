@@ -49,15 +49,15 @@ public class ProjectController {
             @RequestParam(required = false) Integer id,
             @RequestParam(required = false) Integer uid) {
 
-        User user = getUser(session, uid);
+        User user = (User) session.getAttribute("user");
 
         if (proId == null) {
             proId = id;
         }
 
         Project project = projectDao.getProject(proId);
-        boolean isCollected = projectDao.isProjectCollected(user.getId(), proId);
-        project.setIsCollected(isCollected);
+        
+        project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
 
         Map<String, Object> attrs = new HashMap<>(4);
         attrs.put("project", project);
@@ -79,18 +79,18 @@ public class ProjectController {
         Project project = projectDao.getProject(proId);
         User user = (User) session.getAttribute("user");
 
-        boolean isCollected = projectDao.isProjectCollected(user.getId(), proId);
-        project.setIsCollected(isCollected);
+        project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
 
         return new ModelAndView("page/myProject/myPost/detail", "project", project);
     }
 
     @RequestMapping("myProject/myPost/editDetail")
     public ModelAndView getProjectEditDetailPage(HttpSession session, @RequestParam Integer proId) {
+        
         Project project = projectDao.getProject(proId);
         User user = (User) session.getAttribute("user");
-        boolean isCollected = projectDao.isProjectCollected(user.getId(), proId);
-        project.setIsCollected(isCollected);
+        project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
+        
         return new ModelAndView("/page/myProject/myPost/editDetail", "project", project);
     }
 
@@ -128,22 +128,12 @@ public class ProjectController {
         Project project = projectDao.getProject(proId);
         project.setIsCollected(projectDao.isProjectCollected(uid, proId));
 
-        User user = getUser(session, uid);
+        User user = (User) session.getAttribute("user");
 
         mav.addObject("project", project);
         mav.addObject("user", user);
 
         return mav;
-    }
-
-    private User getUser(HttpSession session, Integer uid) {
-        User user = (User) session.getAttribute("user");
-        if (user == null && uid != null) { // 主要调试时候用，重新部署时候会重置 session
-            user = userDao.getUser(uid);
-            session.setAttribute("user", user);
-        }
-
-        return user;
     }
 
 }
