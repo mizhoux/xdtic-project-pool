@@ -7,7 +7,7 @@
 		<div id="appProfile">
 			<header>
 				<div class="tic-header-three">
-					<a href="javascript:window.history.go(-1);" v-tap class="tic-header-three-aside">
+					<a v-tap="{methods: navBack}" class="tic-header-three-aside">
 	        			<img src="/xdtic/static/images/arrow_prev.png" alt="后退">
 	    			</a>
 					<h2>个人信息</h2>
