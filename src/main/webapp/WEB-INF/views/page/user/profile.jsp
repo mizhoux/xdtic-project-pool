@@ -7,7 +7,7 @@
 		<div id="appProfile">
 			<header>
 				<div class="tic-header-three">
-					<a href="javascript:window.history.go(-1);" v-tap class="tic-header-three-aside">
+					<a v-tap="{methods: navBack}" class="tic-header-three-aside">
 	        			<img src="/xdtic/static/images/arrow_prev.png" alt="后退">
 	    			</a>
 					<h2>个人信息</h2>
@@ -24,7 +24,7 @@
 				<div class="tic-table">
 					<form method="POST" class="tic-form" id="formProfile">
 						<div class="tic-tr-two">
-							<span class="tic-td-label">昵称</span>
+							<span class="tic-td-label">用户名</span>
 							<span class="tic-td-content" v-show="!isEditing">{{user.username}}</span>
 							<span class="tic-td-content" v-show="isEditing">
 								<input type="text" name="username" v-model="user.username" />

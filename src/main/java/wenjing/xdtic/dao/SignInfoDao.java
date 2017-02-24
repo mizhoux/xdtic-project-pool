@@ -3,11 +3,14 @@ package wenjing.xdtic.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import wenjing.xdtic.model.Message;
+import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.SignInfo;
 
 /**
@@ -23,47 +26,66 @@ public class SignInfoDao {
     @Autowired
     private JdbcTemplate jdbcTmpl;
 
-    public boolean add(SignInfo signInfo) {
+    @Autowired
+    private MessageDao messageDao;
+
+    @Autowired
+    private ProjectDao projectDao;
+
+    public boolean addSignInfo(SignInfo signInfo) {
         String SQL
-                = "INSERT INTO sign_info (proId, uid, apply, profile, pexperice, sign_time) "
+                = "INSERT INTO sign_info (pro_id, user_id, apply, skill, experience, sign_time) "
                 + "VALUES (?, ?, ?, ?, ?, NOW())";
+
         int result = jdbcTmpl.update(SQL, signInfo.getProId(), signInfo.getUid(),
                 signInfo.getApply(), signInfo.getProfile(), signInfo.getPexperice());
 
-        return result == 1;
+        if (result == 1) { // 添加 signInfo 成功
+            Project project = projectDao.getProject(signInfo.getProId());
+            messageDao.addMessage(project.getUserid(), project.getProId(), project.getProname(), Message.Type.JOIN);
+            return true;
+        }
+
+        return false;
+    }
+
+    public SignInfo getSignInfo(Integer id) {
+        String SQL
+                = "SELECT u.username, s.* FROM sign_info s, user u "
+                + "WHERE s.id = ? AND u.id = s.user_id";
+        return jdbcTmpl.query(SQL, rs -> rs.next() ? parseSignInfo(rs, 1) : null, id);
     }
 
     public List<SignInfo> getSignInfos(Integer proId) {
-        String SQL = "SELECT u.username, s.* FROM sign_info AS s, user AS u WHERE proId = ? AND u.id = s.uid";
+        String SQL
+                = "SELECT u.username, s.* FROM sign_info s, user u "
+                + "WHERE pro_id = ? AND u.id = s.user_id";
         return jdbcTmpl.query(SQL, this::parseSignInfo, proId);
-    }
-
-    public SignInfo getSignInfo(Integer sid) {
-        String SQL = "SELECT u.username, s.* FROM sign_info AS s, user AS u WHERE s.sid = ? AND u.id = s.uid";
-        return jdbcTmpl.query(SQL, this::extractSignInfo, sid);
     }
 
     private SignInfo parseSignInfo(ResultSet rs, int rowNum) throws SQLException {
         SignInfo signInfo = new SignInfo();
 
+        signInfo.setId(rs.getInt("id"));
+        signInfo.setProId(rs.getInt("pro_id"));
+        signInfo.setUserId(rs.getInt("user_id"));
         signInfo.setApply(rs.getString("apply"));
-        signInfo.setPexperice(rs.getString("pexperice"));
-        signInfo.setProId(rs.getInt("proId"));
-        signInfo.setProfile(rs.getString("profile"));
-        signInfo.setSid(rs.getInt("sid"));
-        signInfo.setUid(rs.getInt("uid"));
+        signInfo.setExperience(rs.getString("experience"));
+        signInfo.setSkill(rs.getString("skill"));
+        signInfo.setSignTime(rs.getTimestamp("sign_time"));
         signInfo.setUsername(rs.getString("username"));
 
-        LocalDateTime dateTime = rs.getTimestamp("sign_time").toLocalDateTime();
-
+        // 兼容前端
+        signInfo.setSid(signInfo.getId());
+        signInfo.setUid(signInfo.getUserId());
+        signInfo.setProfile(signInfo.getSkill());
+        signInfo.setPexperice(signInfo.getExperience());
+        LocalDateTime dateTime = LocalDateTime.ofInstant(
+                signInfo.getSignTime().toInstant(), ZoneId.systemDefault());
         signInfo.setDate(DATE_FORMATTER.format(dateTime));
         signInfo.setTime(TIME_FORMATTER.format(dateTime));
 
         return signInfo;
-    }
-
-    private SignInfo extractSignInfo(ResultSet rs) throws SQLException {
-        return rs.next() ? parseSignInfo(rs, 0) : null;
     }
 
 }

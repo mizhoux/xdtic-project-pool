@@ -1,21 +1,43 @@
 package wenjing.xdtic.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
+
 /**
  *
  * @author wenjing
  */
 public class Message {
 
-    private Integer mid;
-    private Integer uid;
+    public static enum Type {
+        POST, PASS, JOIN
+    }
 
+    private Integer id;
+
+    private Integer userId;
+    private String content;
+    private Integer proId;
     private String type;
-    private String massage;
-    private String date;
-
     private boolean read;
 
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date date;
+
+    // 兼容前端
+    private Integer mid;
+    private Integer uid;
+    private String massage;
+
     public Message() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getUid() {
@@ -42,11 +64,11 @@ public class Message {
         this.massage = massage;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -64,6 +86,30 @@ public class Message {
 
     public void setRead(boolean read) {
         this.read = read;
+    }
+
+    public Integer getProId() {
+        return proId;
+    }
+
+    public void setProId(Integer proId) {
+        this.proId = proId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
 }

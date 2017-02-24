@@ -1,11 +1,8 @@
 package wenjing.xdtic.controller;
 
 import javax.servlet.http.HttpSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import wenjing.xdtic.dao.UserDao;
-import wenjing.xdtic.model.User;
+import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * 基本的路由控制器
@@ -15,31 +12,20 @@ import wenjing.xdtic.model.User;
 @Controller
 public class HomeController {
 
-    @Autowired
-    private UserDao userDao;
-
-    @RequestMapping({"/", "index", "home", "login"})
+    @GetMapping({"/", "index", "home", "login"})
     public String index() {
         return "page/user/login";
     }
 
-    @RequestMapping("logout")
+    @GetMapping("logout")
     public String logout(HttpSession session) {
         session.removeAttribute("user");
         return "page/user/login";
     }
 
-    @RequestMapping("user")
-    public String getUserCenterPage(Integer userid, HttpSession session) {
-        User user = userDao.getUser(userid);
-        session.setAttribute("user", user);
-
-        return "page/user/center";
-    }
-
-    @RequestMapping("hall")
+    @GetMapping("hall")
     public String getHallPage() {
         return "page/hall/hall";
     }
-    
+
 }
