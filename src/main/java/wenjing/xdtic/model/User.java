@@ -9,16 +9,30 @@ public class User {
     private Integer id;
     private String username;
     private String password;
+
     private String email;
-    private String name;
-    private String nickname;
-    private String sex;
-    private String profe;//专业
-    private String stunum;//学号 
     private String phone;
-    private String profile;
-    private String pexperice;
+
+    private String nickname;
+
+    private String realname;
+
+    private String gender;
+
+    private String specialty;
+    private String stuNum;
+    private String skill;
+    private String experience;
+
     private boolean hasMsg;
+
+    // 兼容前端
+    private String name;  // realname
+    private String sex;   // gender
+    private String profe; // specialty
+    private String stunum;// stuNum
+    private String profile;   // skill
+    private String pexperice; // experience
 
     public User() {
     }
@@ -61,14 +75,6 @@ public class User {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     public String getSex() {
@@ -118,18 +124,69 @@ public class User {
     public void setPexperice(String pexperice) {
         this.pexperice = pexperice;
     }
-   public boolean isHasMsg() {
+
+    public boolean isHasMsg() {
         return hasMsg;
     }
 
     public void setHasMsg(boolean hasMsg) {
         this.hasMsg = hasMsg;
     }
-    @Override
-    public String toString() {
-        return "User{" + "id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", name=" + name + ", nickname=" + nickname + ", sex=" + sex + ", profe=" + profe + ", stunum=" + stunum + ", phone=" + phone + ", profile=" + profile + ", pexperice=" + pexperice + '}';
+
+    public String getNickname() {
+        return nickname;
     }
 
- 
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
+
+    public String getRealname() {
+        return realname;
+    }
+
+    public void setRealname(String realname) {
+        this.realname = realname;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getSpecialty() {
+        return specialty;
+    }
+
+    public void setSpecialty(String specialty) {
+        this.specialty = specialty;
+    }
+
+    public String getStuNum() {
+        return stuNum;
+    }
+
+    public void setStuNum(String stuNum) {
+        this.stuNum = stuNum;
+    }
+
+    public String getSkill() {
+        return skill;
+    }
+
+    public void setSkill(String skill) {
+        this.skill = skill;
+    }
+
+    public String getExperience() {
+        return experience;
+    }
+
+    public void setExperience(String experience) {
+        this.experience = experience;
+    }
 
 }

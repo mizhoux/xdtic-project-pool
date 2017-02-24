@@ -10,27 +10,104 @@ import java.util.List;
  */
 public class Project {
 
-    private Integer proId;
-    private Integer userid;
+    private Integer id;
 
-    private String proname;
-    private String promassage;
-    private String prowant;
+    private Integer userId;
+
+    private String name;
+    private String content;
     private String tag;
 
-    private String concat;
-    private String statu;
+    private String recruit;
+    private String contact;
+
+    private String status;
 
     @JsonFormat(pattern = "yyyy.MM.dd")
     private Date date;
 
-    private boolean isCollected;
-
-    private List<String> tags;
     private String username;
-    private String desc;
+
+    private boolean isCollected;
+    private List<String> tags;
+
+    // 兼容前端
+    private Integer proId;  // id
+    private Integer userid; // userId
+    private String proname; // name
+    private String desc; // content
+    private String promassage; // content
+    private String prowant; // recruit
+    private String concat;  // contact
+    private String statu;   // status
 
     public Project() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    /**
+     * 获得参与项目的联系方式
+     *
+     * @return
+     */
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * 获得项目的具体内容
+     *
+     * @return
+     */
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getRecruit() {
+        return recruit;
+    }
+
+    public void setRecruit(String recruit) {
+        this.recruit = recruit;
     }
 
     public String getConcat() {
@@ -81,14 +158,6 @@ public class Project {
         this.proname = proname;
     }
 
-    public String getPromassage() {
-        return promassage;
-    }
-
-    public void setPromassage(String promassage) {
-        this.promassage = promassage;
-    }
-
     public String getProwant() {
         return prowant;
     }
@@ -135,6 +204,14 @@ public class Project {
 
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public String getPromassage() {
+        return promassage;
+    }
+
+    public void setPromassage(String promassage) {
+        this.promassage = promassage;
     }
 
 }

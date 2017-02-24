@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.User;
@@ -31,7 +32,7 @@ public class UserController {
     }
 
     @GetMapping("profile")
-    public String getUserProfilePage(Integer userid, HttpSession session) {
+    public String getUserProfilePage(@RequestParam Integer userid, HttpSession session) {
         User user = userDao.getUser(userid);
         session.setAttribute("user", user);
 

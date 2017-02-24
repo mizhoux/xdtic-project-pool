@@ -62,8 +62,8 @@ public class UserDao {
      */
     public boolean updateUser(User user) {
         String SQL
-                = "UPDATE user SET username = ?, name = ?, nickname= ?, email = ?, sex = ?, "
-                + "profe = ?, phone = ?, stunum = ?, profile= ?, pexperice = ? WHERE id = ?";
+                = "UPDATE user SET username = ?, realname = ?, nickname= ?, email = ?, gender = ?, "
+                + "specialty = ?, phone = ?, stu_num = ?, skill = ?, experience = ? WHERE id = ?";
         int result = jdbcTmpl.update(SQL,
                 user.getUsername(), user.getName(), user.getNickname(),
                 user.getEmail(), user.getSex(), user.getProfe(), user.getPhone(),
@@ -105,7 +105,7 @@ public class UserDao {
      */
     public boolean containsUsername(String username) {
         String SQL = "SELECT id FROM user WHERE username = ?";
-        return jdbcTmpl.query(SQL, rs -> rs.next() ? TRUE : FALSE);
+        return jdbcTmpl.query(SQL, rs -> rs.next() ? TRUE : FALSE, username);
     }
 
     /**
@@ -129,18 +129,30 @@ public class UserDao {
      */
     private User parseUser(ResultSet rs, int rowNum) throws SQLException {
         User user = new User();
+
         user.setId(rs.getInt("id"));
         user.setUsername(rs.getString("username"));
         user.setPassword(rs.getString("password"));
-        user.setName(rs.getString("name"));
-        user.setNickname(rs.getString("nickname"));
         user.setEmail(rs.getString("email"));
-        user.setSex(rs.getString("sex"));
-        user.setProfe(rs.getString("profe"));
         user.setPhone(rs.getString("phone"));
-        user.setStunum(rs.getString("stunum"));
-        user.setProfile(rs.getString("profile"));
-        user.setPexperice(rs.getString("pexperice"));
+        user.setNickname(rs.getString("nickname"));
+
+        user.setRealname(rs.getString("realname"));
+        user.setGender(rs.getString("gender"));
+
+        user.setSpecialty(rs.getString("specialty"));
+        user.setStuNum(rs.getString("stu_num"));
+
+        user.setSkill(rs.getString("skill"));
+        user.setExperience(rs.getString("experience"));
+
+        // 兼容前端
+        user.setName(user.getRealname());
+        user.setSex(user.getGender());
+        user.setProfe(user.getSpecialty());
+        user.setStunum(user.getStuNum());
+        user.setProfile(user.getSkill());
+        user.setPexperice(user.getExperience());
 
         return user;
     }
