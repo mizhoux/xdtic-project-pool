@@ -1,0 +1,43 @@
+@charset "UTF-8";
+.pushable {
+  height: 100%;
+  overflow-x: hidden;
+  padding: 0;
+}
+
+@media only screen and (max-width: 374px) {
+  .tic-logo {
+    display: none !important;
+  }
+}
+
+.article {
+  flex: 1 1 auto;
+}
+
+.dimmed::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.3);
+  content: "";
+}
+
+/*文章标题上内边距*/
+.masthead .introduction {
+  display: block;
+  width: 100%;
+}
+
+#app .masthead.segment {
+  padding-top: 5em;
+  position: relative;
+  z-index: 3;
+  margin: 0em;
+  padding: 5em 0 1em;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #DDDDDD;
+  box-shadow: none;
+}

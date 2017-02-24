@@ -1,5 +1,33 @@
 {
     "res": {
+        "page/admin/index.jsp": {
+            "uri": "/page/admin/index.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/admin/project/check.jsp": {
+            "uri": "/page/admin/project/check.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/admin/project/look.jsp": {
+            "uri": "/page/admin/project/look.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/admin/user/look.jsp": {
+            "uri": "/page/admin/user/look.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
         "page/hall/hall.jsp": {
             "uri": "/page/hall/hall.jsp",
             "type": "jsp",
@@ -9,6 +37,13 @@
         },
         "page/index.jsp": {
             "uri": "/page/index.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/layout/frame_admin.jsp": {
+            "uri": "/page/layout/frame_admin.jsp",
             "type": "jsp",
             "extras": {
                 "isPage": true
@@ -167,6 +202,37 @@
             "uri": "/xdtic/static/page/widget/main/projectDetail.css",
             "type": "css"
         },
+        "static/js/admin/index.js": {
+            "uri": "/xdtic/static/js/admin/index.js",
+            "type": "js"
+        },
+        "static/js/admin/project/check.js": {
+            "uri": "/xdtic/static/js/admin/project/check.js",
+            "type": "js",
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
+        "static/js/admin/project/look.js": {
+            "uri": "/xdtic/static/js/admin/project/look.js",
+            "type": "js",
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
+        "static/js/admin/user/look.js": {
+            "uri": "/xdtic/static/js/admin/user/look.js",
+            "type": "js",
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
         "static/js/hall/hall.js": {
             "uri": "/xdtic/static/js/hall/hall.js",
             "type": "js",
@@ -271,6 +337,10 @@
                 "node_modules/whatwg-fetch/fetch.js"
             ]
         },
+        "static/libs/admin/common.js": {
+            "uri": "/xdtic/static/libs/admin/common.js",
+            "type": "js"
+        },
         "static/libs/common.js": {
             "uri": "/xdtic/static/libs/common.js",
             "type": "js"
@@ -286,6 +356,30 @@
         "static/libs/vue.js": {
             "uri": "/xdtic/static/libs/vue.js",
             "type": "js"
+        },
+        "static/scss/admin/common.scss": {
+            "uri": "/xdtic/static/scss/admin/common.css",
+            "type": "css"
+        },
+        "static/scss/admin/index.scss": {
+            "uri": "/xdtic/static/scss/admin/index.css",
+            "type": "css"
+        },
+        "static/scss/admin/projectCheck.scss": {
+            "uri": "/xdtic/static/scss/admin/projectCheck.css",
+            "type": "css"
+        },
+        "static/scss/admin/projectLook.scss": {
+            "uri": "/xdtic/static/scss/admin/projectLook.css",
+            "type": "css"
+        },
+        "static/scss/admin/semantic.css": {
+            "uri": "/xdtic/static/scss/admin/semantic.css",
+            "type": "css"
+        },
+        "static/scss/admin/userLook.scss": {
+            "uri": "/xdtic/static/scss/admin/userLook.css",
+            "type": "css"
         },
         "static/scss/center.scss": {
             "uri": "/xdtic/static/scss/center.css",

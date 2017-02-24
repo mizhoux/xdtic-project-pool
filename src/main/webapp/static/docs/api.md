@@ -195,7 +195,7 @@
 - jsp页面所需变量
 ```
 {
-    "signUser": {
+    "user": {
 		"id": "u001",
 		"username": "adoug",
 		"email": "942434869@qq.com",
@@ -416,7 +416,7 @@
 - url: /xdtic/hall
 - jsp: /page/hall/hall.jsp
 
-- api: /xdtic/fn/get/project `[GET]`
+- api: /xdtic/get/project `[GET]`
 
    - 说明：获取项目
    - request
@@ -752,4 +752,143 @@
     }
     ```
 
+### 管理员
 
+#### 待审核项目页面
+
+- url: /xdtic/admin/project/check
+- jsp: /page/admin/project/uncheck.jsp
+
+- api: /xdtic/fn/admin/get/project/uncheck
+
+    - 获取待审核项目 & 在待审核项目中搜索
+    - request `[GET]`
+    ```
+    {
+        pageNum: 0,
+        size: 8,
+        keyWords: ''
+    }
+    ```
+    - response `[JSON]`
+    ```
+    {
+    "size": 2,
+	"pageNum": 0,
+	"hasMore": false,
+
+	"projects": [{
+		"proId": "p001",
+		"proname": "SSR召唤符画法",
+		"username": "adoug"
+	}, {
+		"proId": "p002",
+		"proname": "tic项目池",
+		"username": "adoug"
+	}]
+    }
+    ```
+
+- api: /fn/admin/project/operate
+
+    - 发送项目操作结果
+    - request `[POST]` `[JSON]`
+    ```
+    {
+        proId: p001,
+        operation: reject/accept/delete
+    }
+    ```
+    - response `[JSON]`
+    ```
+    {
+        code: ok
+    }
+    ```
+
+#### 已通过项目页面
+
+- url: /xdtic/admin/project/accept
+- jsp: /page/admin/project/accept.jsp
+
+- api: /xdtic/fn/admin/get/project/accept
+
+    - 获取已通过项目 & 在已通过项目中搜索
+    - request `[GET]`
+    ```
+    {
+        pageNum: 0,
+        size: 8,
+        keyWords: ''
+    }
+    ```
+    - response `[JSON]`
+    ```
+    {
+    "size": 2,
+	"pageNum": 0,
+	"hasMore": false,
+
+	"projects": [{
+		"proId": "p001",
+		"proname": "SSR召唤符画法",
+		"username": "adoug"
+	}, {
+		"proId": "p002",
+		"proname": "tic项目池",
+		"username": "adoug"
+	}]
+    }
+    ```
+    
+#### 用户浏览页面
+- url: /xdtic/admin/user/look
+- jsp: /page/admin/user/look.jsp
+
+- api: /xdtic/fn/admin/get/user
+
+    - 获取用户列表 & 在用户中搜索
+    - request `[GET]`
+    ```
+    {
+        pageNum: 0,
+        size: 8,
+        keyWords: ''
+    }
+    ```
+    - response `[JSON]`
+    ```
+    {
+    "size": 2,
+	"pageNum": 0,
+	"hasMore": false,
+
+	"projects": [{
+		"id": "u001",
+		"username": "adoug",
+		"name": "陈智仁",
+		"email": "942434869@qq.com"
+	}, {
+		"id": "u002",
+		"username": "garfiled",
+		"name": "加菲",
+		"email": "yuqingya101@163.com"
+	}]
+    }
+    ```
+
+- api: /fn/admin/user/delete
+
+    - 删除用户
+    - request `[POST]` `[JSON]`
+    ```
+    {
+        uid: ["u001"] / "All"  //All表示删除所有用户
+    }
+    ```
+    - response `[JSON]`
+    ```
+    {
+        code: ok
+    }
+    ```

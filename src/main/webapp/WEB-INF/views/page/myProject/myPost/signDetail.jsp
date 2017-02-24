@@ -33,41 +33,41 @@
 				<form class="tic-form">
 					<div class="tic-tr-two">
 						<span class="tic-td-label">昵称</span>
-						<span class="tic-td-content"><c:out value='${signUser.username}' /></span>
+						<span class="tic-td-content"><c:out value='${user.username}' /></span>
 					</div>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">邮箱</span>
-						<span class="tic-td-content"><c:out value='${signUser.email}' /></span>
+						<span class="tic-td-content"><c:out value='${user.email}' /></span>
 					</div>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">性别</span>
 						<c:set var="userSex" value="男" />
-						<c:if test="${signUser.sex == 'girl'}">
+						<c:if test="${user.sex == 'girl'}">
 							<c:set var="userSex" value="女" />
 						</c:if>
 						<span class="tic-td-content"><c:out value='${userSex}' /></span>
 					</div>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">专业</span>
-						<span class="tic-td-content"><c:out value='${signUser.profe}' /></span>
+						<span class="tic-td-content"><c:out value='${user.profe}' /></span>
 					</div>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">手机</span>
-						<span class="tic-td-content"><c:out value='${signUser.phone}' /></span>
+						<span class="tic-td-content"><c:out value='${user.phone}' /></span>
 					</div>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">学号</span>
-						<span class="tic-td-content"><c:out value='${signUser.stunum}' /></span>
+						<span class="tic-td-content"><c:out value='${user.stunum}' /></span>
 					</div>
 					<hr>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">个人能力</span>
-						<span class="tic-td-content"><c:out value='${signUser.profile}' /></span>
+						<span class="tic-td-content"><c:out value='${user.profile}' /></span>
 					</div>
 					<hr>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">项目经历</span>
-						<span class="tic-td-content"><c:out value='${signUser.pexperice}' /></span>
+						<span class="tic-td-content"><c:out value='${user.pexperice}' /></span>
 					</div>
 				</form>
 			</div>
