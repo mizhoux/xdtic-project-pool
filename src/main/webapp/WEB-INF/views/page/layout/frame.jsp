@@ -35,7 +35,7 @@
         <div id="wrapper">
             <fis:block name="body"></fis:block>
         </div>
-        <script type="text/javascript" charset="utf-8" src="http://192.168.199.1:8132/livereload.js"></script><!--livereload-->
+        
     </fis:body>
 
  

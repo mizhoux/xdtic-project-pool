@@ -5,7 +5,7 @@
 <fis:require id="page/widget/header/projectDetailHeader.scss" />
 
 <div class="tic-header-three" id="detailPostHeader">
-    <a v-tap="{methods: navBack}" class="tic-header-three-aside">
+    <a href="javascript:window.history.go(-1);" v-tap class="tic-header-three-aside">
         <img src="/xdtic/static/images/arrow_prev.png" alt="后退">
     </a>
     <div class="tic-header-three-center">

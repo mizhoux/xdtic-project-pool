@@ -65,11 +65,7 @@ window.addEventListener('load', function () {
 
 			closeDialog: function closeDialog() {
 				this.collectIsFail = false;
-			},
-                        
-                        navBack: function() {
-                            window.history.go(-1);
-                        }
+			}
 		}
 	});
 });
