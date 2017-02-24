@@ -1,5 +1,7 @@
 package wenjing.xdtic.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -8,22 +10,26 @@ import java.util.List;
  */
 public class Project {
 
-    private Integer userid;
     private Integer proId;
+    private Integer userid;
+
     private String proname;
     private String promassage;
     private String prowant;
     private String tag;
-    private String date;
+
     private String concat;
     private String statu;
+
+    @JsonFormat(pattern = "yyyy.MM.dd")
+    private Date date;
 
     private boolean isCollected;
 
     private List<String> tags;
     private String username;
     private String desc;
-    
+
     public Project() {
     }
 
@@ -99,11 +105,11 @@ public class Project {
         this.tag = tag;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

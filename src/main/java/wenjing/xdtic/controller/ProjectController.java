@@ -7,7 +7,6 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import wenjing.xdtic.dao.ProjectDao;
@@ -33,17 +32,17 @@ public class ProjectController {
     @Autowired
     private SignInfoDao signInfoDao;
 
-    @RequestMapping("myProject")
+    @GetMapping("myProject")
     public String getMyProjectPage() {
         return "page/myProject/myProject";
     }
 
-    @RequestMapping("myProject/postProject")
+    @GetMapping("myProject/postProject")
     public String getPostProjectPage() {
         return "page/myProject/postProject";
     }
 
-    @RequestMapping("project")
+    @GetMapping("project")
     public ModelAndView getProjectDetailPage(HttpSession session,
             @RequestParam(required = false) Integer proId,
             @RequestParam(required = false) Integer id,
@@ -55,8 +54,8 @@ public class ProjectController {
             proId = id;
         }
 
-        Project project = projectDao.get(proId);
-        
+        Project project = projectDao.getProject(proId);
+
         project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
 
         Map<String, Object> attrs = new HashMap<>(4);
@@ -71,12 +70,12 @@ public class ProjectController {
         return new ModelAndView("page/myProject/myCollect/detail", attrs);
     }
 
-    @RequestMapping("myProject/myPost/detail")
+    @GetMapping("myProject/myPost/detail")
     public ModelAndView getPostProjectDetailPage(
             HttpSession session, @RequestParam Integer proId,
             @RequestParam(required = false) Integer uid) {
 
-        Project project = projectDao.get(proId);
+        Project project = projectDao.getProject(proId);
         User user = (User) session.getAttribute("user");
 
         project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
@@ -84,19 +83,19 @@ public class ProjectController {
         return new ModelAndView("page/myProject/myPost/detail", "project", project);
     }
 
-    @RequestMapping("myProject/myPost/editDetail")
+    @GetMapping("myProject/myPost/editDetail")
     public ModelAndView getProjectEditDetailPage(HttpSession session, @RequestParam Integer proId) {
-        
-        Project project = projectDao.get(proId);
+
+        Project project = projectDao.getProject(proId);
         User user = (User) session.getAttribute("user");
         project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
-        
+
         return new ModelAndView("/page/myProject/myPost/editDetail", "project", project);
     }
 
     @GetMapping("myProject/myPost/signInfo")
     public ModelAndView getSignInfosPage(@RequestParam Integer proId) {
-        Project project = projectDao.get(proId);
+        Project project = projectDao.getProject(proId);
         List<SignInfo> signInfos = signInfoDao.getSignInfos(proId);
 
         ModelAndView mav = new ModelAndView("page/myProject/myPost/signInfo");
@@ -109,7 +108,7 @@ public class ProjectController {
     @GetMapping("signInfo")
     public ModelAndView getSignInfoDetail(HttpSession session, @RequestParam Integer signId) {
         ModelAndView mav = new ModelAndView("page/myProject/myPost/signDetail");
-        
+
         SignInfo signInfo = signInfoDao.getSignInfo(signId);
         User signUser = userDao.getUser(signInfo.getUid());
 
@@ -125,7 +124,7 @@ public class ProjectController {
 
         ModelAndView mav = new ModelAndView("page/myProject/myCollect/toJoin");
 
-        Project project = projectDao.get(proId);
+        Project project = projectDao.getProject(proId);
         project.setIsCollected(projectDao.isProjectCollected(uid, proId));
 
         User user = (User) session.getAttribute("user");

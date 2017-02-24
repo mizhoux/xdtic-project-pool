@@ -2,10 +2,7 @@ package wenjing.xdtic.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +21,6 @@ import wenjing.xdtic.model.User;
 @Repository
 public class ProjectDao {
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-
     @Autowired
     private JdbcTemplate jdbcTmpl;
 
@@ -35,9 +30,48 @@ public class ProjectDao {
     @Autowired
     private MessageDao messageDao;
 
-    public Project get(Integer proId) {
+    public boolean addProject(Integer userId, String tag,
+            String proname, String promassage, String prowant, String concat) {
+
+        String SQL = "INSERT INTO project "
+                + "(userid, proname, promassage, prowant, tag, concat, date) "
+                + "VALUES (?, ?, ?, ?, ?, ?, NOW())";
+
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        int result = jdbcTmpl.update(conn -> {
+            
+            PreparedStatement pstmt = conn.prepareStatement(SQL, new String[]{"proId"});
+            pstmt.setInt(1, userId);
+            pstmt.setString(2, proname);
+            pstmt.setString(3, promassage);
+            pstmt.setString(4, prowant);
+            pstmt.setString(5, tag);
+            pstmt.setString(6, concat);
+            
+            return pstmt;
+            
+        }, keyHolder);
+
+        if (result == 1) { // 添加项目成功
+            Integer proId = keyHolder.getKey().intValue();
+            messageDao.addMessage(userId, proId, proname, Message.Type.POST);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean updateProject(Integer userId, Integer proId,
+            String promassage, String prowant, String concat) {
+        String SQL
+                = "UPDATE project SET promassage = ?, prowant = ?, concat = ? "
+                + "WHERE userid = ? AND proId = ?";
+
+        return jdbcTmpl.update(SQL, promassage, prowant, concat, userId, proId) == 1;
+    }
+
+    public Project getProject(Integer id) {
         String SQL = "SELECT * FROM project WHERE proId = ?";
-        return jdbcTmpl.query(SQL, this::extractProject, proId);
+        return jdbcTmpl.query(SQL, this::extractProject, id);
     }
 
     // userId 用来判断项目是否已经被该用户收藏
@@ -69,6 +103,14 @@ public class ProjectDao {
         return projects;
     }
 
+    /**
+     * 获得用户发布的项目
+     *
+     * @param userId 用户 ID
+     * @param offset
+     * @param size
+     * @return
+     */
     public List<Project> getPostedProjects(Integer userId, Integer offset, Integer size) {
         String SQL = "SELECT * FROM project WHERE userid = ? LIMIT ?, ?";
         List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
@@ -83,47 +125,13 @@ public class ProjectDao {
     }
 
     /**
-     * 获得用户发布的项目数量
+     * 获得用户收藏的项目
      *
      * @param userId 用户 ID
-     * @return 用户发布的项目数量
+     * @param offset
+     * @param size
+     * @return
      */
-    public long getPostedProjectsCount(Integer userId) {
-        String SQL = "SELECT COUNT(*) FROM project WHERE userid = ?";
-        return jdbcTmpl.queryForObject(SQL, Long.class, userId);
-    }
-
-    public long getProjectsCount(String keywords) {
-        String SQL = "SELECT COUNT(*) FROM project WHERE tag LIKE ?";
-        return jdbcTmpl.queryForObject(SQL, Long.class, getMysqlLikeKey(keywords));
-    }
-
-    public List<Project> getJoiningProjects(Integer userId, Integer offset, Integer size) {
-        String SQL
-                = "SELECT u.username, p.* FROM project AS p, user AS u WHERE p.proId IN "
-                + "(SELECT s.proId FROM sign_info AS s WHERE s.uid = ?) AND u.id = p.userid "
-                + "LIMIT ?, ?";
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProjectWithUsername, userId, offset, size);
-
-        projects.forEach(project -> project.setIsCollected(isProjectCollected(userId, project.getProId())));
-
-        return projects;
-    }
-
-    /**
-     * 获得用户参加的项目数量
-     *
-     * @param userId 用户 ID
-     * @return 用户参加的项目数量
-     */
-    public long getJoiningProjectsCount(Integer userId) {
-        String SQL
-                = "SELECT COUNT(*) FROM project AS p WHERE p.proId IN "
-                + "(SELECT s.proId FROM sign_info AS s WHERE s.uid = ?)";
-
-        return jdbcTmpl.queryForObject(SQL, Long.class, userId);
-    }
-
     public List<Project> getCollectedProjects(Integer userId, Integer offset, Integer size) {
         String SQL
                 = "SELECT u.username, p.* FROM project AS p, user AS u WHERE p.proId IN "
@@ -135,6 +143,56 @@ public class ProjectDao {
         projects.forEach(project -> project.setIsCollected(true));
 
         return projects;
+    }
+
+    /**
+     * 获得用户参与的项目
+     *
+     * @param userId 用户 ID
+     * @param offset
+     * @param size
+     * @return
+     */
+    public List<Project> getJoiningProjects(Integer userId, Integer offset, Integer size) {
+        String SQL
+                = "SELECT u.username, p.* FROM project AS p, user AS u WHERE p.proId IN "
+                + "(SELECT s.pro_id FROM sign_info AS s WHERE s.user_id = ?) AND u.id = p.userid "
+                + "LIMIT ?, ?";
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProjectWithUsername, userId, offset, size);
+
+        projects.forEach(project -> project.setIsCollected(isProjectCollected(userId, project.getProId())));
+
+        return projects;
+    }
+
+    public long getProjectsCount(String keywords) {
+        String SQL = "SELECT COUNT(*) FROM project WHERE tag LIKE ?";
+        return jdbcTmpl.queryForObject(SQL, Long.class, getMysqlLikeKey(keywords));
+    }
+
+    /**
+     * 获得用户发布的项目数量
+     *
+     * @param userId 用户 ID
+     * @return 用户发布的项目数量
+     */
+    public long getPostedProjectsCount(Integer userId) {
+        String SQL = "SELECT COUNT(*) FROM project WHERE userid = ?";
+        return jdbcTmpl.queryForObject(SQL, Long.class, userId);
+    }
+
+    /**
+     * 获得用户参加的项目数量
+     *
+     * @param userId 用户 ID
+     * @return 用户参加的项目数量
+     */
+    public long getJoiningProjectsCount(Integer userId) {
+        String SQL
+                = "SELECT COUNT(*) FROM project AS p WHERE p.proId IN "
+                + "(SELECT s.pro_id FROM sign_info AS s WHERE s.user_id = ?)";
+
+        return jdbcTmpl.queryForObject(SQL, Long.class, userId);
     }
 
     /**
@@ -161,6 +219,45 @@ public class ProjectDao {
     public boolean isProjectCollected(Integer userId, Integer proId) {
         String SQL = "SELECT COUNT(*) FROM collect_project WHERE uid = ? AND pid = ?";
         return jdbcTmpl.queryForObject(SQL, Long.class, userId, proId) == 1;
+    }
+
+    /**
+     * 收藏项目
+     *
+     * @param userId
+     * @param proId
+     * @return
+     */
+    public boolean collectProject(Integer userId, Integer proId) {
+        String SQL = "INSERT INTO collect_project SET uid = ?, pid = ?";
+        return jdbcTmpl.update(SQL, userId, proId) == 1;
+    }
+
+    /**
+     * 取消收藏项目
+     *
+     * @param userId
+     * @param proId
+     * @return
+     */
+    public boolean uncollectProject(Integer userId, Integer proId) {
+        String SQL = "DELETE FROM collect_project WHERE uid = ? AND pid = ?";
+        return jdbcTmpl.update(SQL, userId, proId) == 1;
+    }
+
+    public User getCreator(Project project) {
+        Integer userId = project.getUserid();
+        return userId == null ? null : userDao.getUser(userId);
+    }
+
+    public boolean isUserJoined(User user, Project project) {
+        String SQL = "SELECT COUNT(*) FROM sign_info WHERE user_id = ? AND pro_id = ?";
+        long result = jdbcTmpl.queryForObject(SQL, Long.class, user.getId(), project.getProId());
+        return result == 1;
+    }
+
+    private String getMysqlLikeKey(String keyword) {
+        return "%" + keyword + "%";
     }
 
     /**
@@ -192,8 +289,7 @@ public class ProjectDao {
         project.setConcat(rs.getString("concat"));
         project.setStatu(rs.getString("statu"));
 
-        LocalDateTime creationDateTime = rs.getTimestamp("date").toLocalDateTime();
-        project.setDate(creationDateTime.format(DATE_TIME_FORMATTER));
+        project.setDate(rs.getTimestamp("date"));
 
         project.setDesc(project.getPromassage());
         String tag = rs.getString("tag");
@@ -211,81 +307,4 @@ public class ProjectDao {
         project.setUsername(rs.getString("username"));
         return project;
     }
-
-    public boolean add(Integer userId, String tag,
-            String proname, String promassage, String prowant, String concat) {
-
-        String SQL
-                = "INSERT INTO project "
-                + "(userid, proname, promassage, prowant, tag, concat, date) "
-                + "VALUES (?, ?, ?, ?, ?, ?, NOW())";
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-        int result = jdbcTmpl.update(conn -> {
-            PreparedStatement pstmt = conn.prepareStatement(SQL, new String[]{"proId"});
-            pstmt.setInt(1, userId);
-            pstmt.setString(2, proname);
-            pstmt.setString(3, promassage);
-            pstmt.setString(4, prowant);
-            pstmt.setString(5, tag);
-            pstmt.setString(6, concat);
-            return pstmt;
-        }, keyHolder);
-
-        if (result == 1) {
-            Integer proId = keyHolder.getKey().intValue();
-            messageDao.add(userId, proId, proname, Message.Type.POST);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean collectProject(Integer userId, Integer proId) {
-        String SQL = "INSERT INTO collect_project SET uid = ?, pid = ?";
-        return jdbcTmpl.update(SQL, userId, proId) == 1;
-    }
-
-    public boolean uncollectProject(Integer userId, Integer proId) {
-        String SQL = "DELETE FROM collect_project WHERE uid = ? AND pid = ?";
-        return jdbcTmpl.update(SQL, userId, proId) == 1;
-    }
-
-    public boolean updateProject(Integer userId, Integer proId,
-            String promassage, String prowant, String concat) {
-        String SQL
-                = "UPDATE project SET promassage = ?, prowant = ?, concat = ? "
-                + "WHERE userid = ? AND proId = ?";
-
-        return jdbcTmpl.update(SQL, promassage, prowant, concat, userId, proId) == 1;
-    }
-
-    public User getCreator(Project project) {
-        Integer userId = project.getUserid();
-        if (userId != null) {
-            return userDao.getUser(userId);
-        }
-        return null;
-    }
-
-    public boolean isUserJoined(User user, Project project) {
-        String SQL = "SELECT COUNT(*) FROM sign_info WHERE uid = ? AND proId = ?";
-        long result = jdbcTmpl.queryForObject(SQL, Long.class, user.getId(), project.getProId());
-        return result == 1;
-    }
-
-    private String getMysqlLikeKey(String keyword) {
-        return "%" + keyword + "%";
-    }
-
-    private boolean isColumnExists(ResultSet rs, String column) throws SQLException {
-        ResultSetMetaData metaData = rs.getMetaData();
-        int columnCount = metaData.getColumnCount();
-        for (int i = 1; i <= columnCount; i++) {
-            if (column.equals(metaData.getColumnName(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
 }

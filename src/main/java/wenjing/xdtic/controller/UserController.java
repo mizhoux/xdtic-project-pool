@@ -30,7 +30,7 @@ public class UserController {
         return "page/user/center";
     }
 
-    @RequestMapping("profile")
+    @GetMapping("profile")
     public String getUserProfilePage(Integer userid, HttpSession session) {
         User user = userDao.getUser(userid);
         session.setAttribute("user", user);
@@ -38,7 +38,7 @@ public class UserController {
         return "page/user/profile";
     }
 
-    @RequestMapping("{pageName}")
+    @GetMapping("{pageName}")
     public String route(@PathVariable String pageName) {
         return "page/user/" + pageName;
     }
@@ -50,7 +50,7 @@ public class UserController {
      * @return
      */
     @ResponseBody
-    @RequestMapping("info/{id}")
+    @GetMapping("info/{id}")
     public User getPesonalInformationById(@PathVariable("id") Integer id) {
         User user = userDao.getUser(id);
         return user;

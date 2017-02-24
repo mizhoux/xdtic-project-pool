@@ -1,23 +1,75 @@
 package wenjing.xdtic.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date;
+
 /**
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
 public class SignInfo {
 
-    private Integer sid;
+    private Integer id;
 
-    private Integer uid;
+    private Integer userId;
     private Integer proId;
 
-    private String username;
     private String apply;
-    private String profile;
-    private String pexperice;
+    private String skill;
+    private String experience;
 
-    private String date;
-    private String time;
+    @JsonFormat(pattern = "yyyy.MM.dd HH:mm")
+    private Date signTime;
+
+    private String username;
+
+    // 兼容前端
+    private Integer sid; // id
+    private Integer uid; // userId
+    private String profile; // skill
+    private String pexperice; // experience
+    private String date; // signTime yyyy.MM.dd
+    private String time; // signTime HH:mm
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    public String getSkill() {
+        return skill;
+    }
+
+    public void setSkill(String skill) {
+        this.skill = skill;
+    }
+
+    public String getExperience() {
+        return experience;
+    }
+
+    public void setExperience(String experience) {
+        this.experience = experience;
+    }
+
+    public Date getSignTime() {
+        return signTime;
+    }
+
+    public void setSignTime(Date signTime) {
+        this.signTime = signTime;
+    }
 
     public Integer getSid() {
         return sid;

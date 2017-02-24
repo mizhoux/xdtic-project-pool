@@ -6,7 +6,6 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VAL
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import wenjing.xdtic.dao.ProjectDao;
@@ -31,7 +30,7 @@ public class ProjectFunction {
     @Autowired
     private SignInfoDao signInfoDao;
 
-    @RequestMapping(value = "project/post", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "project/post", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode postProject(
             @RequestParam(name = "uid") Integer userId,
             @RequestParam(name = "title") String proname,
@@ -42,11 +41,11 @@ public class ProjectFunction {
             return RespCode.ERROR;
         }
 
-        boolean success = projectDao.add(userId, tag, proname, promassage, prowant, concat);
+        boolean success = projectDao.addProject(userId, tag, proname, promassage, prowant, concat);
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
-    @RequestMapping(value = "project/update", method = POST, consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "project/update", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode updateProject(
             @RequestParam(name = "uid") Integer userId,
             @RequestParam Integer proId, @RequestParam String concat,
@@ -56,19 +55,19 @@ public class ProjectFunction {
         return addProjectSucc ? RespCode.OK : RespCode.ERROR;
     }
 
-    @RequestMapping("project/collect")
+    @GetMapping("project/collect")
     public RespCode collectProject(@RequestParam Integer userid, @RequestParam Integer proId) {
         boolean success = projectDao.collectProject(userid, proId);
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
-    @RequestMapping("project/uncollect")
+    @GetMapping("project/uncollect")
     public RespCode uncollectProject(@RequestParam Integer userid, @RequestParam Integer proId) {
         boolean success = projectDao.uncollectProject(userid, proId);
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
-    @RequestMapping("get/project/myJoin")
+    @GetMapping("get/project/myJoin")
     public PagingProjects getMyJoiningProjects(@RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
 
@@ -91,7 +90,7 @@ public class ProjectFunction {
         return pagingProject;
     }
 
-    @RequestMapping("get/project/myCollect")
+    @GetMapping("get/project/myCollect")
     public PagingProjects getMyCollectedProjects(@RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
 
@@ -114,7 +113,7 @@ public class ProjectFunction {
         return pagingProject;
     }
 
-    @RequestMapping("get/project/myPost")
+    @GetMapping("get/project/myPost")
     public PagingProjects getMyPostedProjects(@RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
 
@@ -172,7 +171,7 @@ public class ProjectFunction {
 
     @PostMapping("project/toJoin")
     public RespCode toJoinProject(SignInfo signInfo) {
-        boolean success = signInfoDao.add(signInfo);
+        boolean success = signInfoDao.addSignInfo(signInfo);
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
