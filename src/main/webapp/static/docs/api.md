@@ -930,7 +930,7 @@
 	"pageNum": 0,
 	"hasMore": false,
 
-	"projects": [{
+	"users": [{
 		"id": "u001",
 		"username": "adoug",
 		"name": "陈智仁",

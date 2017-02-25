@@ -7,8 +7,22 @@
                 "isPage": true
             }
         },
+        "page/admin/login.jsp": {
+            "uri": "/page/admin/login.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
         "page/admin/project/check.jsp": {
             "uri": "/page/admin/project/check.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
+        "page/admin/project/detail.jsp": {
+            "uri": "/page/admin/project/detail.jsp",
             "type": "jsp",
             "extras": {
                 "isPage": true
@@ -215,6 +229,15 @@
                 "node_modules/whatwg-fetch/fetch.js"
             ]
         },
+        "static/js/admin/project/detail.js": {
+            "uri": "/xdtic/static/js/admin/project/detail.js",
+            "type": "js",
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
         "static/js/admin/project/look.js": {
             "uri": "/xdtic/static/js/admin/project/look.js",
             "type": "js",
@@ -367,6 +390,10 @@
         },
         "static/scss/admin/projectCheck.scss": {
             "uri": "/xdtic/static/scss/admin/projectCheck.css",
+            "type": "css"
+        },
+        "static/scss/admin/projectDetail.scss": {
+            "uri": "/xdtic/static/scss/admin/projectDetail.css",
             "type": "css"
         },
         "static/scss/admin/projectLook.scss": {

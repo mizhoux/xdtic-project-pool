@@ -3,14 +3,11 @@ a.tic-project-wrap {
 }
 
 .project-item {
-  transition: transform .5s ease, visibility .5s ease .5s;
+  transition: transform .5s ease, opacity .5s ease;
+  opacity: 1;
 }
 
 .project-item.project-slide {
   transform: translate3d(-150%, 0, 0);
-  visibility: hidden;
-}
-
-.project-item.project-slide-end {
-  display: none;
+  opacity: 0;
 }

@@ -5,7 +5,17 @@
 <fis:extends name="page/layout/frame_admin.jsp">
     <fis:block name="article">
 		<header>
-			<fis:widget name="page/widget/header/projectDetailHeader.jsp" />	
+			<div class="tic-header-three">
+				<div class="tic-header-three-center">
+			        <p class="tic-title-main"><c:out value="${project.proname}" /></p>
+			        <p class="tic-title-secondary">
+			            标签：
+			            <c:forEach items="${project.tag}" var="item">
+			                <span><c:out value="${item}" /></span>
+			            </c:forEach>
+			        </p>
+			    </div>
+			</div>	
 		</header>
 
 		<main>
@@ -13,7 +23,7 @@
 		</main>
 	
 		<p class="haha"><c:out value="${project.accept}" /></p>
-        <c:if test="${!project.accept}">
+        <c:if test="${!project.hasProcessed}">
 			<div class="ui buttons tic-buttons" id="projectOperation">
 	            <button class="ui button" v-tap="{methods: reject}">拒绝</button>
 	            <div class="or"></div>
