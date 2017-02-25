@@ -26,9 +26,10 @@ public class Project {
     @JsonFormat(pattern = "yyyy.MM.dd")
     private Date date;
 
+    // 非数据库中字段，前端需要
     private String username;
-
     private boolean isCollected;
+    private boolean hasProcessed;
     private List<String> tags;
 
     // 兼容前端
@@ -212,6 +213,14 @@ public class Project {
 
     public void setPromassage(String promassage) {
         this.promassage = promassage;
+    }
+
+    public boolean isHasProcessed() {
+        return hasProcessed;
+    }
+
+    public void setHasProcessed(boolean hasProcessed) {
+        this.hasProcessed = hasProcessed;
     }
 
 }
