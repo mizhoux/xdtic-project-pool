@@ -51,3 +51,7 @@ hr {
 [v-cloak] {
   display: none;
 }
+
+body {
+  font-family: inherit;
+}

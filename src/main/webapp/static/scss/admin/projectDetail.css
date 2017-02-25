@@ -1,0 +1,25 @@
+.tic-header-three {
+  justify-content: center;
+}
+
+.tic-header-three > .tic-header-three-aside {
+  display: none;
+}
+
+.tic-header-three > .tic-header-three-aside {
+  display: none;
+}
+
+.tic-header-three > .tic-header-three-center {
+  flex-basis: 50%;
+}
+
+#app .tic-menu-top {
+  display: none;
+}
+
+.tic-buttons {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+}

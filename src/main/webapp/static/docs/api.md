@@ -754,6 +754,29 @@
 
 ### 管理员
 
+#### 管理员登录页面
+
+- url: /xdtic/admin/login
+- jsp: /page/admin/login.jsp
+
+- api: /xdtic/fn/admin/login
+
+    - 管理员登录，直接提交表单，验证通过跳转到主页（/xdtic/admin）
+    - request `[POST]`
+    ```
+    {
+        username: adoug,
+        password: xxxx
+        
+    }
+    ```
+    
+#### 管理员主页
+
+- url: /xdtic/admin
+- jsp: /page/admin/index.jsp
+
+
 #### 待审核项目页面
 
 - url: /xdtic/admin/project/check
@@ -805,6 +828,44 @@
         code: ok
     }
     ```
+
+#### 管理员登录页面
+
+- url: /xdtic/admin/login
+- jsp: /page/admin/login
+
+- api: /xdtic/fn/admin/login
+
+    - 管理员登录，直接提交表单，验证通过跳转到主页（/xdtic/admin）
+    - request `[POST]`
+    ```
+    {
+        username: adoug,
+        password: xxxx
+        
+    }
+    ```
+    
+#### 管理员项目详情页
+
+- url: /xdtic/page/admin/project?proId=p001
+- jsp: /page/admin/project/detail.jsp
+- 页面所需变量
+```
+{
+    "project": {
+		"hasProcessed": true, //是否已处理
+		"proname": "时间典当铺",
+		"tag": ["Web", "情感"],
+		"proId": "p001",
+		"prowant": "产品经理：2名  UI设计：1名 前端：1名",
+		"promassage": "这里就是项目的详情了，文字就不限量了，感觉应该加上可以添加图片的功能，这里的文字颜
+        色是#222222，字号15。",
+        "concat": "邮箱：yuqingyaa@163.com 如有疑问，敬请用以上方式咨询~",
+        "date": "2016.01.28"
+	}
+}
+```
 
 #### 已通过项目页面
 

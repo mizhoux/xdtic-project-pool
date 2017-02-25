@@ -35,7 +35,7 @@
 
     <fis:body class="body">
         <!--这个的app对应的Vue组件须在各页面自行构造，处理得不是很好-->
-        <div id="app" class="pushable">
+        <div id="app" class="pushable tic-app">
             <div class="ui vertical inverted sidebar menu left"
              :class="{visible: sidePush, uncover: sidePush}">
                 <div class="item">
@@ -55,12 +55,11 @@
                         用户管理
                     </div>
                     <div class="menu">
-                        <a href="<c:url value='/admin/user/add' />" class="item">用户添加</a>
                         <a href="<c:url value='/admin/user/look' />" class="item">用户浏览</a>
                     </div>
                 </div>
             </div>
-            <div class="ui fixed inverted menu">
+            <div class="tic-menu-top ui fixed inverted menu">
                 <div class="ui container">
                     <a class="launch icon item" v-tap.prevent='{methods: push}'>
                         <i class="content icon"></i>
@@ -82,6 +81,9 @@
              :class="{dimmed: sidePush}">
                 <fis:block name="article"></fis:block>
             </div>
+
+            <fis:block name="footer">
+            </fis:block>
         </div>
         
     </fis:body>

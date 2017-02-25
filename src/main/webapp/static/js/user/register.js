@@ -11,7 +11,10 @@ var formRegister = new Vue({
         username: '',
         password: '',
         passConfirm: '',
+
+        usernameNull: false,
         usernameError: false,
+        passNull: false,
         passError: false
     },
     computed: {
@@ -27,16 +30,25 @@ var formRegister = new Vue({
                 msg = '抱歉，用户名已被注册';
             } else if (this.passError) {
                 msg = '两次密码输入不一致';
+            } else if (this.passNull) {
+                msg = '密码没有填写哦';
+            } else if (this.usernameNull) {
+                msg = '用户名没有填写哦';
             }
             return msg;
         },
         hasError: function hasError() {
-            return this.usernameError || this.passError;
+            return this.usernameError || this.passError || this.usernameNull || this.passNull;
         }
     },
 
     methods: {
         validName: function validName(event) {
+            if (this.username.length === 0) {
+                this.usernameNull = true;
+                return;
+            }
+
             fetch(urlValidUserName, {
                 method: 'POST',
                 headers: {
@@ -61,6 +73,7 @@ var formRegister = new Vue({
 
         validPass: function validPass() {
             this.passError = !(this.password === this.passConfirm);
+            this.passNull = !(this.password.length > 0 && this.passConfirm.length > 0);
             return this.passError;
         },
 

@@ -91,7 +91,7 @@ var projectBox = new Vue({
 			if (isChecked) {
 				this.checkedUser.push(uid);
 			} else {
-				var indexOfUid = checkedUser.indexOf(uid);
+				var indexOfUid = this.checkedUser.indexOf(uid);
 				this.checkedUser.splice(indexOfUid, 1);
 			}
 		},
