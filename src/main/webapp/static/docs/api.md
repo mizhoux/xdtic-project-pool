@@ -833,6 +833,12 @@
 
 - url: /xdtic/admin/login
 - jsp: /page/admin/login
+- 页面所需变量
+```
+{
+    loginFail: false
+}
+```
 
 - api: /xdtic/fn/admin/login
 

@@ -11,6 +11,9 @@
 			<img src="/xdtic/static/images/logo2.png" alt="西电腾讯俱乐部" />
 
 			<form action="<c:url value='/fn/admin/login' />" method="POST" class="tic-form" id="formLogin">
+				<c:if test="${loginFail}">
+					<p class="tic-error-tip" >用户名或密码错误</p>
+				</c:if>
 				<div class="tic-field">
 					<input type="text" name="username" placeholder="用户名" />
 				</div>
