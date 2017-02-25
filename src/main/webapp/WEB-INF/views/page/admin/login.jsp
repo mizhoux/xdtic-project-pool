@@ -35,7 +35,4 @@
 	<fis:block name="js">
 		<fis:parent />		
 	</fis:block>
- 
-  <%-- auto inject by fis3-preprocess-extlang--%>
-  <fis:require name="page/admin/login.jsp" />
 </fis:extends>
