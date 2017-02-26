@@ -57,6 +57,7 @@ public class ProjectDao {
             messageDao.addMessage(userId, proId, proname, Message.Type.POST);
             return true;
         }
+        
         return false;
     }
 
@@ -74,10 +75,18 @@ public class ProjectDao {
         return jdbcTmpl.query(SQL, this::extractProject, id);
     }
 
-    // userId 用来判断项目是否已经被该用户收藏
+    /**
+     * 从数据中按分页条件获取项目
+     *
+     * @param userId 当前 session 中的用户，用来判断项目是否已经被该用户收藏
+     * @param keywords 搜索关键字，默认为 ""
+     * @param offset 分页起始位置
+     * @param size 每页的元素数量
+     * @return
+     */
     public List<Project> getProjects(Integer userId, String keywords, Integer offset, Integer size) {
         String SQL
-                = "SELECT u.username, p.* FROM project AS p, user AS u "
+                = "SELECT u.username, p.* FROM project p, user u "
                 + "WHERE p.user_id = u.id AND p.tag LIKE ? LIMIT ?, ?";
 
         List<Project> projects = jdbcTmpl.query(
@@ -101,6 +110,38 @@ public class ProjectDao {
         projects.forEach(project -> project.setIsCollected(isProjectCollected(userId, project.getProId())));
 
         return projects;
+    }
+
+    public List<Project> getUncheckedProjects(String keywords, Integer offset, Integer size) {
+        String SQL
+                = "SELECT u.username, p.* FROM project AS p, user AS u "
+                + "WHERE p.user_id = u.id AND p.status = 'check' AND p.tag LIKE ? LIMIT ?, ?";
+
+        List<Project> projects = jdbcTmpl.query(
+                SQL, this::parseProjectWithUsername, getMysqlLikeKey(keywords), offset, size);
+
+        return projects;
+    }
+
+    public long getUncheckedProjectsCount(String keywords) {
+        String SQL = "SELECT COUNT(*) FROM project p WHERE p.status = 'check' AND p.tag LIKE ?";
+        return jdbcTmpl.queryForObject(SQL, Long.class, keywords);
+    }
+
+    public List<Project> getCheckedProjects(String keywords, Integer offset, Integer size) {
+        String SQL
+                = "SELECT u.username, p.* FROM project p, user u "
+                + "WHERE p.user_id = u.id AND p.status = 'pass' AND p.tag LIKE ? LIMIT ?, ?";
+
+        List<Project> projects = jdbcTmpl.query(
+                SQL, this::parseProjectWithUsername, getMysqlLikeKey(keywords), offset, size);
+
+        return projects;
+    }
+
+    public long getCheckedProjectsCount(String keywords) {
+        String SQL = "SELECT COUNT(*) FROM project p WHERE p.status = 'pass' AND p.tag LIKE ?";
+        return jdbcTmpl.queryForObject(SQL, Long.class, keywords);
     }
 
     /**
@@ -134,8 +175,8 @@ public class ProjectDao {
      */
     public List<Project> getCollectedProjects(Integer userId, Integer offset, Integer size) {
         String SQL
-                = "SELECT u.username, p.* FROM project AS p, user AS u WHERE p.id IN "
-                + "(SELECT pc.pro_id FROM pro_collection AS pc WHERE pc.user_id = ?) AND u.id = p.user_id "
+                = "SELECT u.username, p.* FROM project p, user u WHERE p.id IN "
+                + "(SELECT pc.pro_id FROM pro_collection pc WHERE pc.user_id = ?) AND u.id = p.user_id "
                 + "LIMIT ?, ?";
 
         List<Project> projects = jdbcTmpl.query(SQL, this::parseProjectWithUsername, userId, offset, size);
@@ -155,8 +196,8 @@ public class ProjectDao {
      */
     public List<Project> getJoiningProjects(Integer userId, Integer offset, Integer size) {
         String SQL
-                = "SELECT u.username, p.* FROM project AS p, user AS u WHERE p.id IN "
-                + "(SELECT s.pro_id FROM sign_info AS s WHERE s.user_id = ?) AND u.id = p.user_id "
+                = "SELECT u.username, p.* FROM project p, user u WHERE p.id IN "
+                + "(SELECT s.pro_id FROM sign_info s WHERE s.user_id = ?) AND u.id = p.user_id "
                 + "LIMIT ?, ?";
         List<Project> projects = jdbcTmpl.query(SQL, this::parseProjectWithUsername, userId, offset, size);
 
@@ -189,8 +230,8 @@ public class ProjectDao {
      */
     public long getJoiningProjectsCount(Integer userId) {
         String SQL
-                = "SELECT COUNT(*) FROM project AS p WHERE p.id IN "
-                + "(SELECT s.pro_id FROM sign_info AS s WHERE s.user_id = ?)";
+                = "SELECT COUNT(*) FROM project p WHERE p.id IN "
+                + "(SELECT s.pro_id FROM sign_info s WHERE s.user_id = ?)";
 
         return jdbcTmpl.queryForObject(SQL, Long.class, userId);
     }
@@ -203,8 +244,8 @@ public class ProjectDao {
      */
     public long getCollectedProjectsCount(Integer userId) {
         String SQL
-                = "SELECT COUNT(*) FROM project AS p WHERE p.id IN "
-                + "(SELECT pc.pro_id FROM pro_collection AS pc WHERE pc.user_id = ?)";
+                = "SELECT COUNT(*) FROM project p WHERE p.id IN "
+                + "(SELECT pc.pro_id FROM pro_collection pc WHERE pc.user_id = ?)";
 
         return jdbcTmpl.queryForObject(SQL, Long.class, userId);
     }
@@ -316,4 +357,20 @@ public class ProjectDao {
         project.setUsername(rs.getString("username"));
         return project;
     }
+
+    public boolean rejectProject(Integer proId) {
+        String SQL = "UPDATE project SET status = 'reject' WHERE id = ?";
+        return jdbcTmpl.update(SQL, proId) == 1;
+    }
+
+    public boolean acceptProject(Integer proId) {
+        String SQL = "UPDATE project SET status = 'pass' WHERE id = ?";
+        return jdbcTmpl.update(SQL, proId) == 1;
+    }
+
+    public boolean deleteProject(Integer proId) {
+        String SQL = "DELETE FROM project WHERE id = ?";
+        return jdbcTmpl.update(SQL, proId) == 1;
+    }
+    
 }

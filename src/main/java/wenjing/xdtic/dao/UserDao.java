@@ -4,6 +4,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -97,6 +98,16 @@ public class UserDao {
         return jdbcTmpl.query(SQL, this::extractUser, username, password);
     }
 
+    public List<User> getUsers(String keywords, Integer offset, Integer size) {
+        String SQL = "SELECT u.* FROM user AS u WHERE u.username LIKE ? LIMIT ?, ?";
+        return jdbcTmpl.query(SQL, this::parseUser, getMysqlLikeKey(keywords), offset, size);
+    }
+
+    public Long getUsersCount(String keywords) {
+        String SQL = "SELECT COUNT(*) FROM user u WHERE u.username LIKE ? ";
+        return jdbcTmpl.queryForObject(SQL, Long.class, getMysqlLikeKey(keywords));
+    }
+
     /**
      * 判断用户名在数据库中是否已经存在
      *
@@ -155,6 +166,15 @@ public class UserDao {
         user.setPexperice(user.getExperience());
 
         return user;
+    }
+
+    private String getMysqlLikeKey(String keyword) {
+        return "%" + keyword + "%";
+    }
+
+    public boolean deleteUser(Integer id) {
+        String SQL = "DELETE FROM user WHERE id = ?";
+        return jdbcTmpl.update(SQL, id) == 1;
     }
 
 }
