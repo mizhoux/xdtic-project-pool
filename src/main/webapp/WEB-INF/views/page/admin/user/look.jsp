@@ -53,7 +53,7 @@
                  :class="{disabled: !hasUser}"
                  v-tap="{methods: deleteAll}">删除全部</div>
             </div>
-            <div class="item ui right">
+            <div class="item ui right" style="display: none">
                 <div class="ui small primary labeled icon button"
                  v-tap="{methods: addUser}">
                     <i class="user icon"></i> 添加用户

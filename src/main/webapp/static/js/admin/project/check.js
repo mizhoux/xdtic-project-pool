@@ -140,8 +140,8 @@ function requestProcessProject(vProject, operation, proIndex) {
 			'Accept': 'application/json'
 		},
 		body: JSON.stringify({
-			operation: operation,
-			proId: vProject.project.proId
+			"operation": operation,
+			"proId": vProject.project.proId
 		})
 	}).then(function (response) {
 		return response.json();

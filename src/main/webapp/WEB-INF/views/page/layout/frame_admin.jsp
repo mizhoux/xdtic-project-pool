@@ -39,7 +39,7 @@
             <div class="ui vertical inverted sidebar menu left"
              :class="{visible: sidePush, uncover: sidePush}">
                 <div class="item">
-                    <a href="/admin">西电TIC项目池</a>
+                    <a href="<c:url value='/admin' />">西电TIC项目池</a>
                 </div>
                 <div class="item">
                     <div class="header">

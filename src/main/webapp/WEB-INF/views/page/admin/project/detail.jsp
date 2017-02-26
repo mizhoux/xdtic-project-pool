@@ -22,6 +22,7 @@
 			<fis:widget name="page/widget/main/projectDetail.jsp" />	
 		</main>
 	
+		<p class="haha"><c:out value="${project.accept}" /></p>
         <c:if test="${!project.hasProcessed}">
 			<div class="ui buttons tic-buttons" id="projectOperation">
 	            <button class="ui button" v-tap="{methods: reject}">拒绝</button>

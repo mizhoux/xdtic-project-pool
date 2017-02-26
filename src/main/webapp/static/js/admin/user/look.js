@@ -160,7 +160,7 @@ function requestDeleteUser(app, uid) {
 			'Accept': 'application/json'
 		},
 		body: JSON.stringify({
-			uid: uid
+			"uid": uid
 		})
 	}).then(function (response) {
 		return response.json();
