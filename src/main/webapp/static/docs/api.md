@@ -869,7 +869,12 @@
         色是#222222，字号15。",
         "concat": "邮箱：yuqingyaa@163.com 如有疑问，敬请用以上方式咨询~",
         "date": "2016.01.28"
-	}
+	},
+
+  "projectCreator": {
+    "id": "u001",
+    "username": "adoug"
+  }
 }
 ```
 
