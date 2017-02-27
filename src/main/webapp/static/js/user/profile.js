@@ -35,8 +35,9 @@ var appProfile = new Vue({
 			fetch(urlUpdateProfile, {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
-				},
+					'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+                    'Accept': 'application/json'
+                },
 				credentials: 'same-origin',
 				body: tools.formSerialize('#formProfile')
 			}).then(function (response) {
