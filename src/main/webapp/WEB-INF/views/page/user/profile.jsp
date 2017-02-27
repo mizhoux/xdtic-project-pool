@@ -106,7 +106,7 @@
 							</span>
 						</div>
 						<input type="hidden" name="id" value="<c:out value="${user.id}" />">
-						<button class="weui-btn weui-btn_primary" id="btnConfirm" v-show="isEditing" v-tap="{methods: editProfile}">确认</button>
+						<button class="weui-btn weui-btn_primary" id="btnConfirm" v-show="isEditing" v-tap.prevent="{methods: editProfile}">确认</button>
 					</form>
 				</div>
 			</main>
