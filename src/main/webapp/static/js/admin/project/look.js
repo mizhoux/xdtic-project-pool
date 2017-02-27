@@ -132,6 +132,7 @@ function requestProcessProject(vProject, operation, proIndex) {
 	fetch(urlOperateProject, {
 		method: 'POST',
 		headers: {
+			'Content-Type': 'application/json',
 			'Accept': 'application/json'
 		},
 		body: JSON.stringify({
