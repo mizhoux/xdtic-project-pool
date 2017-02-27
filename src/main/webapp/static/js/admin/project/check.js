@@ -104,7 +104,8 @@ function loadMore() {
 	fetch(url, {
 		method: 'GET',
 		headers: {
-			'Accept': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
 		}
 	}).then(function (response) {
 		return response.json();
