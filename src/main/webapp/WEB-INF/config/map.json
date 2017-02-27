@@ -341,7 +341,7 @@
             "deps": [
                 "node_modules/es6-promise/dist/es6-promise.js",
                 "node_modules/whatwg-fetch/fetch.js",
-                "static/js/module/formSerialize.js"
+                "static/js/module/tools.js"
             ]
         },
         "static/js/user/register.js": {

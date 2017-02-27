@@ -45,6 +45,18 @@ Vue.component('tic-project', {
 
 	props: ['project', 'index', 'userid'],
 
+	computed: {
+		projectDetailHref: function projectDetailHref() {
+			var projectDetailHref = '' + urlPrefix;
+
+			if (this.project.userid === this.userid) {
+				return urlPrefix + '/myProject/myPost/detail?proId=' + this.project.proId;
+			} else {
+				return '{urlPrefix}/project?proId=' + this.project.proId + '&uid={this.userid}';
+			}
+		}
+	},
+
 	methods: {
 		collect: function collect(params) {
 			//假装收藏成功，这样给用户的反馈快一点，收藏失败再回滚

@@ -9,7 +9,7 @@
 var Promise = require('node_modules/es6-promise/dist/es6-promise').Promise;
 require('node_modules/whatwg-fetch/fetch');
 
-var formSerialize = require('static/js/module/formSerialize');
+var tools = require('static/js/module/tools');
 
 var urlUpdateProfile = urlPrefix + '/fn/update/profile';
 
@@ -38,7 +38,7 @@ var appProfile = new Vue({
 					'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
 				},
 				credentials: 'same-origin',
-				body: formSerialize('#formProfile')
+				body: tools.formSerialize('#formProfile')
 			}).then(function (response) {
 				return response.json();
 			}).then(function (data) {
