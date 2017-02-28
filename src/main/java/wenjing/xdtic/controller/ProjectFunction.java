@@ -37,7 +37,7 @@ public class ProjectFunction {
 
         project.setUserid(uid);
         project.setProname(title);
-        Project.syscDataFromFrontToBack(project);
+        Project.syscDataForBack(project);
 
         boolean success = projectDao.addProject(project);
         return success ? RespCode.OK : RespCode.ERROR;
@@ -47,7 +47,7 @@ public class ProjectFunction {
     public RespCode updateProject(@RequestParam Integer uid, Project project) {
 
         project.setUserid(uid);
-        Project.syscDataFromFrontToBack(project);
+        Project.syscDataForBack(project);
 
         boolean success = projectDao.updateProject(project);
         return success ? RespCode.OK : RespCode.ERROR;
@@ -177,6 +177,8 @@ public class ProjectFunction {
 
     @PostMapping("project/toJoin")
     public RespCode toJoinProject(SignInfo signInfo) {
+        SignInfo.syncDataForBack(signInfo);
+
         boolean success = signInfoDao.addSignInfo(signInfo);
         return success ? RespCode.OK : RespCode.ERROR;
     }

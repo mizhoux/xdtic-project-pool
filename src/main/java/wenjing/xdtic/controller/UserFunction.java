@@ -109,7 +109,7 @@ public class UserFunction {
                 return "page/user/login";
             }
         }
-        return ""; // 更新密码不成功
+        return "page/user/resetPass"; // 更新密码不成功
     }
 
     /**
@@ -122,7 +122,7 @@ public class UserFunction {
     @ResponseBody
     @PostMapping(value = "update/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode updateUserProfile(HttpSession session, User user) {
-        User.syncDataFromFrontToBack(user);
+        User.syncDataForBack(user);
         boolean updateSucc = userDao.updateUser(user);
         session.setAttribute("user", user);
         return updateSucc ? RespCode.OK : RespCode.ERROR;

@@ -42,7 +42,7 @@ public class Project {
     private String concat;  // contact
     private String statu;   // status
 
-    public static void syscDataFromFrontToBack(Project project) {
+    public static void syscDataForBack(Project project) {
         project.setId(project.getProId());
         project.setUserId(project.getUserid());
         project.setName(project.getProname());
@@ -52,7 +52,7 @@ public class Project {
         project.setStatus(project.getStatu());
     }
 
-    public static void syscDataFromBackToFront(Project project) {
+    public static void syscDataForFront(Project project) {
         project.setProId(project.getId());
         project.setUserid(project.getUserId());
         project.setProname(project.getName());

@@ -34,22 +34,32 @@ public class User {
     private String profile;   // skill
     private String pexperice; // experience
 
-    public static void syncDataFromBackToFront(User user) {
-        user.setName(user.getRealname());
-        user.setSex(user.getGender());
-        user.setProfe(user.getSpecialty());
-        user.setStunum(user.getStuNum());
-        user.setProfile(user.getSkill());
-        user.setPexperice(user.getExperience());
-    }
-
-    public static void syncDataFromFrontToBack(User user) {
+    /**
+     * 为后端需求的字段同步 User
+     *
+     * @param user
+     */
+    public static void syncDataForBack(User user) {
         user.setRealname(user.getName());
         user.setGender(user.getSex());
         user.setSpecialty(user.getProfe());
         user.setStuNum(user.getStunum());
         user.setSkill(user.getProfile());
         user.setExperience(user.getPexperice());
+    }
+
+    /**
+     * 为前端需求的字段同步 User
+     *
+     * @param user
+     */
+    public static void syncDataForFront(User user) {
+        user.setName(user.getRealname());
+        user.setSex(user.getGender());
+        user.setProfe(user.getSpecialty());
+        user.setStunum(user.getStuNum());
+        user.setProfile(user.getSkill());
+        user.setPexperice(user.getExperience());
     }
 
     public Integer getId() {

@@ -338,7 +338,7 @@ public class ProjectDao {
         }
 
         // 兼容前端
-        Project.syscDataFromBackToFront(project);
+        Project.syscDataForFront(project);
 
         return project;
     }

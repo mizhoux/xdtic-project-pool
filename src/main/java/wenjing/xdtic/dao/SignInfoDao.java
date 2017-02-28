@@ -2,9 +2,6 @@ package wenjing.xdtic.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -20,9 +17,6 @@ import wenjing.xdtic.model.SignInfo;
 @Repository
 public class SignInfoDao {
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
-
     @Autowired
     private JdbcTemplate jdbcTmpl;
 
@@ -37,12 +31,12 @@ public class SignInfoDao {
                 = "INSERT INTO sign_info (pro_id, user_id, apply, skill, experience, sign_time) "
                 + "VALUES (?, ?, ?, ?, ?, NOW())";
 
-        int result = jdbcTmpl.update(SQL, signInfo.getProId(), signInfo.getUid(),
-                signInfo.getApply(), signInfo.getProfile(), signInfo.getPexperice());
+        int result = jdbcTmpl.update(SQL, signInfo.getProId(), signInfo.getUserId(),
+                signInfo.getApply(), signInfo.getSkill(), signInfo.getExperience());
 
         if (result == 1) { // 添加 signInfo 成功
             Project project = projectDao.getProject(signInfo.getProId());
-            messageDao.addMessage(project.getUserid(), project.getProId(), project.getProname(), Message.Type.JOIN);
+            messageDao.addMessage(project.getUserId(), project.getId(), project.getName(), Message.Type.JOIN);
             return true;
         }
 
@@ -76,14 +70,7 @@ public class SignInfoDao {
         signInfo.setUsername(rs.getString("username"));
 
         // 兼容前端
-        signInfo.setSid(signInfo.getId());
-        signInfo.setUid(signInfo.getUserId());
-        signInfo.setProfile(signInfo.getSkill());
-        signInfo.setPexperice(signInfo.getExperience());
-        LocalDateTime dateTime = LocalDateTime.ofInstant(
-                signInfo.getSignTime().toInstant(), ZoneId.systemDefault());
-        signInfo.setDate(DATE_FORMATTER.format(dateTime));
-        signInfo.setTime(TIME_FORMATTER.format(dateTime));
+        SignInfo.syncDataForFront(signInfo);
 
         return signInfo;
     }

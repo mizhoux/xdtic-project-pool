@@ -19,8 +19,8 @@ public class HomeController {
 
     @GetMapping("logout")
     public String logout(HttpSession session) {
-        session.removeAttribute("user");
-        return "page/user/login";
+        session.invalidate();
+        return "redirect:/index";
     }
 
     @GetMapping("hall")
