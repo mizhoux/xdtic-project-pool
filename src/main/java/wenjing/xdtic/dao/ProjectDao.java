@@ -57,7 +57,7 @@ public class ProjectDao {
             messageDao.addMessage(userId, proId, proname, Message.Type.POST);
             return true;
         }
-        
+
         return false;
     }
 
@@ -340,14 +340,7 @@ public class ProjectDao {
         }
 
         // 兼容前端
-        project.setProId(project.getId());
-        project.setUserid(project.getUserId());
-        project.setProname(project.getName());
-        project.setDesc(project.getContent());
-        project.setProwant(project.getRecruit());
-        project.setConcat(project.getContact());
-        project.setStatu(project.getStatus());
-        project.setPromassage(project.getContent());
+        Project.syscDataFromBackToFront(project);
 
         return project;
     }
@@ -372,5 +365,5 @@ public class ProjectDao {
         String SQL = "DELETE FROM project WHERE id = ?";
         return jdbcTmpl.update(SQL, proId) == 1;
     }
-    
+
 }

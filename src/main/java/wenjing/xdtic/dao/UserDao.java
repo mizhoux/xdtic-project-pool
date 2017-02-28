@@ -66,9 +66,9 @@ public class UserDao {
                 = "UPDATE user SET username = ?, realname = ?, nickname= ?, email = ?, gender = ?, "
                 + "specialty = ?, phone = ?, stu_num = ?, skill = ?, experience = ? WHERE id = ?";
         int result = jdbcTmpl.update(SQL,
-                user.getUsername(), user.getName(), user.getNickname(),
-                user.getEmail(), user.getSex(), user.getProfe(), user.getPhone(),
-                user.getStunum(), user.getProfile(), user.getPexperice(), user.getId());
+                user.getUsername(), user.getRealname(), user.getNickname(),
+                user.getEmail(), user.getGender(), user.getSpecialty(), user.getPhone(),
+                user.getStuNum(), user.getSkill(), user.getExperience(), user.getId());
 
         return result == 1;
     }
@@ -147,23 +147,15 @@ public class UserDao {
         user.setEmail(rs.getString("email"));
         user.setPhone(rs.getString("phone"));
         user.setNickname(rs.getString("nickname"));
-
         user.setRealname(rs.getString("realname"));
         user.setGender(rs.getString("gender"));
-
         user.setSpecialty(rs.getString("specialty"));
         user.setStuNum(rs.getString("stu_num"));
-
         user.setSkill(rs.getString("skill"));
         user.setExperience(rs.getString("experience"));
 
         // 兼容前端
-        user.setName(user.getRealname());
-        user.setSex(user.getGender());
-        user.setProfe(user.getSpecialty());
-        user.setStunum(user.getStuNum());
-        user.setProfile(user.getSkill());
-        user.setPexperice(user.getExperience());
+        User.syncDataFromBackToFront(user);
 
         return user;
     }

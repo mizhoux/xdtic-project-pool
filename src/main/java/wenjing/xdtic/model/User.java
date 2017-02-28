@@ -34,7 +34,22 @@ public class User {
     private String profile;   // skill
     private String pexperice; // experience
 
-    public User() {
+    public static void syncDataFromBackToFront(User user) {
+        user.setName(user.getRealname());
+        user.setSex(user.getGender());
+        user.setProfe(user.getSpecialty());
+        user.setStunum(user.getStuNum());
+        user.setProfile(user.getSkill());
+        user.setPexperice(user.getExperience());
+    }
+
+    public static void syncDataFromFrontToBack(User user) {
+        user.setRealname(user.getName());
+        user.setGender(user.getSex());
+        user.setSpecialty(user.getProfe());
+        user.setStuNum(user.getStunum());
+        user.setSkill(user.getProfile());
+        user.setExperience(user.getPexperice());
     }
 
     public Integer getId() {
@@ -69,60 +84,12 @@ public class User {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public String getProfe() {
-        return profe;
-    }
-
-    public void setProfe(String profe) {
-        this.profe = profe;
-    }
-
-    public String getStunum() {
-        return stunum;
-    }
-
-    public void setStunum(String stunum) {
-        this.stunum = stunum;
-    }
-
     public String getPhone() {
         return phone;
     }
 
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    public String getProfile() {
-        return profile;
-    }
-
-    public void setProfile(String profile) {
-        this.profile = profile;
-    }
-
-    public String getPexperice() {
-        return pexperice;
-    }
-
-    public void setPexperice(String pexperice) {
-        this.pexperice = pexperice;
     }
 
     public boolean isHasMsg() {
@@ -187,6 +154,54 @@ public class User {
 
     public void setExperience(String experience) {
         this.experience = experience;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSex() {
+        return sex;
+    }
+
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
+
+    public String getProfe() {
+        return profe;
+    }
+
+    public void setProfe(String profe) {
+        this.profe = profe;
+    }
+
+    public String getStunum() {
+        return stunum;
+    }
+
+    public void setStunum(String stunum) {
+        this.stunum = stunum;
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public String getPexperice() {
+        return pexperice;
+    }
+
+    public void setPexperice(String pexperice) {
+        this.pexperice = pexperice;
     }
 
 }

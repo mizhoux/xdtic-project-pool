@@ -122,6 +122,7 @@ public class UserFunction {
     @ResponseBody
     @PostMapping(value = "update/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode updateUserProfile(HttpSession session, User user) {
+        User.syncDataFromFrontToBack(user);
         boolean updateSucc = userDao.updateUser(user);
         session.setAttribute("user", user);
         return updateSucc ? RespCode.OK : RespCode.ERROR;
