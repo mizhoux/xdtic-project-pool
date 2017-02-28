@@ -32,28 +32,25 @@ public class ProjectFunction {
 
     @PostMapping(value = "project/post", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode postProject(
-            @RequestParam(name = "uid") Integer userId,
-            @RequestParam(name = "title") String proname,
-            @RequestParam String concat, @RequestParam String tag,
-            @RequestParam String promassage, @RequestParam String prowant) {
+            @RequestParam Integer uid,
+            @RequestParam String title, Project project) {
 
-        if (userId == null) {
-            return RespCode.ERROR;
-        }
+        project.setUserid(uid);
+        project.setProname(title);
+        Project.syscDataFromFrontToBack(project);
 
-        boolean success = projectDao.addProject(userId, tag, proname, promassage, prowant, concat);
+        boolean success = projectDao.addProject(project);
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
     @PostMapping(value = "project/update", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode updateProject(
-            @RequestParam(name = "uid") Integer userId,
-            @RequestParam Integer proId, @RequestParam String concat,
-            @RequestParam String promassage, @RequestParam String prowant) {
+    public RespCode updateProject(@RequestParam Integer uid, Project project) {
 
-        boolean addProjectSucc
-                = projectDao.updateProject(userId, proId, promassage, prowant, concat);
-        return addProjectSucc ? RespCode.OK : RespCode.ERROR;
+        project.setUserid(uid);
+        Project.syscDataFromFrontToBack(project);
+
+        boolean success = projectDao.updateProject(project);
+        return success ? RespCode.OK : RespCode.ERROR;
     }
 
     @GetMapping("project/collect")
