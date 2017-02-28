@@ -24,7 +24,8 @@ public class UserController {
     private UserDao userDao;
 
     @GetMapping("")
-    public String getUserCenterPage(Integer userid, HttpSession session) {
+    public String getUserCenterPage(
+            @RequestParam Integer userid, HttpSession session) {
         User user = userDao.getUser(userid);
         session.setAttribute("user", user);
 
@@ -32,7 +33,8 @@ public class UserController {
     }
 
     @GetMapping("profile")
-    public String getUserProfilePage(@RequestParam Integer userid, HttpSession session) {
+    public String getUserProfilePage(
+            @RequestParam Integer userid, HttpSession session) {
         User user = userDao.getUser(userid);
         session.setAttribute("user", user);
 
@@ -52,7 +54,7 @@ public class UserController {
      */
     @ResponseBody
     @GetMapping("info/{id}")
-    public User getPesonalInformationById(@PathVariable("id") Integer id) {
+    public User getPesonalInfoById(@PathVariable("id") Integer id) {
         User user = userDao.getUser(id);
         return user;
     }

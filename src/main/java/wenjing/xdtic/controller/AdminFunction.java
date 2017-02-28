@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,17 +33,19 @@ import wenjing.xdtic.model.User;
 public class AdminFunction {
 
     @Autowired
-    private ProjectDao projectDao;
-
-    @Autowired
     private UserDao userDao;
 
     @Autowired
     private AdminDao adminDao;
 
+    @Autowired
+    private ProjectDao projectDao;
+
     @PostMapping(value = "admin/login", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public String login(HttpServletRequest request, HttpSession session,
+    public String login(
+            HttpServletRequest request, HttpSession session,
             @RequestParam String username, @RequestParam String password) {
+
         Admin admin = adminDao.getAdmin(username, password);
 
         if (admin == null) {
@@ -56,7 +59,10 @@ public class AdminFunction {
 
     @ResponseBody
     @GetMapping("admin/get/project/uncheck")
-    public PagingProjects getUncheckedProjects(Integer pageNum, Integer size, String keyWords) {
+    public PagingProjects getUncheckedProjects(
+            @RequestParam String keyWords,
+            @RequestParam Integer pageNum, @RequestParam Integer size) {
+
         int offset = pageNum * size;
         List<Project> projects = projectDao.getUncheckedProjects(keyWords, offset, size);
 
@@ -76,8 +82,9 @@ public class AdminFunction {
     }
 
     @ResponseBody
-    @PostMapping(value = "admin/project/operate")
+    @PostMapping(value = "admin/project/operate", consumes = MediaType.APPLICATION_JSON_VALUE)
     public RespCode operateProject(@RequestBody Map<String, String> params) {
+
         Integer proId = Integer.valueOf(params.get("proId"));
         String operation = params.get("operation");
 
@@ -98,7 +105,10 @@ public class AdminFunction {
 
     @ResponseBody
     @GetMapping("admin/get/project/accept")
-    public PagingProjects getAcceptedProjects(Integer pageNum, Integer size, String keyWords) {
+    public PagingProjects getAcceptedProjects(
+            @RequestParam String keyWords,
+            @RequestParam Integer pageNum, @RequestParam Integer size) {
+
         int offset = pageNum * size;
         List<Project> projects = projectDao.getCheckedProjects(keyWords, offset, size);
 
@@ -119,7 +129,10 @@ public class AdminFunction {
 
     @ResponseBody
     @GetMapping("admin/get/user")
-    public PagingUsers getUsers(Integer pageNum, Integer size, String keyWords) {
+    public PagingUsers getUsers(
+            @RequestParam String keyWords,
+            @RequestParam Integer pageNum, @RequestParam Integer size) {
+
         int offset = pageNum * size;
         List<User> users = userDao.getUsers(keyWords, offset, size);
 
@@ -140,14 +153,19 @@ public class AdminFunction {
 
     @ResponseBody
     @PostMapping("admin/user/delete")
-    public RespCode deleteUser(@RequestBody Map<String, String> params) {
-        String uid = params.get("uid");
-        String id = uid.substring(1, uid.length() - 1);
-        if ("all".equals(id)) {
+    public RespCode deleteUser(@RequestBody Map<String, Object> params) {
+        Object uid = params.get("uid");
+        if (uid instanceof List) {
+            List<Integer> uids = (List<Integer>) uid;
+            for (Integer id : uids) {
+                userDao.deleteUser(id);
+            }
+
+            return RespCode.OK;
+        } else {
+            // delete ALL
             return RespCode.ERROR;
         }
-        boolean success = userDao.deleteUser(Integer.valueOf(id));
-        return success ? RespCode.OK : RespCode.ERROR;
     }
-    
+
 }

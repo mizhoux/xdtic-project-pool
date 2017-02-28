@@ -42,7 +42,25 @@ public class Project {
     private String concat;  // contact
     private String statu;   // status
 
-    public Project() {
+    public static void syscDataFromFrontToBack(Project project) {
+        project.setId(project.getProId());
+        project.setUserId(project.getUserid());
+        project.setName(project.getProname());
+        project.setContent(project.getPromassage());
+        project.setRecruit(project.getProwant());
+        project.setContact(project.getConcat());
+        project.setStatus(project.getStatu());
+    }
+
+    public static void syscDataFromBackToFront(Project project) {
+        project.setProId(project.getId());
+        project.setUserid(project.getUserId());
+        project.setProname(project.getName());
+        project.setDesc(project.getContent());
+        project.setPromassage(project.getContent());
+        project.setProwant(project.getRecruit());
+        project.setConcat(project.getContact());
+        project.setStatu(project.getStatus());
     }
 
     public Integer getId() {

@@ -42,7 +42,7 @@ public class ProjectController {
         return "page/myProject/postProject";
     }
 
-    @GetMapping("project")
+    @GetMapping({"project", "myProject/myCollect/detail"})
     public ModelAndView getProjectDetailPage(HttpSession session,
             @RequestParam(required = false) Integer proId,
             @RequestParam(required = false) Integer id,
@@ -72,7 +72,8 @@ public class ProjectController {
 
     @GetMapping("myProject/myPost/detail")
     public ModelAndView getPostProjectDetailPage(
-            HttpSession session, @RequestParam Integer proId,
+            HttpSession session,
+            @RequestParam Integer proId,
             @RequestParam(required = false) Integer uid) {
 
         Project project = projectDao.getProject(proId);
@@ -84,7 +85,8 @@ public class ProjectController {
     }
 
     @GetMapping("myProject/myPost/editDetail")
-    public ModelAndView getProjectEditDetailPage(HttpSession session, @RequestParam Integer proId) {
+    public ModelAndView getProjectEditDetailPage(
+            HttpSession session, @RequestParam Integer proId) {
 
         Project project = projectDao.getProject(proId);
         User user = (User) session.getAttribute("user");
@@ -106,7 +108,8 @@ public class ProjectController {
     }
 
     @GetMapping("signInfo")
-    public ModelAndView getSignInfoDetail(HttpSession session, @RequestParam Integer signId) {
+    public ModelAndView getSignInfoDetail(
+            HttpSession session, @RequestParam Integer signId) {
         ModelAndView mav = new ModelAndView("page/myProject/myPost/signDetail");
 
         SignInfo signInfo = signInfoDao.getSignInfo(signId);
