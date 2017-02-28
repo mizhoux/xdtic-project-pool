@@ -100,7 +100,8 @@ function loadMore() {
 		method: 'GET',
 		headers: {
 			'Accept': 'application/json'
-		}
+		},
+		credentials: 'same-origin'
 	}).then(function (response) {
 		return response.json();
 	}).then(function (data) {
@@ -135,6 +136,7 @@ function requestProcessProject(vProject, operation, proIndex) {
 			'Content-Type': 'application/json',
 			'Accept': 'application/json'
 		},
+		credentials: 'same-origin',
 		body: JSON.stringify({
 			operation: operation,
 			proID: vProject.project.proId

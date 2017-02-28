@@ -51,7 +51,7 @@
             <transition name="slide">
                 <tr v-if="!project.isDeleted" class="project-item">
                     <td>
-                        <a class="tic-project-wrap" :href="'<c:url value='/admin/project?proId=' />' + project.id">
+                        <a class="tic-project-wrap" :href="'<c:url value='/admin/project?proId=' />' + project.proId">
                             <h4 class="ui image header">
                                 <img src="<c:url value='/static/images/admin/avatar-lena.png' />" alt="lena" class="ui mini rounded image">
                                 <div class="content">

@@ -60,6 +60,7 @@ function requestProcessProject(vProject, operation) {
 			'Content-Type': 'application/json',
 			'Accept': 'application/json'
 		},
+		credentials: 'same-origin',
 		body: JSON.stringify({
 			"operation": operation,
 			"proId": vProject.project.proId

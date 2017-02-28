@@ -48,8 +48,8 @@
 	<fis:block name="jsPre">
 		<script type="text/javascript">
 		    var projectInfo = {
-		        "proId": '<c:out value="${project.proId}" />',
-		        "proname": '<c:out value="${project.proname}" />'
+		        "proId": "<c:out value="${project.proId}" />",
+		        "proname": "<c:out value="${project.proname}" />"
 		    };
 
 		    var userInfo = {};
