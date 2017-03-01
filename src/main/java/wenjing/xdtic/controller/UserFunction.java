@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wenjing.xdtic.dao.MessageDao;
 import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.Message;
-import wenjing.xdtic.model.PagingMessages;
+import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.RespCode;
 import wenjing.xdtic.model.User;
 
@@ -177,27 +177,19 @@ public class UserFunction {
      */
     @ResponseBody
     @GetMapping("get/msg")
-    public PagingMessages getMessages(
+    public PagingModel<Message> getMessages(
             @RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer size) {
 
         int offset = pageNum * size;
-        List<Message> messages = messageDao.getMessages(uid, offset, size);
+        List<Message> msgs = messageDao.getMessages(uid, offset, size);
 
-        PagingMessages pagingMsgs = new PagingMessages();
-        pagingMsgs.setPageNum(pageNum);
-        pagingMsgs.setSize(size); // 设置返回的 size 为本次返回消息的数量
+        PagingModel<Message> pagingMsgs = new PagingModel<>(msgs, pageNum, msgs.size());
 
-        pagingMsgs.setMsgs(messages);
         long count = messageDao.getMessagesCount(uid);
-        if ((pageNum + 1) * size >= count) {
-            pagingMsgs.setHasMore(false);
-        } else {
-            pagingMsgs.setHasMore(true);
-        }
+        pagingMsgs.setHasMore((pageNum + 1) * size < count);
 
-        pagingMsgs.setMsgs(messages);
-
+        pagingMsgs.setEntitiesName("msgs");
         return pagingMsgs;
     }
 

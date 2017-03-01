@@ -1,17 +1,19 @@
 package wenjing.xdtic.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import wenjing.xdtic.dao.ProjectDao;
 import wenjing.xdtic.dao.SignInfoDao;
-import wenjing.xdtic.model.HotProjects;
-import wenjing.xdtic.model.PagingProjects;
+import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.RespCode;
 import wenjing.xdtic.model.SignInfo;
@@ -68,110 +70,69 @@ public class ProjectFunction {
     }
 
     @GetMapping("get/project/myJoin")
-    public PagingProjects getMyJoiningProjects(
+    public PagingModel<Project> getMyJoiningProjects(
             @RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
 
         int offset = pageNum * pageSize;
-        List<Project> projects = projectDao.getJoiningProjects(uid, offset, pageSize);
 
-        PagingProjects pagingProject = new PagingProjects();
-        pagingProject.setProjects(projects);
+        Supplier<List<Project>> projectsSupplier = () -> projectDao.getJoiningProjects(uid, offset, pageSize);
+        Supplier<Long> countSupplier = () -> projectDao.getJoiningProjectsCount(uid);
 
-        long count = projectDao.getJoiningProjectsCount(uid);
-        if ((pageNum + 1) * pageSize >= count) {
-            pagingProject.setHasMore(false);
-        } else {
-            pagingProject.setHasMore(true);
-        }
-
-        pagingProject.setPageNum(pageNum);
-        pagingProject.setSize(projects.size());
-
-        return pagingProject;
+        return PagingModel.of(projectsSupplier, "projects", countSupplier, pageNum, pageSize);
     }
 
     @GetMapping("get/project/myCollect")
-    public PagingProjects getMyCollectedProjects(
+    public PagingModel<Project> getMyCollectedProjects(
             @RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
 
         int offset = pageNum * pageSize;
-        List<Project> projects = projectDao.getCollectedProjects(uid, offset, pageSize);
 
-        PagingProjects pagingProject = new PagingProjects();
-        pagingProject.setProjects(projects);
+        Supplier<List<Project>> projectsSupplier = () -> projectDao.getCollectedProjects(uid, offset, pageSize);
+        Supplier<Long> countSupplier = () -> projectDao.getCollectedProjectsCount(uid);
 
-        long count = projectDao.getCollectedProjectsCount(uid);
-        if ((pageNum + 1) * pageSize >= count) {
-            pagingProject.setHasMore(false);
-        } else {
-            pagingProject.setHasMore(true);
-        }
-
-        pagingProject.setPageNum(pageNum);
-        pagingProject.setSize(projects.size());
-
-        return pagingProject;
+        return PagingModel.of(projectsSupplier, "projects", countSupplier, pageNum, pageSize);
     }
 
     @GetMapping("get/project/myPost")
-    public PagingProjects getMyPostedProjects(
+    public PagingModel<Project> getMyPostedProjects(
             @RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
 
         int offset = pageNum * pageSize;
-        List<Project> projects = projectDao.getPostedProjects(uid, offset, pageSize);
 
-        PagingProjects pagingProjects = new PagingProjects();
-        pagingProjects.setProjects(projects);
+        Supplier<List<Project>> projectsSupplier = () -> projectDao.getPostedProjects(uid, offset, pageSize);
+        Supplier<Long> countSupplier = () -> projectDao.getPostedProjectsCount(uid);
 
-        long count = projectDao.getPostedProjectsCount(uid);
-        if ((pageNum + 1) * pageSize >= count) {
-            pagingProjects.setHasMore(false);
-        } else {
-            pagingProjects.setHasMore(true);
-        }
-
-        pagingProjects.setPageNum(pageNum);
-        pagingProjects.setSize(projects.size());
-
-        return pagingProjects;
+        return PagingModel.of(projectsSupplier, "projects", countSupplier, pageNum, pageSize);
     }
 
     @GetMapping("get/project")
-    public PagingProjects getProjects(
+    public PagingModel<Project> getProjects(
             @RequestParam Integer userid, @RequestParam String keyWords,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
 
         int offset = pageNum * pageSize;
-        List<Project> projects = projectDao.getCheckedProjects(userid, keyWords, offset, pageSize);
 
-        PagingProjects pagingProjects = new PagingProjects();
-        pagingProjects.setProjects(projects);
+        Supplier<List<Project>> projectsSupplier = () -> projectDao.getCheckedProjects(userid, keyWords, offset, pageSize);
+        Supplier<Long> countSupplier = () -> projectDao.getCheckedProjectsCount(keyWords);
 
-        long count = projectDao.getCheckedProjectsCount(keyWords);
-        if ((pageNum + 1) * pageSize >= count) {
-            pagingProjects.setHasMore(false);
-        } else {
-            pagingProjects.setHasMore(true);
-        }
-
-        pagingProjects.setPageNum(pageNum);
-        pagingProjects.setSize(projects.size());
-
-        return pagingProjects;
+        return PagingModel.of(projectsSupplier, "projects", countSupplier, pageNum, pageSize);
     }
 
+    @ResponseBody
     @GetMapping("get/hotProject")
-    public HotProjects getHotProjects(
+    public HashMap<String, Object> getHotProjects(
             @RequestParam Integer userid,
-            @RequestParam String keyWords,
-            @RequestParam Integer hotSize) {
+            @RequestParam String keyWords, @RequestParam Integer hotSize) {
 
         List<Project> projects = projectDao.getHotProjects(userid, keyWords, hotSize);
 
-        HotProjects hotProjects = new HotProjects(projects.size(), projects);
+        HashMap<String, Object> hotProjects = new HashMap<>(2);
+        hotProjects.put("hotSize", projects.size());
+        hotProjects.put("projects", projects);
+
         return hotProjects;
     }
 
