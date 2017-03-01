@@ -15,9 +15,9 @@ public class Message {
 
     private Integer id;
 
+    private Integer proId;
     private Integer userId;
     private String content;
-    private Integer proId;
     private String type;
     private boolean read;
 
@@ -29,7 +29,16 @@ public class Message {
     private Integer uid;
     private String massage;
 
-    public Message() {
+    public static void syncDataForBack(Message message) {
+        message.setId(message.getMid());
+        message.setUserId(message.getUid());
+        message.setContent(message.getMassage());
+    }
+
+    public static void syncDataForFront(Message message) {
+        message.setMid(message.getId());
+        message.setUid(message.getUserId());
+        message.setMassage(message.getContent());
     }
 
     public Integer getId() {

@@ -91,9 +91,7 @@ public class MessageDao {
         message.setDate(rs.getTimestamp("date"));
 
         // 兼容前端
-        message.setMid(message.getId());
-        message.setUid(message.getUserId());
-        message.setMassage(message.getContent());
+        Message.syncDataForFront(message);
 
         return message;
     }

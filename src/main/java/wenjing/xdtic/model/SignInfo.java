@@ -1,6 +1,9 @@
 package wenjing.xdtic.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
@@ -30,6 +33,27 @@ public class SignInfo {
     private String pexperice; // experience
     private String date; // signTime yyyy.MM.dd
     private String time; // signTime HH:mm
+
+    public static void syncDataForBack(SignInfo signInfo) {
+        signInfo.setId(signInfo.getSid());
+        signInfo.setUserId(signInfo.getUid());
+        signInfo.setSkill(signInfo.getProfile());
+        signInfo.setExperience(signInfo.getPexperice());
+    }
+
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
+    public static void syncDataForFront(SignInfo signInfo) {
+        signInfo.setSid(signInfo.getId());
+        signInfo.setUid(signInfo.getUserId());
+        signInfo.setProfile(signInfo.getSkill());
+        signInfo.setPexperice(signInfo.getExperience());
+        LocalDateTime dateTime = LocalDateTime.ofInstant(
+                signInfo.getSignTime().toInstant(), ZoneId.systemDefault());
+        signInfo.setDate(DATE_FORMATTER.format(dateTime));
+        signInfo.setTime(TIME_FORMATTER.format(dateTime));
+    }
 
     public Integer getId() {
         return id;

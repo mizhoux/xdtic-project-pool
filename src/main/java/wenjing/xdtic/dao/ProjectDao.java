@@ -30,9 +30,7 @@ public class ProjectDao {
     @Autowired
     private MessageDao messageDao;
 
-    public boolean addProject(Integer userId, String tag,
-            String proname, String promassage, String prowant, String concat) {
-
+    public boolean addProject(Project project) {
         String SQL = "INSERT INTO project "
                 + "(user_id, name, content, recruit, tag, contact, date) "
                 + "VALUES (?, ?, ?, ?, ?, ?, NOW())";
@@ -41,12 +39,12 @@ public class ProjectDao {
         int result = jdbcTmpl.update(conn -> {
 
             PreparedStatement pstmt = conn.prepareStatement(SQL, new String[]{"id"});
-            pstmt.setInt(1, userId);
-            pstmt.setString(2, proname);
-            pstmt.setString(3, promassage);
-            pstmt.setString(4, prowant);
-            pstmt.setString(5, tag);
-            pstmt.setString(6, concat);
+            pstmt.setInt(1, project.getUserId());
+            pstmt.setString(2, project.getName());
+            pstmt.setString(3, project.getContent());
+            pstmt.setString(4, project.getRecruit());
+            pstmt.setString(5, project.getTag());
+            pstmt.setString(6, project.getContact());
 
             return pstmt;
 
@@ -54,20 +52,20 @@ public class ProjectDao {
 
         if (result == 1) { // 添加项目成功
             Integer proId = keyHolder.getKey().intValue();
-            messageDao.addMessage(userId, proId, proname, Message.Type.POST);
+            messageDao.addMessage(project.getUserId(), proId, project.getName(), Message.Type.POST);
             return true;
         }
 
         return false;
     }
 
-    public boolean updateProject(Integer userId, Integer proId,
-            String promassage, String prowant, String concat) {
+    public boolean updateProject(Project project) {
         String SQL
                 = "UPDATE project SET content = ?, recruit = ?, contact = ? "
                 + "WHERE user_id = ? AND id = ?";
 
-        return jdbcTmpl.update(SQL, promassage, prowant, concat, userId, proId) == 1;
+        return jdbcTmpl.update(SQL, project.getContent(), project.getRecruit(),
+                project.getContact(), project.getUserId(), project.getId()) == 1;
     }
 
     public Project getProject(Integer id) {
@@ -340,7 +338,7 @@ public class ProjectDao {
         }
 
         // 兼容前端
-        Project.syscDataFromBackToFront(project);
+        Project.syscDataForFront(project);
 
         return project;
     }

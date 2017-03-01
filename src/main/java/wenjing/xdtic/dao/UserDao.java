@@ -155,7 +155,7 @@ public class UserDao {
         user.setExperience(rs.getString("experience"));
 
         // 兼容前端
-        User.syncDataFromBackToFront(user);
+        User.syncDataForFront(user);
 
         return user;
     }
