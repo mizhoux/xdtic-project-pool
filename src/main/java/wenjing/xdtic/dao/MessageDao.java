@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import wenjing.xdtic.model.Message;
+import wenjing.xdtic.model.Project;
 
 /**
  *
@@ -18,11 +19,11 @@ public class MessageDao {
     @Autowired
     private JdbcTemplate jdbcTmpl;
 
-    public boolean addMessage(Integer userId, Integer proId, String proName, Message.Type type) {
-        String SQL = "INSERT INTO message (user_id, content, pro_id, type, date) VALUES (?, ?, ?, ?, NOW())";
+    public boolean addMessage(Integer toUserId, Project project, Message.Type type) {
+        String SQL = "INSERT INTO message (user_id, pro_id, content, type, date) VALUES (?, ?, ?, ?, NOW())";
 
-        return jdbcTmpl.update(SQL,
-                userId, getMessageContent(type, proName), proId, type.name().toLowerCase()) == 1;
+        return jdbcTmpl.update(SQL, toUserId, project.getId(),
+                getMessageContent(type, project.getName()), type.name().toLowerCase()) == 1;
     }
 
     public Message getMessage(Integer id) {
@@ -31,7 +32,7 @@ public class MessageDao {
     }
 
     public List<Message> getMessages(Integer userId, Integer offset, Integer size) {
-        String SQL = "SELECT * FROM message WHERE user_id = ? LIMIT ?, ?";
+        String SQL = "SELECT * FROM message WHERE user_id = ? ORDER BY date DESC LIMIT ?, ?";
         return jdbcTmpl.query(SQL, this::parseMessage, userId, offset, size);
     }
 
@@ -66,13 +67,13 @@ public class MessageDao {
         String content = "";
         switch (type) {
             case POST:
-                content = "恭喜~ 成功发布项目【" + proName + "】";
+                content = "棒棒哒~ 成功发布项目【" + proName + "】，请等待审核";
                 break;
             case PASS:
                 content = "厉害了~ 项目【" + proName + "】通过了审核";
                 break;
             case JOIN:
-                content = "开心~ 有用户报名了项目【" + proName + "】";
+                content = "好开心~ 有用户报名了项目【" + proName + "】";
                 break;
         }
 

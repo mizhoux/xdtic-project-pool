@@ -145,12 +145,12 @@ public class ProjectFunction {
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
 
         int offset = pageNum * pageSize;
-        List<Project> projects = projectDao.getProjects(userid, keyWords, offset, pageSize);
+        List<Project> projects = projectDao.getCheckedProjects(userid, keyWords, offset, pageSize);
 
         PagingProjects pagingProjects = new PagingProjects();
         pagingProjects.setProjects(projects);
 
-        long count = projectDao.getProjectsCount(keyWords);
+        long count = projectDao.getCheckedProjectsCount(keyWords);
         if ((pageNum + 1) * pageSize >= count) {
             pagingProjects.setHasMore(false);
         } else {

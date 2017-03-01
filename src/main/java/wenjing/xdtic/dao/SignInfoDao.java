@@ -36,7 +36,7 @@ public class SignInfoDao {
 
         if (result == 1) { // 添加 signInfo 成功
             Project project = projectDao.getProject(signInfo.getProId());
-            messageDao.addMessage(project.getUserId(), project.getId(), project.getName(), Message.Type.JOIN);
+            messageDao.addMessage(project.getUserId(), project, Message.Type.JOIN);
             return true;
         }
 
