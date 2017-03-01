@@ -44,7 +44,7 @@
 					 v-for="(hotProject, index) in hotProjects"
 					 v-bind:project="hotProject"
 					 v-bind:index="index"
-					 userid="<c:out value='${userId}' />"
+					 :userid="<c:out value='${userId}' />"
 					 @collect="collectHot"
 					 @uncollect="uncollectHot"
 					 @collectFail="openDialog">
