@@ -1,13 +1,13 @@
 package wenjing.xdtic.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import wenjing.xdtic.dao.ProjectDao;
 import wenjing.xdtic.dao.SignInfoDao;
@@ -55,19 +55,18 @@ public class ProjectController {
         }
 
         Project project = projectDao.getProject(proId);
-
         project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
 
-        Map<String, Object> attrs = new HashMap<>(4);
-        attrs.put("project", project);
+        ModelAndView mav = new ModelAndView("page/myProject/myCollect/detail");
+        mav.addObject("project", project);
 
         User projectCreator = projectDao.getCreator(project);
-        attrs.put("projectCreator", projectCreator);
+        mav.addObject("projectCreator", projectCreator);
 
         boolean userIsJoined = projectDao.isUserJoined(user, project);
-        attrs.put("userIsJoined", userIsJoined);
+        mav.addObject("userIsJoined", userIsJoined);
 
-        return new ModelAndView("page/myProject/myCollect/detail", attrs);
+        return mav;
     }
 
     @GetMapping("myProject/myPost/detail")
@@ -136,6 +135,12 @@ public class ProjectController {
         mav.addObject("user", user);
 
         return mav;
+    }
+
+    @ResponseBody
+    @GetMapping("project/debug/{id}")
+    public Project getProjectInfo(@PathVariable Integer id) {
+        return projectDao.getProject(id);
     }
 
 }

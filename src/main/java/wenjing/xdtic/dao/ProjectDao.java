@@ -85,7 +85,7 @@ public class ProjectDao {
     public List<Project> getProjects(Integer userId, String keywords, Integer offset, Integer size) {
         String SQL
                 = "SELECT u.username, p.* FROM project p, user u "
-                + "WHERE p.user_id = u.id AND p.tag LIKE ? LIMIT ?, ?";
+                + "WHERE p.user_id = u.id AND p.tag LIKE ? ORDER BY p.id LIMIT ?, ?";
 
         List<Project> projects = jdbcTmpl.query(
                 SQL, this::parseProjectWithUsername, getMysqlLikeKey(keywords), offset, size);
