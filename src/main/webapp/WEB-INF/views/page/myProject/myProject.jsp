@@ -37,7 +37,7 @@
 					 :project="project"
 					 :index="index"
 					 :projecttype="myProjectType"
-					 userid="<c:out value='${user.id}' />"
+					 :userid="<c:out value='${user.id}' />"
 					 @collect="collect"
 					 @uncollect="uncollect"
 					 @collectfail="openDialog" >

@@ -55,7 +55,7 @@
 					 v-for="(project, index) in projects"
 					 :project="project"
 					 :index="index"
-					 userid="<c:out value='${userId}' />"
+					 :userid="<c:out value='${userId}' />"
 					 @collect="collect"
 					 @uncollect="uncollect"
 					 @collectFail="openDialog">
