@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import wenjing.xdtic.dao.MessageDao;
 import wenjing.xdtic.dao.ProjectDao;
 import wenjing.xdtic.dao.SignInfoDao;
+import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.RespCode;
@@ -30,6 +32,9 @@ public class ProjectFunction {
     private ProjectDao projectDao;
 
     @Autowired
+    private MessageDao messageDao;
+
+    @Autowired
     private SignInfoDao signInfoDao;
 
     @PostMapping(value = "project/post", consumes = APPLICATION_FORM_URLENCODED_VALUE)
@@ -42,6 +47,11 @@ public class ProjectFunction {
         Project.syscDataForBack(project);
 
         boolean success = projectDao.addProject(project);
+        if (success) {
+            Message message = Message.of(project, Message.Type.POST);
+            messageDao.addMessage(message);
+        }
+
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
@@ -76,8 +86,8 @@ public class ProjectFunction {
 
         int offset = pageNum * pageSize;
 
-        Supplier<List<Project>> projectsSupplier = () -> projectDao.getJoiningProjects(uid, offset, pageSize);
-        Supplier<Long> countSupplier = () -> projectDao.getJoiningProjectsCount(uid);
+        Supplier<List<Project>> projectsSupplier = () -> projectDao.getJoinedProjects(uid, offset, pageSize);
+        Supplier<Long> countSupplier = () -> projectDao.getJoinedProjectsCount(uid);
 
         return PagingModel.of(projectsSupplier, "projects", countSupplier, pageNum, pageSize);
     }
@@ -109,14 +119,14 @@ public class ProjectFunction {
     }
 
     @GetMapping("get/project")
-    public PagingModel<Project> getProjects(
+    public PagingModel<Project> getAcceptedProjects(
             @RequestParam Integer userid, @RequestParam String keyWords,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
 
         int offset = pageNum * pageSize;
 
-        Supplier<List<Project>> projectsSupplier = () -> projectDao.getCheckedProjects(userid, keyWords, offset, pageSize);
-        Supplier<Long> countSupplier = () -> projectDao.getCheckedProjectsCount(keyWords);
+        Supplier<List<Project>> projectsSupplier = () -> projectDao.getAcceptedProjects(userid, keyWords, offset, pageSize);
+        Supplier<Long> countSupplier = () -> projectDao.getAcceptedProjectsCount(keyWords);
 
         return PagingModel.of(projectsSupplier, "projects", countSupplier, pageNum, pageSize);
     }
@@ -141,6 +151,12 @@ public class ProjectFunction {
         SignInfo.syncDataForBack(signInfo);
 
         boolean success = signInfoDao.addSignInfo(signInfo);
+        if (success) {
+            Project project = projectDao.getProject(signInfo.getProId());
+            Message message = Message.of(project, Message.Type.JOIN);
+            messageDao.addMessage(message);
+        }
+
         return success ? RespCode.OK : RespCode.ERROR;
     }
 

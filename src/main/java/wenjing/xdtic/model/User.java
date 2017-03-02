@@ -1,9 +1,12 @@
 package wenjing.xdtic.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  *
  * @author wenjing
  */
+@JsonIgnoreProperties({"realname", "gender", "specialty", "stuNum", "skill", "experience"})
 public class User {
 
     private Integer id;

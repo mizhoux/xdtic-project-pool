@@ -21,6 +21,11 @@ public class AdminController {
     @Autowired
     private ProjectDao projectDao;
 
+    @GetMapping("")
+    public String index() {
+        return "page/admin/index";
+    }
+
     @GetMapping("login")
     public String getLoginPage(HttpServletRequest request) {
         request.setAttribute("loginFail", Boolean.FALSE);

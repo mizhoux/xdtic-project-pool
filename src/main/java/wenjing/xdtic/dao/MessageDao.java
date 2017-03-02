@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import wenjing.xdtic.model.Message;
-import wenjing.xdtic.model.Project;
 
 /**
  *
@@ -19,11 +18,10 @@ public class MessageDao {
     @Autowired
     private JdbcTemplate jdbcTmpl;
 
-    public boolean addMessage(Integer toUserId, Project project, Message.Type type) {
+    public boolean addMessage(Message msg) {
         String SQL = "INSERT INTO message (user_id, pro_id, content, type, date) VALUES (?, ?, ?, ?, NOW())";
 
-        return jdbcTmpl.update(SQL, toUserId, project.getId(),
-                getMessageContent(type, project.getName()), type.name().toLowerCase()) == 1;
+        return jdbcTmpl.update(SQL, msg.getUserId(), msg.getProId(), msg.getContent(), msg.getType()) == 1;
     }
 
     public Message getMessage(Integer id) {
@@ -34,11 +32,6 @@ public class MessageDao {
     public List<Message> getMessages(Integer userId, Integer offset, Integer size) {
         String SQL = "SELECT * FROM message WHERE user_id = ? ORDER BY date DESC LIMIT ?, ?";
         return jdbcTmpl.query(SQL, this::parseMessage, userId, offset, size);
-    }
-
-    public boolean setMessageRead(Integer id) {
-        String SQL = "UPDATE message m SET m.read = TRUE WHERE m.id = ?";
-        return jdbcTmpl.update(SQL, id) == 1;
     }
 
     /**
@@ -53,6 +46,17 @@ public class MessageDao {
     }
 
     /**
+     * 将消息标记为已读
+     *
+     * @param id 消息 ID
+     * @return
+     */
+    public boolean setMessageRead(Integer id) {
+        String SQL = "UPDATE message m SET m.read = TRUE WHERE m.id = ?";
+        return jdbcTmpl.update(SQL, id) == 1;
+    }
+
+    /**
      * 获得用户未读的消息总数
      *
      * @param userId 用户的 id
@@ -61,23 +65,6 @@ public class MessageDao {
     public long getUnreadMessagesCount(Integer userId) {
         String SQL = "SELECT COUNT(*) FROM message m WHERE m.user_id = ? AND m.read = FALSE";
         return jdbcTmpl.queryForObject(SQL, Long.class, userId);
-    }
-
-    private String getMessageContent(Message.Type type, String proName) {
-        String content = "";
-        switch (type) {
-            case POST:
-                content = "棒棒哒~ 成功发布项目【" + proName + "】，请等待审核";
-                break;
-            case PASS:
-                content = "厉害了~ 项目【" + proName + "】通过了审核";
-                break;
-            case JOIN:
-                content = "好开心~ 有用户报名了项目【" + proName + "】";
-                break;
-        }
-
-        return content;
     }
 
     private Message parseMessage(ResultSet rs, int rowNum) throws SQLException {

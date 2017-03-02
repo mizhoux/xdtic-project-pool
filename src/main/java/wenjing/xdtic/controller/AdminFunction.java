@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wenjing.xdtic.dao.AdminDao;
+import wenjing.xdtic.dao.MessageDao;
 import wenjing.xdtic.dao.ProjectDao;
 import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.Admin;
+import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.RespCode;
@@ -40,6 +42,9 @@ public class AdminFunction {
     @Autowired
     private ProjectDao projectDao;
 
+    @Autowired
+    private MessageDao messageDao;
+
     @PostMapping(value = "admin/login", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public String login(
             HttpServletRequest request, HttpSession session,
@@ -53,7 +58,7 @@ public class AdminFunction {
         }
 
         session.setAttribute("admin", admin);
-        return "page/admin/index";
+        return "redirect:/admin";
     }
 
     @ResponseBody
@@ -77,7 +82,11 @@ public class AdminFunction {
     @PostMapping(value = "admin/project/operate", consumes = MediaType.APPLICATION_JSON_VALUE)
     public RespCode operateProject(@RequestBody Map<String, String> params) {
 
-        Integer proId = Integer.valueOf(params.get("proId"));
+        String proIdStr = params.get("proId");
+        if (proIdStr == null) {
+            proIdStr = params.get("proID");
+        }
+        Integer proId = Integer.parseInt(proIdStr);
         String operation = params.get("operation");
 
         boolean success = false;
@@ -87,6 +96,8 @@ public class AdminFunction {
                 break;
             case "accept":
                 success = projectDao.acceptProject(proId);
+                Message message = Message.of(projectDao.getProject(proId), Message.Type.PASS);
+                messageDao.addMessage(message);
                 break;
             case "delete":
                 success = projectDao.deleteProject(proId);
@@ -101,14 +112,14 @@ public class AdminFunction {
             @RequestParam String keyWords,
             @RequestParam Integer pageNum, @RequestParam Integer size) {
 
-        List<Project> projects = projectDao.getCheckedProjects(keyWords, pageNum * size, size);
+        List<Project> projects = projectDao.getAcceptedProjects(keyWords, pageNum * size, size);
 
-        PagingModel<Project> pagingProjects = new PagingModel<>(projects, pageNum, projects.size());
+        PagingModel<Project> pagingProjects = new PagingModel<>(
+                projects, pageNum, projects.size(), "projects");
 
-        long count = projectDao.getCheckedProjectsCount(keyWords);
+        long count = projectDao.getAcceptedProjectsCount(keyWords);
         pagingProjects.setHasMore((pageNum + 1) * size < count);
 
-        pagingProjects.setEntitiesName("projects");
         return pagingProjects;
     }
 
@@ -120,12 +131,11 @@ public class AdminFunction {
 
         List<User> users = userDao.getUsers(keyWords, pageNum * size, size);
 
-        PagingModel<User> pagingUsers = new PagingModel<>(users, pageNum, users.size());
+        PagingModel<User> pagingUsers = new PagingModel<>(users, pageNum, users.size(), "users");
 
         long count = userDao.getUsersCount(keyWords);
         pagingUsers.setHasMore((pageNum + 1) * size < count);
 
-        pagingUsers.setEntitiesName("users");
         return pagingUsers;
     }
 
@@ -136,7 +146,7 @@ public class AdminFunction {
         if (uid instanceof List) {
             List<Integer> uids = (List<Integer>) uid;
             uids.forEach(id -> userDao.deleteUser(id));
-            
+
             return RespCode.OK;
         } else {
             // delete ALL

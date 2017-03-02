@@ -53,15 +53,15 @@ public class ProjectController {
         }
 
         Project project = projectDao.getProject(proId);
-        project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
+        project.setIsCollected(projectDao.isUserCollected(user.getId(), proId));
 
         ModelAndView mav = new ModelAndView("page/myProject/myCollect/detail");
         mav.addObject("project", project);
 
-        User projectCreator = projectDao.getCreator(project);
+        User projectCreator = userDao.getUser(project.getUserId());
         mav.addObject("projectCreator", projectCreator);
 
-        boolean userIsJoined = projectDao.isUserJoined(user, project);
+        boolean userIsJoined = projectDao.isUserJoined(user.getId(), project.getId());
         mav.addObject("userIsJoined", userIsJoined);
 
         return mav;
@@ -76,7 +76,7 @@ public class ProjectController {
         Project project = projectDao.getProject(proId);
         User user = (User) session.getAttribute("user");
 
-        project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
+        project.setIsCollected(projectDao.isUserCollected(user.getId(), proId));
 
         return new ModelAndView("page/myProject/myPost/detail", "project", project);
     }
@@ -87,7 +87,7 @@ public class ProjectController {
 
         Project project = projectDao.getProject(proId);
         User user = (User) session.getAttribute("user");
-        project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
+        project.setIsCollected(projectDao.isUserCollected(user.getId(), proId));
 
         return new ModelAndView("/page/myProject/myPost/editDetail", "project", project);
     }
@@ -125,7 +125,7 @@ public class ProjectController {
         ModelAndView mav = new ModelAndView("page/myProject/myCollect/toJoin");
 
         Project project = projectDao.getProject(proId);
-        project.setIsCollected(projectDao.isProjectCollected(uid, proId));
+        project.setIsCollected(projectDao.isUserCollected(uid, proId));
 
         User user = (User) session.getAttribute("user");
 

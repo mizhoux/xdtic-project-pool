@@ -46,7 +46,13 @@
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/fn/**"/>
             <mvc:exclude-mapping path="/admin/**"/>
+            <mvc:exclude-mapping path="/user/register"/>
             <bean class="wenjing.xdtic.aop.UserLoginInterceptor" />
+        </mvc:interceptor>  
+        <mvc:interceptor>  
+            <mvc:mapping path="/admin/**"/>
+            <mvc:exclude-mapping path="/fn/admin/**"/>
+            <bean class="wenjing.xdtic.aop.AdminLoginInterceptor" />
         </mvc:interceptor>  
     </mvc:interceptors>
     

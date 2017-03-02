@@ -1,6 +1,7 @@
 package wenjing.xdtic.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -10,6 +11,7 @@ import java.util.Date;
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
+@JsonIgnoreProperties({"id", "userId", "skill", "experience"})
 public class SignInfo {
 
     private Integer id;

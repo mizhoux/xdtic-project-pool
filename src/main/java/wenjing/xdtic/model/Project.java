@@ -1,6 +1,7 @@
 package wenjing.xdtic.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import java.util.List;
  *
  * @author wenjing
  */
+@JsonIgnoreProperties({"id", "userId", "name", "content", "recruit", "contact", "status"})
 public class Project {
 
     private Integer id;
