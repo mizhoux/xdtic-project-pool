@@ -3,7 +3,7 @@
 <%@ taglib uri="/fis" prefix="fis"%>
 
 <fis:extends name="page/layout/frame.jsp">
-    <fis:block name="body">
+    <fis:block name="body">    
 		<header>
 			<fis:widget name="page/widget/header/projectDetailHeader.jsp" />	
 		</header>

@@ -46,7 +46,7 @@
 							   </div>
 						</div>
 						<input type="hidden" name="uid" value="<c:out value='${user.id}' />">
-						<button class="weui-btn weui-btn_primary" id="btnConfirm" v-tap="{methods: postProject}">发布</button>
+						<button class="weui-btn weui-btn_primary" id="btnConfirm" v-tap.prevent="{methods: postProject}">发布</button>
 					</form>
 				</div>
 			</main>

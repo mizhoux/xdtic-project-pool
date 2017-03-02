@@ -43,6 +43,11 @@ var appBox = new Vue({
 			requestProcessProject(self, 'reject');
 		},
 
+		deleteProject: function deleteProject() {
+			var self = this;
+			requestProcessProject(self, 'delete');
+		},
+
 		search: function search() {}
 	}
 });
@@ -50,10 +55,12 @@ var appBox = new Vue({
 /**
  * @fileOverview 将审核操作发送给后台
  * @param        {[vue-组件]}   vProject  [project组件]
- * @param        {[String]}   operation [审核操作：pass/reject]
+ * @param        {[String]}   operation [审核操作：pass/reject/delete]
  * @param        {[Int]}   proIndex  [vProject父组件中的索引]
  */
 function requestProcessProject(vProject, operation) {
+	var jumpUrl = operation === 'delete' ? urlPrefix + '/admin/project/look' : urlPrefix + '/admin/project/check';
+
 	fetch(urlOperateProject, {
 		method: 'POST',
 		headers: {
@@ -72,7 +79,7 @@ function requestProcessProject(vProject, operation) {
 			vProject.isChecked = true;
 			vProject.$nextTick(function () {
 				setTimeout(function () {
-					window.location.href = urlPrefix + '/admin/project/check';
+					window.location.href = jumpUrl;
 				}, 1000);
 			});
 		} else {

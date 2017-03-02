@@ -139,7 +139,8 @@ var projectBox = new Vue({
 		myProjectType: myProjectType,
 		urlLoadProject: urlLoadProject,
 
-		user: userInfo
+		user: userInfo,
+		pageSelected: 'myProject'
 	},
 
 	beforeMount: function beforeMount() {

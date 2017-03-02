@@ -4,6 +4,7 @@
 
 <fis:extends name="page/layout/frame.jsp">
     <fis:block name="body">
+		<c:set var="pageSelected" value="hall" />
 		<header class="tic-header-hall">
 			<img src="/xdtic/static/images/hall/logo.png" alt="西电腾讯俱乐部">
 			<aside>
@@ -44,7 +45,7 @@
 					 v-for="(hotProject, index) in hotProjects"
 					 v-bind:project="hotProject"
 					 v-bind:index="index"
-					 :userid="<c:out value='${userId}' />"
+					 userid="<c:out value='${userId}' />"
 					 @collect="collectHot"
 					 @uncollect="uncollectHot"
 					 @collectFail="openDialog">
@@ -55,7 +56,7 @@
 					 v-for="(project, index) in projects"
 					 :project="project"
 					 :index="index"
-					 :userid="<c:out value='${userId}' />"
+					 userid="<c:out value='${userId}' />"
 					 @collect="collect"
 					 @uncollect="uncollect"
 					 @collectFail="openDialog">
@@ -79,9 +80,9 @@
 			<div class="weui-loadmore weui-loadmore_line" v-show="noMore">
 			    <span class="weui-loadmore__tips">没有更多消息了</span>
 			</div>
+			<fis:widget name="page/widget/footer/nav.jsp" />
 		</main>		
 
-		<fis:widget name="page/widget/footer/nav.jsp" />
 	</fis:block>
 
 	<fis:block name="style">
@@ -94,6 +95,8 @@
 			var userInfo = {
 				id: '<c:out value="${user.id}" />'
 			};
+
+			var pageSelected = 'hall';
 		</script>
 	</fis:block>
 

@@ -47,7 +47,7 @@ Vue.component('tic-project', {
 
 	computed: {
 		projectDetailHref: function projectDetailHref() {
-			if (this.project.userid === this.userid) {
+			if (this.project.userid == this.userid) {
 				return urlPrefix + '/myProject/myPost/detail?proId=' + this.project.proId;
 			} else {
 				return urlPrefix + '/project?proId=' + this.project.proId + '&uid=' + this.userid;
@@ -124,7 +124,8 @@ var projectBox = new Vue({
 
 		keyWords: '',
 
-		user: userInfo
+		user: userInfo,
+		pageSelected: 'hall'
 	},
 
 	beforeMount: function beforeMount() {

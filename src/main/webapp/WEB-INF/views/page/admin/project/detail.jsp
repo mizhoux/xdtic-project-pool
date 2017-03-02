@@ -6,6 +6,7 @@
     <fis:block name="article">
 		<header>
 			<div class="tic-header-three">
+				<p><c:out value="${project.processed}" /></p>
 				<div class="tic-header-three-center">
 			        <p class="tic-title-main"><c:out value="${project.proname}" /></p>
 			        <p class="tic-title-secondary">
@@ -22,18 +23,32 @@
 			<fis:widget name="page/widget/main/projectDetail.jsp" />	
 		</main>
 	
-        <c:if test="${!project.hasProcessed}">
-			<div class="ui buttons tic-buttons" id="projectOperation">
-	            <button class="ui button" v-tap="{methods: reject}">拒绝</button>
-	            <div class="or"></div>
-	            <button class="ui positive button" v-tap="{methods: accept}">通过</button>
-	        </div>
-	    </c:if>
+        <c:choose>
+        	<c:when test="${project.hasProcessed}">
+	        	<div class="ui buttons tic-buttons" id="projectOperation">
+		            <button class="ui red button" v-tap="{methods: deleteProject}">删除</button>
+		        </div>
+        	</c:when>
+        	<c:otherwise>
+				<div class="ui buttons tic-buttons" id="projectOperation">
+		            <button class="ui button" v-tap="{methods: reject}">拒绝</button>
+		            <div class="or"></div>
+		            <button class="ui positive button" v-tap="{methods: accept}">通过</button>
+		        </div>
+	        </c:otherwise>
+	    </c:choose>
         <div id="toast" v-show="isChecked" v-cloak>
 		    <div class="weui-mask_transparent"></div>
 		    <div class="weui-toast">
 		        <i class="weui-icon-success-no-circle weui-icon_toast"></i>
-		        <p class="weui-toast__content">已审核</p>
+		        <c:choose>
+		        	<c:when test="${project.hasProcessed}">
+		        		<p class="weui-toast__content">已删除</p>
+		        	</c:when>
+		        	<c:otherwise>
+		        		<p class="weui-toast__content">已审核</p>
+		        	</c:otherwise>
+		        </c:choose>
 		    </div>
 		</div>
 	</fis:block>
