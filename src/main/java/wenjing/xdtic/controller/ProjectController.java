@@ -1,8 +1,6 @@
 package wenjing.xdtic.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -55,19 +53,18 @@ public class ProjectController {
         }
 
         Project project = projectDao.getProject(proId);
+        project.setIsCollected(projectDao.isUserCollected(user.getId(), proId));
 
-        project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
+        ModelAndView mav = new ModelAndView("page/myProject/myCollect/detail");
+        mav.addObject("project", project);
 
-        Map<String, Object> attrs = new HashMap<>(4);
-        attrs.put("project", project);
+        User projectCreator = userDao.getUser(project.getUserId());
+        mav.addObject("projectCreator", projectCreator);
 
-        User projectCreator = projectDao.getCreator(project);
-        attrs.put("projectCreator", projectCreator);
+        boolean userIsJoined = projectDao.isUserJoined(user.getId(), project.getId());
+        mav.addObject("userIsJoined", userIsJoined);
 
-        boolean userIsJoined = projectDao.isUserJoined(user, project);
-        attrs.put("userIsJoined", userIsJoined);
-
-        return new ModelAndView("page/myProject/myCollect/detail", attrs);
+        return mav;
     }
 
     @GetMapping("myProject/myPost/detail")
@@ -79,7 +76,7 @@ public class ProjectController {
         Project project = projectDao.getProject(proId);
         User user = (User) session.getAttribute("user");
 
-        project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
+        project.setIsCollected(projectDao.isUserCollected(user.getId(), proId));
 
         return new ModelAndView("page/myProject/myPost/detail", "project", project);
     }
@@ -90,7 +87,7 @@ public class ProjectController {
 
         Project project = projectDao.getProject(proId);
         User user = (User) session.getAttribute("user");
-        project.setIsCollected(projectDao.isProjectCollected(user.getId(), proId));
+        project.setIsCollected(projectDao.isUserCollected(user.getId(), proId));
 
         return new ModelAndView("/page/myProject/myPost/editDetail", "project", project);
     }
@@ -128,7 +125,7 @@ public class ProjectController {
         ModelAndView mav = new ModelAndView("page/myProject/myCollect/toJoin");
 
         Project project = projectDao.getProject(proId);
-        project.setIsCollected(projectDao.isProjectCollected(uid, proId));
+        project.setIsCollected(projectDao.isUserCollected(uid, proId));
 
         User user = (User) session.getAttribute("user");
 

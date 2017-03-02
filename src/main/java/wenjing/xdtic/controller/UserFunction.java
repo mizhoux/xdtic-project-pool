@@ -8,7 +8,6 @@ import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VAL
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import wenjing.xdtic.dao.MessageDao;
 import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.Message;
-import wenjing.xdtic.model.PagingMessages;
+import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.RespCode;
 import wenjing.xdtic.model.User;
 
@@ -73,20 +72,10 @@ public class UserFunction {
         if (user != null) {
             user.setHasMsg(messageDao.getUnreadMessagesCount(user.getId()) > 0);
             session.setAttribute("user", user);
-            return "redirect:/fn/loginBySession";
+            return "redirect:/user/loginBySession";
         }
 
         return "page/user/register";
-    }
-
-    @GetMapping(value = "loginBySession")
-    public String userLoginBySession(HttpSession session) {
-
-        if (session.getAttribute("user") != null) {
-            return "redirect:/user/center";
-        }
-
-        return "page/user/login";
     }
 
     /**
@@ -104,8 +93,8 @@ public class UserFunction {
             @RequestParam String passNew, @RequestParam String passNewConfirm) {
 
         if (passNew.equals(passNewConfirm)) {
-            boolean updatePassSucc = userDao.updatePassword(username, passOld, passNew);
-            if (updatePassSucc) {
+            boolean success = userDao.updatePassword(username, passOld, passNew);
+            if (success) {
                 return "page/user/login";
             }
         }
@@ -123,9 +112,13 @@ public class UserFunction {
     @PostMapping(value = "update/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode updateUserProfile(HttpSession session, User user) {
         User.syncDataForBack(user);
-        boolean updateSucc = userDao.updateUser(user);
-        session.setAttribute("user", user);
-        return updateSucc ? RespCode.OK : RespCode.ERROR;
+
+        boolean success = userDao.updateUser(user);
+        if (success) {
+            session.setAttribute("user", user);
+        }
+
+        return success ? RespCode.OK : RespCode.ERROR;
     }
 
     /**
@@ -137,10 +130,9 @@ public class UserFunction {
     @ResponseBody
     @PostMapping(value = "valid/username", consumes = APPLICATION_JSON_VALUE)
     public RespCode validUsername(@RequestBody Map<String, String> params) {
-        String username = params.get("username");
 
-        boolean usernameExisted = userDao.containsUsername(username);
-        return usernameExisted ? RespCode.ERROR : RespCode.OK;
+        String username = params.get("username");
+        return userDao.containsUsername(username) ? RespCode.ERROR : RespCode.OK;
     }
 
     /**
@@ -155,8 +147,8 @@ public class UserFunction {
         String username = params.get("username");
         String password = params.get("password");
 
-        User _user = userDao.getUser(username, password);
-        return _user == null ? RespCode.ERROR : RespCode.OK;
+        User user = userDao.getUser(username, password);
+        return user == null ? RespCode.ERROR : RespCode.OK;
     }
 
     /**
@@ -171,8 +163,8 @@ public class UserFunction {
     public RespCode validUserByFormValue(
             @RequestParam String username, @RequestParam String password) {
 
-        User _user = userDao.getUser(username, password);
-        return _user == null ? RespCode.ERROR : RespCode.OK;
+        User user = userDao.getUser(username, password);
+        return user == null ? RespCode.ERROR : RespCode.OK;
     }
 
     /**
@@ -185,27 +177,19 @@ public class UserFunction {
      */
     @ResponseBody
     @GetMapping("get/msg")
-    public PagingMessages getMessages(
+    public PagingModel<Message> getMessages(
             @RequestParam Integer uid,
             @RequestParam Integer pageNum, @RequestParam Integer size) {
 
         int offset = pageNum * size;
-        List<Message> messages = messageDao.getMessages(uid, offset, size);
+        List<Message> msgs = messageDao.getMessages(uid, offset, size);
 
-        PagingMessages pagingMsgs = new PagingMessages();
-        pagingMsgs.setPageNum(pageNum);
-        pagingMsgs.setSize(size); // 设置返回的 size 为本次返回消息的数量
+        PagingModel<Message> pagingMsgs = new PagingModel<>(msgs, pageNum, msgs.size());
 
-        pagingMsgs.setMsgs(messages);
         long count = messageDao.getMessagesCount(uid);
-        if ((pageNum + 1) * size >= count) {
-            pagingMsgs.setHasMore(false);
-        } else {
-            pagingMsgs.setHasMore(true);
-        }
+        pagingMsgs.setHasMore((pageNum + 1) * size < count);
 
-        pagingMsgs.setMsgs(messages);
-
+        pagingMsgs.setEntitiesName("msgs");
         return pagingMsgs;
     }
 
@@ -214,18 +198,6 @@ public class UserFunction {
     public RespCode readMessage(@RequestParam Integer mid) {
         boolean success = messageDao.setMessageRead(mid);
         return success ? RespCode.OK : RespCode.ERROR;
-    }
-
-    /**
-     * 获得消息实体，用于调试
-     *
-     * @param mid
-     * @return
-     */
-    @ResponseBody
-    @GetMapping("msg/{mid}")
-    public Message getMessage(@PathVariable Integer mid) {
-        return messageDao.getMessage(mid);
     }
 
 }

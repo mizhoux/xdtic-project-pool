@@ -6,8 +6,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import wenjing.xdtic.model.Message;
-import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.SignInfo;
 
 /**
@@ -20,12 +18,6 @@ public class SignInfoDao {
     @Autowired
     private JdbcTemplate jdbcTmpl;
 
-    @Autowired
-    private MessageDao messageDao;
-
-    @Autowired
-    private ProjectDao projectDao;
-
     public boolean addSignInfo(SignInfo signInfo) {
         String SQL
                 = "INSERT INTO sign_info (pro_id, user_id, apply, skill, experience, sign_time) "
@@ -34,13 +26,7 @@ public class SignInfoDao {
         int result = jdbcTmpl.update(SQL, signInfo.getProId(), signInfo.getUserId(),
                 signInfo.getApply(), signInfo.getSkill(), signInfo.getExperience());
 
-        if (result == 1) { // 添加 signInfo 成功
-            Project project = projectDao.getProject(signInfo.getProId());
-            messageDao.addMessage(project.getUserId(), project.getId(), project.getName(), Message.Type.JOIN);
-            return true;
-        }
-
-        return false;
+        return result == 1;
     }
 
     public SignInfo getSignInfo(Integer id) {

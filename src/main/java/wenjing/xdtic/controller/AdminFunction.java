@@ -15,11 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import wenjing.xdtic.dao.AdminDao;
+import wenjing.xdtic.dao.MessageDao;
 import wenjing.xdtic.dao.ProjectDao;
 import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.Admin;
-import wenjing.xdtic.model.PagingProjects;
-import wenjing.xdtic.model.PagingUsers;
+import wenjing.xdtic.model.Message;
+import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.RespCode;
 import wenjing.xdtic.model.User;
@@ -41,6 +42,9 @@ public class AdminFunction {
     @Autowired
     private ProjectDao projectDao;
 
+    @Autowired
+    private MessageDao messageDao;
+
     @PostMapping(value = "admin/login", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public String login(
             HttpServletRequest request, HttpSession session,
@@ -54,29 +58,22 @@ public class AdminFunction {
         }
 
         session.setAttribute("admin", admin);
-        return "page/admin/index";
+        return "redirect:/admin";
     }
 
     @ResponseBody
     @GetMapping("admin/get/project/uncheck")
-    public PagingProjects getUncheckedProjects(
+    public PagingModel<Project> getUncheckedProjects(
             @RequestParam String keyWords,
             @RequestParam Integer pageNum, @RequestParam Integer size) {
 
-        int offset = pageNum * size;
-        List<Project> projects = projectDao.getUncheckedProjects(keyWords, offset, size);
+        List<Project> projects = projectDao.getUncheckedProjects(keyWords, pageNum * size, size);
 
-        PagingProjects pagingProjects = new PagingProjects();
-        pagingProjects.setProjects(projects);
-        pagingProjects.setPageNum(pageNum);
-        pagingProjects.setSize(size);
+        PagingModel<Project> pagingProjects = new PagingModel<>(
+                projects, pageNum, projects.size(), "projects");
 
         long count = projectDao.getUncheckedProjectsCount(keyWords);
-        if ((pageNum + 1) * size >= count) {
-            pagingProjects.setHasMore(false);
-        } else {
-            pagingProjects.setHasMore(true);
-        }
+        pagingProjects.setHasMore((pageNum + 1) * size < count);
 
         return pagingProjects;
     }
@@ -85,7 +82,11 @@ public class AdminFunction {
     @PostMapping(value = "admin/project/operate", consumes = MediaType.APPLICATION_JSON_VALUE)
     public RespCode operateProject(@RequestBody Map<String, String> params) {
 
-        Integer proId = Integer.valueOf(params.get("proId"));
+        String proIdStr = params.get("proId");
+        if (proIdStr == null) {
+            proIdStr = params.get("proID");
+        }
+        Integer proId = Integer.parseInt(proIdStr);
         String operation = params.get("operation");
 
         boolean success = false;
@@ -95,6 +96,8 @@ public class AdminFunction {
                 break;
             case "accept":
                 success = projectDao.acceptProject(proId);
+                Message message = Message.of(projectDao.getProject(proId), Message.Type.PASS);
+                messageDao.addMessage(message);
                 break;
             case "delete":
                 success = projectDao.deleteProject(proId);
@@ -105,48 +108,33 @@ public class AdminFunction {
 
     @ResponseBody
     @GetMapping("admin/get/project/accept")
-    public PagingProjects getAcceptedProjects(
+    public PagingModel<Project> getAcceptedProjects(
             @RequestParam String keyWords,
             @RequestParam Integer pageNum, @RequestParam Integer size) {
 
-        int offset = pageNum * size;
-        List<Project> projects = projectDao.getCheckedProjects(keyWords, offset, size);
+        List<Project> projects = projectDao.getAcceptedProjects(keyWords, pageNum * size, size);
 
-        PagingProjects pagingProjects = new PagingProjects();
-        pagingProjects.setProjects(projects);
-        pagingProjects.setPageNum(pageNum);
-        pagingProjects.setSize(size);
+        PagingModel<Project> pagingProjects = new PagingModel<>(
+                projects, pageNum, projects.size(), "projects");
 
-        long count = projectDao.getCheckedProjectsCount(keyWords);
-        if ((pageNum + 1) * size >= count) {
-            pagingProjects.setHasMore(false);
-        } else {
-            pagingProjects.setHasMore(true);
-        }
+        long count = projectDao.getAcceptedProjectsCount(keyWords);
+        pagingProjects.setHasMore((pageNum + 1) * size < count);
 
         return pagingProjects;
     }
 
     @ResponseBody
     @GetMapping("admin/get/user")
-    public PagingUsers getUsers(
+    public PagingModel<User> getUsers(
             @RequestParam String keyWords,
             @RequestParam Integer pageNum, @RequestParam Integer size) {
 
-        int offset = pageNum * size;
-        List<User> users = userDao.getUsers(keyWords, offset, size);
+        List<User> users = userDao.getUsers(keyWords, pageNum * size, size);
 
-        PagingUsers pagingUsers = new PagingUsers();
-        pagingUsers.setUsers(users);
-        pagingUsers.setPageNum(pageNum);
-        pagingUsers.setSize(size);
+        PagingModel<User> pagingUsers = new PagingModel<>(users, pageNum, users.size(), "users");
 
         long count = userDao.getUsersCount(keyWords);
-        if ((pageNum + 1) * size >= count) {
-            pagingUsers.setHasMore(false);
-        } else {
-            pagingUsers.setHasMore(true);
-        }
+        pagingUsers.setHasMore((pageNum + 1) * size < count);
 
         return pagingUsers;
     }
@@ -157,9 +145,7 @@ public class AdminFunction {
         Object uid = params.get("uid");
         if (uid instanceof List) {
             List<Integer> uids = (List<Integer>) uid;
-            for (Integer id : uids) {
-                userDao.deleteUser(id);
-            }
+            uids.forEach(id -> userDao.deleteUser(id));
 
             return RespCode.OK;
         } else {
