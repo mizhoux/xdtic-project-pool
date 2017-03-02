@@ -3,7 +3,6 @@ package wenjing.xdtic.aop;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -11,15 +10,16 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 
 /**
- * 记录 Controller 中方法执行的切面
+ * 日志记录的切面
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
 @Aspect
 @Component
-public class ControllerLogger {
+public class LogAdvice {
 
-    @Pointcut("execution(* wenjing.xdtic.controller.*.*(..))")
+    // 被 Log 标记的类或者方法会被该切面拦截
+    @Pointcut("@within(wenjing.xdtic.aop.Log)")
     public void advice() {
 
     }
@@ -28,21 +28,6 @@ public class ControllerLogger {
     public void doBefore(JoinPoint jp) {
         String methodName = getMethodName(jp);
         System.out.println("call: " + methodName);
-    }
-
-    public void doAround() {
-    }
-
-    @After("advice()")
-    public void doAfter(JoinPoint jp) {
-    }
-
-    public void doReturn() {
-
-    }
-
-    public void doThrowing() {
-
     }
 
     private String getMethodName(JoinPoint jp) {
