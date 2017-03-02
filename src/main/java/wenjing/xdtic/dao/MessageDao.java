@@ -58,9 +58,13 @@ public class MessageDao {
     }
 
     public boolean setMessagesRead(List<Integer> ids) {
-        String SQL = "UPDATE message m SET m.read = TRUE WHERE m.id IN "
-                + ids.stream().map(String::valueOf).collect(Collectors.joining(", ", "(", ")"));
-        return jdbcTmpl.update(SQL) == ids.size();
+        if (!ids.isEmpty()) {
+            String SQL = "UPDATE message m SET m.read = TRUE WHERE m.id IN "
+                    + ids.stream().map(String::valueOf).collect(Collectors.joining(",", "(", ")"));
+            return jdbcTmpl.update(SQL) == ids.size();
+        }
+
+        return true;
     }
 
     /**

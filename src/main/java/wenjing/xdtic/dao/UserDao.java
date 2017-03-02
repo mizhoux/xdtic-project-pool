@@ -171,6 +171,10 @@ public class UserDao {
     }
 
     public boolean deleteUsers(List<Integer> ids) {
+        if (ids.isEmpty()) {
+            return true;
+        }
+        
         String SQL = "DELETE FROM user WHERE id IN "
                 + ids.stream().map(String::valueOf).collect(Collectors.joining(",", "(", ")"));
         return jdbcTmpl.update(SQL) == ids.size();
