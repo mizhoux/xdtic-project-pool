@@ -48,7 +48,7 @@
                  :class="{disabled: !hasChecked}"
                  v-tap="{methods: deleteUser}">删除</div>
             </div>
-            <div class="item">
+            <div class="item" style="display: none">
                 <div class="ui red small button"
                  :class="{disabled: !hasUser}"
                  v-tap="{methods: deleteAll}">删除全部</div>

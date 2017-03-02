@@ -145,6 +145,10 @@ var msgHeader = new Vue({
 			if (confirm('你确定要标记所有消息为已读吗？')) {
 				bus.$emit('readAll');
 			}
+		},
+
+		navBack: function navBack() {
+			window.history.back();
 		}
 	}
 });
