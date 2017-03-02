@@ -44,6 +44,10 @@ hr {
   padding: .8rem 0;
 }
 
+.tic-header-three > span > img {
+  max-width: 100%;
+}
+
 /*dialog & toast*/
 /* .tic-dialog {
 	display: none;

@@ -727,10 +727,10 @@
 
   - api: /xdtic/fn/read/msg
    - 说明：标记消息已读
-   - request `[GET]`
+   - request `[POST]` `[JSON]`
    ```
    {
-        mid: m001
+        mid: [m001, m002]
    }
    ```
    - response `[JSON]`

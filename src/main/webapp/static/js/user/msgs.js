@@ -20,18 +20,28 @@ var urlProjectPost = urlPrefix + '/myProject/myPost/detail';
 var pageNum = 0;
 var pageSize = 8;
 
+var bus = new Vue();
+
+bus.$on('readAll', function () {
+	msgBox.readAllMsg();
+});
+
 Vue.component('tic-msg', {
 	template: '#tic-msg',
 	props: ['msg', 'index'],
 
 	methods: {
 		readMsg: function readMsg(params) {
+			var jumpUrl;
+
+			if (this.msg.type === '') {
+				jumpUrl = urlProjectSign + '?uid=' + this.msg.uid + '&proId=' + this.msg.proId;
+			} else {
+				jumpUrl = urlProjectPost + '?uid=' + this.msg.uid + '&proId=' + this.msg.proId;
+			}
+
 			if (this.msg.read) {
-				if (this.msg.type === 'join') {
-					window.location.href = urlProjectSign + '?uid=' + this.msg.uid + '&proId=' + this.msg.proId;
-				} else {
-					window.location.href = urlProjectPost + '?uid=' + this.msg.uid + '&proId=' + this.msg.proId;
-				}
+				window.location.href = jumpUrl;
 			}
 
 			//先假装信息已读，若通信失败回滚
@@ -39,12 +49,16 @@ Vue.component('tic-msg', {
 
 			var self = this;
 
-			var url = urlReadMsg + '?mid=' + this.msg.mid;
-			fetch(url, {
-				method: 'GET',
+			fetch(urlReadMsg, {
+				method: 'POST',
 				headers: {
+					'Content-Type': 'application/json',
 					'Accept': 'application/json'
-				}
+				},
+				credentials: 'same-origin',
+				body: JSON.stringify({
+					mid: [self.msg.mid]
+				})
 			}).then(function (response) {
 				return response.json();
 			}).then(function (data) {
@@ -52,11 +66,7 @@ Vue.component('tic-msg', {
 					self.$emit('unread', params.msgIndex);
 					alert('网络出问题了，请稍后重试');
 				} else {
-					if (self.msg.type === 'join') {
-						window.location.href = urlProjectSign + '?uid=' + self.msg.uid + '&proId=' + self.msg.proId;
-					} else {
-						window.location.href = urlProjectPost + '?uid=' + self.msg.uid + '&proId=' + self.msg.proId;
-					}
+					window.location.href = jumpUrl;
 				}
 			})['catch'](function (error) {
 				self.$emit('unread', params.msgIndex);
@@ -70,6 +80,8 @@ var msgBox = new Vue({
 	el: '#appBody',
 	data: {
 		msgs: [],
+		msgsUnread: [],
+
 		busy: false,
 		noMore: false,
 		isLoading: false,
@@ -90,10 +102,51 @@ var msgBox = new Vue({
 
 		unreadMsg: function unreadMsg(msgIndex) {
 			this.msgs[msgIndex].read = false;
+		},
+
+		readAllMsg: function readAllMsg() {
+			var self = this;
+
+			fetch(urlReadMsg, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+				},
+				credentials: 'same-origin',
+				body: JSON.stringify({
+					mid: self.msgsUnread
+				})
+			}).then(function (response) {
+				return response.json();
+			}).then(function (data) {
+				if (data.code === 'error') {
+					alert('网络出问题了，请稍后重试');
+				} else {
+					self.msgs = self.msgs.map(function (msg, index) {
+						msg.read = true;
+						return msg;
+					});
+				}
+			})['catch'](function (error) {
+				alert('网络出问题了，请稍后重试');
+			});
 		}
 	},
 
 	directives: { infiniteScroll: infiniteScroll }
+});
+
+var msgHeader = new Vue({
+	el: '#appHeader',
+
+	methods: {
+		readAllMsgNotice: function readAllMsgNotice() {
+			if (confirm('你确定要标记所有消息为已读吗？')) {
+				bus.$emit('readAll');
+			}
+		}
+	}
 });
 
 function loadMore() {
@@ -115,8 +168,21 @@ function loadMore() {
 	}).then(function (response) {
 		return response.json();
 	}).then(function (data) {
+		var newUnreadMsg,
+		    newMsgs = data.msgs;
+
 		self.isLoading = false;
 		self.msgs = self.msgs.concat(data.msgs);
+
+		//记录未读消息
+		newUnreadMsg = newMsgs.filter(function (msg, index) {
+			return !msg.read;
+		});
+		newUnreadMsg = newUnreadMsg.map(function (msg) {
+			return msg.mid;
+		});
+
+		self.msgsUnread = self.msgsUnread.concat(newUnreadMsg);
 
 		if (data.hasMore === false) {
 			self.noMore = true;

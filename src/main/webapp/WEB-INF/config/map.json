@@ -42,6 +42,13 @@
                 "isPage": true
             }
         },
+        "page/error.jsp": {
+            "uri": "/page/error.jsp",
+            "type": "jsp",
+            "extras": {
+                "isPage": true
+            }
+        },
         "page/hall/hall.jsp": {
             "uri": "/page/hall/hall.jsp",
             "type": "jsp",

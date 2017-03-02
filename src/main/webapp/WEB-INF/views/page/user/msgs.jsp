@@ -1,16 +1,19 @@
 <%@ page contentType="text/html;charset=utf-8" %>
+<%@ page contentType="text/html;charset=utf-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="/fis" prefix="fis"%>
 
 <fis:extends name="page/layout/frame.jsp">
 	<fis:block name="body">
-		<header>
+		<header id="appHeader">
 			<div class="tic-header-three">
 				<a href="javascript:window.history.go(-1);" v-tap class="tic-header-three-aside">
         			<img src="/xdtic/static/images/arrow_prev.png" alt="后退">
     			</a>
 				<h2>系统信息</h2>
-				<span></span>
+				<span v-tap="{methods: readAllMsgNotice}">
+					<img src="/xdtic/static/images/readAllMsg.png" alt="一键已读">
+				</span>
 			</div>
 		</header>
 		<main id="appBody">
