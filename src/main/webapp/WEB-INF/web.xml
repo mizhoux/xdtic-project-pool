@@ -33,14 +33,7 @@
     
     <servlet-mapping>
         <servlet-name>default</servlet-name>
-        <url-pattern>*.png</url-pattern>
-        <url-pattern>*.css</url-pattern>
-        <url-pattern>*.js</url-pattern>
-        <url-pattern>*.json</url-pattern>
-        <url-pattern>*.ttf</url-pattern>
-        <url-pattern>*.svg</url-pattern>
-        <url-pattern>*.woff</url-pattern>
-        <url-pattern>*.woff2</url-pattern>
+        <url-pattern>/static/*</url-pattern>
     </servlet-mapping>
     
     <jsp-config>

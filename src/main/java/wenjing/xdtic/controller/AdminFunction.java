@@ -69,8 +69,8 @@ public class AdminFunction {
 
         List<Project> projects = projectDao.getUncheckedProjects(keyWords, pageNum * size, size);
 
-        PagingModel<Project> pagingProjects = new PagingModel<>(
-                projects, pageNum, projects.size(), "projects");
+        PagingModel<Project> pagingProjects
+                = new PagingModel<>(projects, pageNum, projects.size(), "projects");
 
         long count = projectDao.getUncheckedProjectsCount(keyWords);
         pagingProjects.setHasMore((pageNum + 1) * size < count);
@@ -114,8 +114,8 @@ public class AdminFunction {
 
         List<Project> projects = projectDao.getAcceptedProjects(keyWords, pageNum * size, size);
 
-        PagingModel<Project> pagingProjects = new PagingModel<>(
-                projects, pageNum, projects.size(), "projects");
+        PagingModel<Project> pagingProjects
+                = new PagingModel<>(projects, pageNum, projects.size(), "projects");
 
         long count = projectDao.getAcceptedProjectsCount(keyWords);
         pagingProjects.setHasMore((pageNum + 1) * size < count);
@@ -131,7 +131,8 @@ public class AdminFunction {
 
         List<User> users = userDao.getUsers(keyWords, pageNum * size, size);
 
-        PagingModel<User> pagingUsers = new PagingModel<>(users, pageNum, users.size(), "users");
+        PagingModel<User> pagingUsers
+                = new PagingModel<>(users, pageNum, users.size(), "users");
 
         long count = userDao.getUsersCount(keyWords);
         pagingUsers.setHasMore((pageNum + 1) * size < count);
@@ -144,14 +145,14 @@ public class AdminFunction {
     public RespCode deleteUser(@RequestBody Map<String, Object> params) {
         Object uid = params.get("uid");
         if (uid instanceof List) {
-            List<Integer> uids = (List<Integer>) uid;
-            uids.forEach(id -> userDao.deleteUser(id));
+            List<Integer> userIds = (List<Integer>) uid;
+            userDao.deleteUsers(userIds);
 
             return RespCode.OK;
-        } else {
-            // delete ALL
-            return RespCode.ERROR;
         }
+        
+        // delete ALL，不能给予管理员这样的权限，只能数据库管理才能删除所有用户
+        return RespCode.ERROR;
     }
 
 }

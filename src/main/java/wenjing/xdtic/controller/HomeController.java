@@ -28,4 +28,9 @@ public class HomeController {
         return "page/hall/hall";
     }
 
+    @GetMapping("/**")
+    public String get404Page() {
+        return "page/error";
+    }
+
 }

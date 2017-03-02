@@ -3,6 +3,7 @@ package wenjing.xdtic.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -54,6 +55,12 @@ public class MessageDao {
     public boolean setMessageRead(Integer id) {
         String SQL = "UPDATE message m SET m.read = TRUE WHERE m.id = ?";
         return jdbcTmpl.update(SQL, id) == 1;
+    }
+
+    public boolean setMessagesRead(List<Integer> ids) {
+        String SQL = "UPDATE message m SET m.read = TRUE WHERE m.id IN "
+                + ids.stream().map(String::valueOf).collect(Collectors.joining(", ", "(", ")"));
+        return jdbcTmpl.update(SQL) == ids.size();
     }
 
     /**

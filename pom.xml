@@ -194,6 +194,7 @@
                 <version>2.3</version>
                 <configuration>
                     <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <warName>xdtic</warName>
                 </configuration>
             </plugin>
             <plugin>
