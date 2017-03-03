@@ -194,9 +194,11 @@ public class UserFunction {
     }
 
     @ResponseBody
-    @GetMapping("read/msg")
-    public RespCode readMessage(@RequestParam Integer mid) {
-        boolean success = messageDao.setMessageRead(mid);
+    @PostMapping("read/msg")
+    public RespCode readMessage(@RequestBody Map<String, Object> params) {
+        List<Integer> msgIds = (List<Integer>) params.get("mid");
+        boolean success = messageDao.setMessagesRead(msgIds);
+
         return success ? RespCode.OK : RespCode.ERROR;
     }
 

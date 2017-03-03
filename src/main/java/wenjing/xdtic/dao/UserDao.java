@@ -5,6 +5,7 @@ import static java.lang.Boolean.TRUE;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -167,6 +168,16 @@ public class UserDao {
     public boolean deleteUser(Integer id) {
         String SQL = "DELETE FROM user WHERE id = ?";
         return jdbcTmpl.update(SQL, id) == 1;
+    }
+
+    public boolean deleteUsers(List<Integer> ids) {
+        if (ids.isEmpty()) {
+            return true;
+        }
+        
+        String SQL = "DELETE FROM user WHERE id IN "
+                + ids.stream().map(String::valueOf).collect(Collectors.joining(",", "(", ")"));
+        return jdbcTmpl.update(SQL) == ids.size();
     }
 
 }
