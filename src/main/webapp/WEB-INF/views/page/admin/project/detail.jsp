@@ -6,7 +6,6 @@
     <fis:block name="article">
 		<header>
 			<div class="tic-header-three">
-				<p><c:out value="${project.processed}" /></p>
 				<div class="tic-header-three-center">
 			        <p class="tic-title-main"><c:out value="${project.proname}" /></p>
 			        <p class="tic-title-secondary">
