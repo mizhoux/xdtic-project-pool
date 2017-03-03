@@ -23,7 +23,7 @@
 		</main>
 	
         <c:choose>
-        	<c:when test="${project.hasProcessed}">
+        	<c:when test="${project.statu != 'check'}">
 	        	<div class="ui buttons tic-buttons" id="projectOperation">
 		            <button class="ui red button" v-tap="{methods: deleteProject}">删除</button>
 		        </div>
