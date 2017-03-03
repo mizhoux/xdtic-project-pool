@@ -80,7 +80,7 @@ var projectBox = new Vue({
 			this.isLoading = false;
 			this.checkImmediately = false;
 
-			this.projects.splice(0, this.projects.length);
+			this.users.splice(0, this.projects.length);
 
 			loadMore.call(this);
 		},

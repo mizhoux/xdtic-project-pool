@@ -23,7 +23,7 @@
 		</main>
 	
         <c:choose>
-        	<c:when test="${project.hasProcessed}">
+        	<c:when test="${project.statu != 'check'}">
 	        	<div class="ui buttons tic-buttons" id="projectOperation">
 		            <button class="ui red button" v-tap="{methods: deleteProject}">删除</button>
 		        </div>
@@ -41,7 +41,7 @@
 		    <div class="weui-toast">
 		        <i class="weui-icon-success-no-circle weui-icon_toast"></i>
 		        <c:choose>
-		        	<c:when test="${project.hasProcessed}">
+		        	<c:when test="${project.statu != 'check'}">
 		        		<p class="weui-toast__content">已删除</p>
 		        	</c:when>
 		        	<c:otherwise>
