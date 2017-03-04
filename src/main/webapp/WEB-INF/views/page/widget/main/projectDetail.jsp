@@ -15,10 +15,17 @@
         </div>
 
         <c:if test="${project.statu != null}">
-            <c:set var="projectStatu" value="审核中" />
-            <c:if test="${project.statu == 'pass'}">
-                <c:set var="projectStatu" value="审核通过" />
-            </c:if>
+            <c:choose>
+                <c:when test="${project.statu == 'pass'}">
+                    <c:set var="projectStatu" value="审核通过" />
+                </c:when>
+                <c:when test="${project.statu == 'reject'}">
+                    <c:set var="projectStatu" value="审核被拒" />
+                </c:when>
+                <c:otherwise>
+                    <c:set var="projectStatu" value="审核中" />
+                </c:otherwise>
+            </c:choose>
             <p class="tic-article-header-right tic-title-em">状态：<c:out value="${projectStatu}" /></p>
         </c:if>
     </div>

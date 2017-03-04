@@ -1,5 +1,5 @@
 /**
- * @fileOverview for /project/check.jsp
+ * @fileOverview for /user/look.jsp
  * @Author       adoug
  * @DateTime     2017-2-23
  */
@@ -18,7 +18,7 @@ var pageNum = 0;
 var pageSize = 8;
 
 Vue.component('tic-user', {
-	template: '#tic-project-look',
+	template: '#tic-user-look',
 	props: ['user', 'index'],
 
 	data: function data() {
@@ -34,7 +34,7 @@ Vue.component('tic-user', {
 	}
 });
 
-var projectBox = new Vue({
+var userBox = new Vue({
 	el: '#app',
 	data: {
 		users: [],
@@ -80,7 +80,7 @@ var projectBox = new Vue({
 			this.isLoading = false;
 			this.checkImmediately = false;
 
-			this.users.splice(0, this.projects.length);
+			this.users.splice(0, this.users.length);
 
 			loadMore.call(this);
 		},

@@ -4,7 +4,7 @@
 
 <fis:extends name="page/layout/frame_admin.jsp">
 	<fis:block name="article">
-		<div class="article" id="projectBox">
+		<div class="article" id="userBox">
             <div class="ui masthead vertical segment">
                 <div class="ui container">
                     <div class="introduction">
@@ -74,7 +74,7 @@
 
         <fis:require id="static/js/admin/user/look.js" />
 
-        <script type="text/x-template" id="tic-project-look">
+        <script type="text/x-template" id="tic-user-look">
             <transition name="slide">
                 <tr>
                     <td class="collapsing">

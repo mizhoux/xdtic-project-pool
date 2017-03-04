@@ -23,7 +23,7 @@ var bus = new Vue();
 
 //searchBar接收请求操作后通知projectBox
 bus.$on('loadProject', function (keyWords) {
-	projectBox.pageNum = 1;
+	projectBox.pageNum = 0;
 	projectBox.keyWords = keyWords;
 
 	projectBox.projects.splice(0, projectBox.projects.length);
