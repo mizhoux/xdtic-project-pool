@@ -133,6 +133,7 @@
     		"promassage":"天空之城在哭泣。",
             "concat":"邮箱：yuqingya@163.com 如有疑问，敬请用以上方式咨询~",
             "date": "2016.01.28"
+        "statu": "check/pass/reject"
     	},
     
     	"user": {
@@ -154,6 +155,8 @@
     						            
         concat:	
         "邮箱：yuqingyaa@163.com   如有疑问，敬请用以上方式咨询~"
+
+        reject: "false/true" //是字符串格式
     						            
         uid:u001
         proId:p001

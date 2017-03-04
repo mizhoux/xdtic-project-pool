@@ -1,4 +1,4 @@
-.tic-detail-footer {
+.tic-detail-footer, .tic-detail-footer2 {
   position: fixed;
   bottom: 0;
   width: 100%;
@@ -9,17 +9,22 @@
   align-items: center;
 }
 
-.tic-detail-footer > a {
+.tic-detail-footer > a, .tic-detail-footer2 > a {
   flex: 1 1 50%;
   box-sizing: border-box;
   text-align: center;
   border-right: solid 1px #ccc4c4;
 }
 
-.tic-detail-footer > a > img {
+.tic-detail-footer > a > img, .tic-detail-footer2 > a > img {
   max-width: 100%;
 }
 
-.tic-detail-footer > a:last-child {
+.tic-detail-footer > a:last-child, .tic-detail-footer2 > a:last-child {
   border: none;
+}
+
+.tic-detail-footer2 {
+  border: none;
+  background-color: transparent;
 }

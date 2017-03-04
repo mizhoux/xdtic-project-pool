@@ -51,7 +51,6 @@
 	<fis:block name="js">
 		<fis:parent />
 		
-		<fis:require id="static/js/user/msgs.js" />
 		<script type="text/x-template" id="tic-msg">
 			<div class="tic-msg">
 				<div class="tic-msg-two">
@@ -75,6 +74,7 @@
 				</div>
 			</div>
 		</script>
+		<fis:require id="static/js/user/msgs.js" />
 	</fis:block>
  
   <%-- auto inject by fis3-preprocess-extlang--%>

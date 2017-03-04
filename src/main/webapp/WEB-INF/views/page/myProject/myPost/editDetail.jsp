@@ -51,6 +51,11 @@
 						        </div>
 							   </div>
 						</div>
+						<c:set var="projectReject" value="false" />
+						<c:if test="${project.statu == 'reject'}">
+							<c:set var="projectReject" value="true" />
+						</c:if>
+						<input type="hidden" name="reject" value="<c:out value='${projectReject}' />">
 						<input type="hidden" name="uid" value="<c:out value='${user.id}' />">
 						<input type="hidden" name="proId" value="<c:out value='${project.proId}' />">
 						<button class="weui-btn weui-btn_primary" id="btnConfirm" v-tap.prevent="{methods: editDetail}">保存</button>

@@ -12,14 +12,23 @@
 			<fis:widget name="page/widget/main/projectDetail.jsp" />	
 		</main>
 
-		<footer class="tic-detail-footer">
-			<a href="<c:url value='/myProject/myPost/editDetail' />?proId=<c:out value='${project.proId}' />" v-tap>
-				<img src="/xdtic/static/images/myProject/edit-info.png" alt="编辑信息">
-			</a>
-			<a href="<c:url value='/myProject/myPost/signInfo' />?proId=<c:out value='${project.proId}' />" v-tap>
-				<img src="/xdtic/static/images/myProject/sign-info.png" alt="报名信息">
-			</a>
-		</footer>
+		<c:choose>
+			<c:when test="${project.statu != 'reject'}">
+				<footer class="tic-detail-footer">
+					<a href="<c:url value='/myProject/myPost/editDetail' />?proId=<c:out value='${project.proId}' />" v-tap>
+						<img src="/xdtic/static/images/myProject/edit-info.png" alt="编辑信息">
+					</a>
+					<a href="<c:url value='/myProject/myPost/signInfo' />?proId=<c:out value='${project.proId}' />" v-tap>
+						<img src="/xdtic/static/images/myProject/sign-info.png" alt="报名信息">
+					</a>
+				</footer>
+			</c:when>
+			<c:otherwise>
+				<footer class="tic-detail-footer2">
+					<a href="<c:url value='/myProject/myPost/editDetail' />?proId=<c:out value='${project.proId}' />" class="weui-btn weui-btn_primary" v-tap>修改并重新发布</a>
+				</footer>
+			</c:otherwise>
+		</c:choose>
 	</fis:block>
 
 	<fis:block name="style">
