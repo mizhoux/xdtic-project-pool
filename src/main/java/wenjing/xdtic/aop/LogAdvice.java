@@ -28,12 +28,14 @@ public class LogAdvice {
     @Around("advice()")
     public Object doAround(ProceedingJoinPoint pjp) throws Throwable {
 
-        System.out.println("call   -> " + getMethodName(pjp));
-        System.out.println("args   -> " + getMethodArgValues(pjp));
+        StringBuilder log = new StringBuilder(300);
+        log.append("call   -> ").append(getMethodName(pjp)).append('\n');
+        log.append("args   -> ").append(getMethodArgValues(pjp)).append('\n');
 
         Object result = pjp.proceed();
 
-        System.out.println("return -> " + result + "\n");
+        log.append("return -> ").append(result).append('\n');
+        System.out.println(log);
 
         return result;
     }

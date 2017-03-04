@@ -56,9 +56,9 @@ public class ProjectFunction {
     }
 
     @PostMapping(value = "project/update", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode updateProject(@RequestParam Integer uid, Project project) {
+    public RespCode updateProject(@RequestParam("uid") Integer userId, Project project) {
 
-        project.setUserid(uid);
+        project.setUserid(userId);
         Project.syscDataForBack(project);
 
         boolean success = projectDao.updateProject(project);
@@ -67,40 +67,40 @@ public class ProjectFunction {
 
     @GetMapping("project/collect")
     public RespCode collectProject(
-            @RequestParam Integer userid, @RequestParam Integer proId) {
-        boolean success = projectDao.collectProject(userid, proId);
+            @RequestParam("userid") Integer userId, @RequestParam Integer proId) {
+        boolean success = projectDao.collectProject(userId, proId);
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
     @GetMapping("project/uncollect")
     public RespCode uncollectProject(
-            @RequestParam Integer userid, @RequestParam Integer proId) {
-        boolean success = projectDao.uncollectProject(userid, proId);
+            @RequestParam("userid") Integer userId, @RequestParam Integer proId) {
+        boolean success = projectDao.uncollectProject(userId, proId);
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
     @GetMapping("get/project/myJoin")
     public PagingModel<Project> getMyJoiningProjects(
-            @RequestParam Integer uid,
+            @RequestParam("uid") Integer userId,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
 
         int offset = pageNum * pageSize;
 
-        Supplier<List<Project>> projectsSupplier = () -> projectDao.getJoinedProjects(uid, offset, pageSize);
-        Supplier<Long> countSupplier = () -> projectDao.getJoinedProjectsCount(uid);
+        Supplier<List<Project>> projectsSupplier = () -> projectDao.getJoinedProjects(userId, offset, pageSize);
+        Supplier<Long> countSupplier = () -> projectDao.getJoinedProjectsCount(userId);
 
         return PagingModel.of(projectsSupplier, "projects", countSupplier, pageNum, pageSize);
     }
 
     @GetMapping("get/project/myCollect")
     public PagingModel<Project> getMyCollectedProjects(
-            @RequestParam Integer uid,
+            @RequestParam("uid") Integer userId,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
 
         int offset = pageNum * pageSize;
 
-        Supplier<List<Project>> projectsSupplier = () -> projectDao.getCollectedProjects(uid, offset, pageSize);
-        Supplier<Long> countSupplier = () -> projectDao.getCollectedProjectsCount(uid);
+        Supplier<List<Project>> projectsSupplier = () -> projectDao.getCollectedProjects(userId, offset, pageSize);
+        Supplier<Long> countSupplier = () -> projectDao.getCollectedProjectsCount(userId);
 
         return PagingModel.of(projectsSupplier, "projects", countSupplier, pageNum, pageSize);
     }
@@ -120,13 +120,14 @@ public class ProjectFunction {
 
     @GetMapping("get/project")
     public PagingModel<Project> getAcceptedProjects(
-            @RequestParam Integer userid, @RequestParam String keyWords,
+            @RequestParam("userid") Integer userId,
+            @RequestParam("keyWords") String keyword,
             @RequestParam Integer pageNum, @RequestParam Integer pageSize) {
 
         int offset = pageNum * pageSize;
 
-        Supplier<List<Project>> projectsSupplier = () -> projectDao.getAcceptedProjects(userid, keyWords, offset, pageSize);
-        Supplier<Long> countSupplier = () -> projectDao.getAcceptedProjectsCount(keyWords);
+        Supplier<List<Project>> projectsSupplier = () -> projectDao.getAcceptedProjects(keyword, offset, pageSize, userId);
+        Supplier<Long> countSupplier = () -> projectDao.getAcceptedProjectsCount(keyword);
 
         return PagingModel.of(projectsSupplier, "projects", countSupplier, pageNum, pageSize);
     }
@@ -134,10 +135,10 @@ public class ProjectFunction {
     @ResponseBody
     @GetMapping("get/hotProject")
     public HashMap<String, Object> getHotProjects(
-            @RequestParam Integer userid,
-            @RequestParam String keyWords, @RequestParam Integer hotSize) {
+            @RequestParam("userid") Integer userId,
+            @RequestParam("keyWords") String keyword, @RequestParam Integer hotSize) {
 
-        List<Project> projects = projectDao.getHotProjects(userid, keyWords, hotSize);
+        List<Project> projects = projectDao.getHotProjects(keyword, hotSize, userId);
 
         HashMap<String, Object> hotProjects = new HashMap<>(2);
         hotProjects.put("hotSize", projects.size());

@@ -43,15 +43,13 @@ public class ProjectController {
     @GetMapping({"project", "myProject/myCollect/detail"})
     public ModelAndView getProjectDetailPage(HttpSession session,
             @RequestParam(required = false) Integer proId,
-            @RequestParam(required = false) Integer id,
-            @RequestParam(required = false) Integer uid) {
-
-        User user = (User) session.getAttribute("user");
+            @RequestParam(required = false) Integer id) {
 
         if (proId == null) {
             proId = id;
         }
 
+        User user = (User) session.getAttribute("user");
         Project project = projectDao.getProject(proId);
         project.setIsCollected(projectDao.isUserCollected(user.getId(), proId));
 
@@ -69,9 +67,7 @@ public class ProjectController {
 
     @GetMapping("myProject/myPost/detail")
     public ModelAndView getPostProjectDetailPage(
-            HttpSession session,
-            @RequestParam Integer proId,
-            @RequestParam(required = false) Integer uid) {
+            HttpSession session, @RequestParam Integer proId) {
 
         Project project = projectDao.getProject(proId);
         User user = (User) session.getAttribute("user");
@@ -120,12 +116,13 @@ public class ProjectController {
 
     @GetMapping("project/toJoin")
     public ModelAndView getToJoinPage(HttpSession session,
-            @RequestParam Integer proId, @RequestParam Integer uid) {
+            @RequestParam Integer proId,
+            @RequestParam("uid") Integer userId) {
 
         ModelAndView mav = new ModelAndView("page/myProject/myCollect/toJoin");
 
         Project project = projectDao.getProject(proId);
-        project.setIsCollected(projectDao.isUserCollected(uid, proId));
+        project.setIsCollected(projectDao.isUserCollected(userId, proId));
 
         User user = (User) session.getAttribute("user");
 

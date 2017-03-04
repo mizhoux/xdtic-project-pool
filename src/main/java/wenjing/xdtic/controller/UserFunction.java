@@ -170,7 +170,7 @@ public class UserFunction {
     /**
      * 根据用户的 id 获取系统消息列表
      *
-     * @param uid 用户 id
+     * @param userId 用户 id
      * @param pageNum 当前页索引
      * @param size 请求的消息数量
      * @return
@@ -178,15 +178,15 @@ public class UserFunction {
     @ResponseBody
     @GetMapping("get/msg")
     public PagingModel<Message> getMessages(
-            @RequestParam Integer uid,
+            @RequestParam("uid") Integer userId,
             @RequestParam Integer pageNum, @RequestParam Integer size) {
 
         int offset = pageNum * size;
-        List<Message> msgs = messageDao.getMessages(uid, offset, size);
+        List<Message> msgs = messageDao.getMessages(userId, offset, size);
 
         PagingModel<Message> pagingMsgs = new PagingModel<>(msgs, pageNum, msgs.size());
 
-        long count = messageDao.getMessagesCount(uid);
+        long count = messageDao.getMessagesCount(userId);
         pagingMsgs.setHasMore((pageNum + 1) * size < count);
 
         pagingMsgs.setEntitiesName("msgs");

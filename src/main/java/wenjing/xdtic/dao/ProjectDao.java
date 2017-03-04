@@ -37,7 +37,7 @@ public class ProjectDao {
         int result = jdbcTmpl.update(conn -> {
 
             PreparedStatement pstmt = conn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
-            
+
             pstmt.setInt(1, project.getUserId());
             pstmt.setString(2, project.getName());
             pstmt.setString(3, project.getContent());
@@ -74,19 +74,21 @@ public class ProjectDao {
     /**
      * 从数据中按分页条件获取审核通过的项目
      *
-     * @param userId 当前 session 中的用户，用来判断项目是否已经被该用户收藏
-     * @param keywords 搜索关键字，默认为 ""
+     * @param keyword 搜索关键字，默认为 ""
      * @param offset 分页起始位置
      * @param size 每页的元素数量
+     * @param userId 当前 session 中的用户，用来判断项目是否已经被该用户收藏
      * @return
      */
-    public List<Project> getAcceptedProjects(Integer userId, String keywords, Integer offset, Integer size) {
+    public List<Project> getAcceptedProjects(String keyword, Integer offset, Integer size, Integer userId) {
         String SQL
                 = "SELECT u.username, p.* FROM project p, user u "
-                + "WHERE p.status = 'pass' AND p.tag LIKE ? AND u.id = p.user_id ORDER BY p.id LIMIT ?, ?";
+                + "WHERE p.status = 'pass' AND (p.tag LIKE ? OR p.name LIKE ?) "
+                + "AND u.id = p.user_id ORDER BY p.date DESC LIMIT ?, ?";
 
+        keyword = getMysqlLikeKeyword(keyword);
         List<Project> projects = jdbcTmpl.query(
-                SQL, this::parseProjectWithUsername, getMysqlLikeKey(keywords), offset, size);
+                SQL, this::parseProjectWithUsername, keyword, keyword, offset, size);
 
         Set<Integer> collectedProIds = getUserCollectedProjectIds(userId);
         projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
@@ -97,43 +99,49 @@ public class ProjectDao {
     /**
      * 从数据中按分页条件获取审核通过的项目，不需要判断该项目是否被某个用户收藏
      *
-     * @param keywords
+     * @param keyword
      * @param offset
      * @param size
      * @return
      */
-    public List<Project> getAcceptedProjects(String keywords, Integer offset, Integer size) {
+    public List<Project> getAcceptedProjects(String keyword, Integer offset, Integer size) {
         String SQL
                 = "SELECT p.* FROM project AS p "
-                + "WHERE p.status = 'pass' AND p.tag LIKE ? LIMIT ?, ?";
+                + "WHERE p.status = 'pass' AND (p.tag LIKE ? OR p.name LIKE ?) LIMIT ?, ?";
 
+        keyword = getMysqlLikeKeyword(keyword);
         List<Project> projects = jdbcTmpl.query(
-                SQL, this::parseProject, getMysqlLikeKey(keywords), offset, size);
+                SQL, this::parseProject, keyword, keyword, offset, size);
 
         return projects;
     }
 
-    public long getAcceptedProjectsCount(String keywords) {
-        String SQL = "SELECT COUNT(*) FROM project p WHERE p.status = 'pass' AND p.tag LIKE ?";
-        return jdbcTmpl.queryForObject(SQL, Long.class, getMysqlLikeKey(keywords));
+    public long getAcceptedProjectsCount(String keyword) {
+        String SQL
+                = "SELECT COUNT(*) FROM project p "
+                + "WHERE p.status = 'pass' AND (p.tag LIKE ? OR p.name LIKE ?)";
+
+        keyword = getMysqlLikeKeyword(keyword);
+        return jdbcTmpl.queryForObject(SQL, Long.class, keyword, keyword);
     }
 
     /**
      * 获得当前的 hot 项目，根据收藏量来判断
      *
-     * @param userId 当前 session 中的用户，用来判断项目是否已经被该用户收藏
-     * @param keywords
+     * @param keyword
      * @param hotSize
+     * @param userId 当前 session 中的用户，用来判断项目是否已经被该用户收藏
      * @return
      */
-    public List<Project> getHotProjects(Integer userId, String keywords, Integer hotSize) {
+    public List<Project> getHotProjects(String keyword, Integer hotSize, Integer userId) {
 
         String SQL = "SELECT u.username, p.* FROM project AS p, user AS u,"
                 + "(SELECT pc.pro_id, COUNT(*) AS num FROM pro_collection pc GROUP BY pc.pro_id ORDER BY num DESC LIMIT ?) AS t "
-                + "WHERE p.status = 'pass' AND p.id = t.pro_id AND p.tag LIKE ? AND u.id = p.user_id";
+                + "WHERE p.status = 'pass' AND p.id = t.pro_id AND (p.tag LIKE ? OR p.name LIKE ?) AND u.id = p.user_id";
 
+        keyword = getMysqlLikeKeyword(keyword);
         List<Project> projects = jdbcTmpl.query(
-                SQL, this::parseProjectWithUsername, hotSize, getMysqlLikeKey(keywords));
+                SQL, this::parseProjectWithUsername, hotSize, keyword, keyword);
 
         Set<Integer> collectedProIds = getUserCollectedProjectIds(userId);
         projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
@@ -144,25 +152,27 @@ public class ProjectDao {
     /**
      * 获得没有审核的项目
      *
-     * @param keywords
+     * @param keyword
      * @param offset
      * @param size
      * @return
      */
-    public List<Project> getUncheckedProjects(String keywords, Integer offset, Integer size) {
+    public List<Project> getUncheckedProjects(String keyword, Integer offset, Integer size) {
         String SQL
                 = "SELECT u.username, p.* FROM project AS p, user AS u "
-                + "WHERE p.status = 'check' AND p.tag LIKE ? AND u.id = p.user_id LIMIT ?, ?";
+                + "WHERE p.status = 'check' AND (p.tag LIKE ? OR p.name LIKE ?) AND u.id = p.user_id LIMIT ?, ?";
 
+        keyword = getMysqlLikeKeyword(keyword);
         List<Project> projects = jdbcTmpl.query(
-                SQL, this::parseProjectWithUsername, getMysqlLikeKey(keywords), offset, size);
+                SQL, this::parseProjectWithUsername, keyword, keyword, offset, size);
 
         return projects;
     }
 
-    public long getUncheckedProjectsCount(String keywords) {
-        String SQL = "SELECT COUNT(*) FROM project p WHERE p.status = 'check' AND p.tag LIKE ?";
-        return jdbcTmpl.queryForObject(SQL, Long.class, getMysqlLikeKey(keywords));
+    public long getUncheckedProjectsCount(String keyword) {
+        String SQL = "SELECT COUNT(*) FROM project p WHERE p.status = 'check' AND (p.tag LIKE ? OR p.name LIKE ?)";
+        keyword = getMysqlLikeKeyword(keyword);
+        return jdbcTmpl.queryForObject(SQL, Long.class, keyword, keyword);
     }
 
     /**
@@ -174,16 +184,13 @@ public class ProjectDao {
      * @return
      */
     public List<Project> getPostedProjects(Integer userId, Integer offset, Integer size) {
-        String SQL = "SELECT * FROM project WHERE user_id = ? LIMIT ?, ?";
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
+        String SQL
+                = "SELECT u.username, p.* FROM project p, user u "
+                + "WHERE p.user_id = ? AND u.id = ? LIMIT ?, ?";
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProjectWithUsername, userId, userId, offset, size);
 
-        String username = userDao.getUsername(userId);
         Set<Integer> collectedProIds = getUserCollectedProjectIds(userId);
-
-        projects.forEach(p -> {
-            p.setUsername(username);
-            p.setIsCollected(collectedProIds.contains(p.getId()));
-        });
+        projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
 
         return projects;
     }
@@ -390,7 +397,7 @@ public class ProjectDao {
         return project;
     }
 
-    private String getMysqlLikeKey(String keyword) {
+    private String getMysqlLikeKeyword(String keyword) {
         return "%" + keyword + "%";
     }
 
