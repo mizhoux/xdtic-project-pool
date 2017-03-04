@@ -99,14 +99,16 @@ public class UserDao {
         return jdbcTmpl.query(SQL, this::extractUser, username, password);
     }
 
-    public List<User> getUsers(String keywords, Integer offset, Integer size) {
-        String SQL = "SELECT u.* FROM user AS u WHERE u.username LIKE ? LIMIT ?, ?";
-        return jdbcTmpl.query(SQL, this::parseUser, getMysqlLikeKey(keywords), offset, size);
+    public List<User> getUsers(String keyword, Integer offset, Integer size) {
+        String SQL = "SELECT u.* FROM user AS u WHERE u.username LIKE ? OR u.realname LIKE ? LIMIT ?, ?";
+        keyword = getMysqlLikeKeyword(keyword);
+        return jdbcTmpl.query(SQL, this::parseUser, keyword, keyword, offset, size);
     }
 
-    public Long getUsersCount(String keywords) {
-        String SQL = "SELECT COUNT(*) FROM user u WHERE u.username LIKE ? ";
-        return jdbcTmpl.queryForObject(SQL, Long.class, getMysqlLikeKey(keywords));
+    public Long getUsersCount(String keyword) {
+        String SQL = "SELECT COUNT(*) FROM user u WHERE u.username LIKE ? OR u.realname LIKE ?";
+        keyword = getMysqlLikeKeyword(keyword);
+        return jdbcTmpl.queryForObject(SQL, Long.class, keyword, keyword);
     }
 
     /**
@@ -118,6 +120,21 @@ public class UserDao {
     public boolean containsUsername(String username) {
         String SQL = "SELECT id FROM user WHERE username = ?";
         return jdbcTmpl.query(SQL, rs -> rs.next() ? TRUE : FALSE, username);
+    }
+
+    public boolean deleteUser(Integer id) {
+        String SQL = "DELETE FROM user WHERE id = ?";
+        return jdbcTmpl.update(SQL, id) == 1;
+    }
+
+    public boolean deleteUsers(List<Integer> ids) {
+        if (ids.isEmpty()) {
+            return true;
+        }
+
+        String SQL = "DELETE FROM user WHERE id IN "
+                + ids.stream().map(String::valueOf).collect(Collectors.joining(",", "(", ")"));
+        return jdbcTmpl.update(SQL) == ids.size();
     }
 
     /**
@@ -161,23 +178,8 @@ public class UserDao {
         return user;
     }
 
-    private String getMysqlLikeKey(String keyword) {
+    private String getMysqlLikeKeyword(String keyword) {
         return "%" + keyword + "%";
-    }
-
-    public boolean deleteUser(Integer id) {
-        String SQL = "DELETE FROM user WHERE id = ?";
-        return jdbcTmpl.update(SQL, id) == 1;
-    }
-
-    public boolean deleteUsers(List<Integer> ids) {
-        if (ids.isEmpty()) {
-            return true;
-        }
-        
-        String SQL = "DELETE FROM user WHERE id IN "
-                + ids.stream().map(String::valueOf).collect(Collectors.joining(",", "(", ")"));
-        return jdbcTmpl.update(SQL) == ids.size();
     }
 
 }
