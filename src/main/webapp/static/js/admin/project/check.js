@@ -19,19 +19,49 @@ var pageSize = 8;
 
 Vue.component('tic-project-check', {
 	template: '#tic-project-check',
-	props: ['project', 'index'],
+	props: ['project', 'index', 'ensurereject'],
+
+	watch: {
+		ensurereject: function ensurereject(newValue) {
+			var self = this;
+
+			newValue && requestProcessProject(self, 'reject', this.project.proIndex);
+		}
+	},
 
 	methods: {
 		reject: function reject(params) {
 			var self = this;
 
-			requestProcessProject(self, 'reject', params.proIndex);
+			this.$emit('toreject', params.proIndex);
 		},
 
 		accept: function accept(params) {
 			var self = this;
 
 			requestProcessProject(self, 'accept', params.proIndex);
+		}
+	}
+});
+
+Vue.component('tic-tag', {
+	template: '#tic-tag',
+
+	props: ['projectindex', 'toshow'],
+
+	data: function data() {
+		return {
+			rejectReason: ''
+		};
+	},
+
+	methods: {
+		hideRejectDialog: function hideRejectDialog() {
+			this.$emit('hide-reject-dialog');
+		},
+
+		ensureReject: function ensureReject() {
+			this.$emit('ensure-reject', this['projectindex'], this.rejectReason);
 		}
 	}
 });
@@ -48,7 +78,10 @@ var projectBox = new Vue({
 		sidePush: false,
 
 		placeholder: '你想要的项目...',
-		keyWords: ''
+		keyWords: '',
+
+		rejectProjectIndex: '',
+		isShowReject: false
 	},
 
 	beforeMount: function beforeMount() {
@@ -64,6 +97,8 @@ var projectBox = new Vue({
 
 		processProject: function processProject(proIndex) {
 			var self = this;
+
+			this.isShowReject = false;
 
 			this.projects[proIndex].isProcessed = true;
 			this.$nextTick(function () {
@@ -84,6 +119,21 @@ var projectBox = new Vue({
 			this.projects.splice(0, this.projects.length);
 
 			loadMore.call(this);
+		},
+
+		toReject: function toReject(proIndex) {
+			this.isShowReject = true;
+			this.rejectProjectIndex = proIndex;
+		},
+
+		hideRejectDialog: function hideRejectDialog() {
+			this.isShowReject = false;
+		},
+
+		ensureReject: function ensureReject(proIndex, rejectReason) {
+			this.projects[proIndex].rejectReason = rejectReason;
+			this.projects[proIndex].ensureReject = true;
+			this.projects[proIndex].proIndex = proIndex;
 		}
 	},
 
@@ -115,6 +165,9 @@ function loadMore() {
 		data.projects.map(function (el) {
 			el.isProcessed = false;
 			el.animationEnd = false;
+			el.ensureReject = false;
+			el.rejectReason = '';
+			el.proIndex = '';
 			return el;
 		});
 		self.projects = self.projects.concat(data.projects);
@@ -134,7 +187,7 @@ function loadMore() {
  * @param        {[String]}   operation [审核操作：pass/reject]
  * @param        {[Int]}   proIndex  [vProject父组件中的索引]
  */
-function requestProcessProject(vProject, operation, proIndex) {
+function requestProcessProject(vProject, operation, proIndex, rejectReason) {
 	fetch(urlOperateProject, {
 		method: 'POST',
 		headers: {
@@ -144,7 +197,8 @@ function requestProcessProject(vProject, operation, proIndex) {
 		credentials: 'same-origin',
 		body: JSON.stringify({
 			"operation": operation,
-			"proId": vProject.project.proId
+			"proId": vProject.project.proId,
+			"rejectReason": vProject.project.rejectReason
 		})
 	}).then(function (response) {
 		return response.json();

@@ -23,7 +23,10 @@ var appBox = new Vue({
 
 		project: projectInfo,
 
-		isChecked: false
+		isChecked: false,
+
+		toshow: false,
+		rejectReason: ''
 	},
 
 	methods: {
@@ -38,9 +41,7 @@ var appBox = new Vue({
 		},
 
 		reject: function reject() {
-			var self = this;
-
-			requestProcessProject(self, 'reject');
+			this.toshow = true;
 		},
 
 		deleteProject: function deleteProject() {
@@ -48,7 +49,17 @@ var appBox = new Vue({
 			requestProcessProject(self, 'delete');
 		},
 
-		search: function search() {}
+		search: function search() {},
+
+		hideRejectDialog: function hideRejectDialog() {
+			this.toshow = false;
+		},
+
+		ensureReject: function ensureReject() {
+			var self = this;
+
+			requestProcessProject(self, 'reject', this.rejectReason);
+		}
 	}
 });
 
@@ -58,7 +69,7 @@ var appBox = new Vue({
  * @param        {[String]}   operation [审核操作：pass/reject/delete]
  * @param        {[Int]}   proIndex  [vProject父组件中的索引]
  */
-function requestProcessProject(vProject, operation) {
+function requestProcessProject(vProject, operation, rejectReason) {
 	var jumpUrl = operation === 'delete' ? urlPrefix + '/admin/project/look' : urlPrefix + '/admin/project/check';
 
 	fetch(urlOperateProject, {
@@ -70,7 +81,8 @@ function requestProcessProject(vProject, operation) {
 		credentials: 'same-origin',
 		body: JSON.stringify({
 			"operation": operation,
-			"proId": vProject.project.proId
+			"proId": vProject.project.proId,
+			"rejectReason": rejectReason
 		})
 	}).then(function (response) {
 		return response.json();

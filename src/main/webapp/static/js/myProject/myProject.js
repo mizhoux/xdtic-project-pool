@@ -100,7 +100,7 @@ Vue.component('tic-project', {
 	computed: {
 		projectStatu: function projectStatu() {
 			if (this.project.statu) {
-				return this.project.statu === 'pass' ? '审核已通过~' : '审核中...';
+				return this.project.statu === 'pass' ? '审核已通过~' : this.project.statu === 'reject' ? '审核被拒' : '审核中...';
 			}
 			return '';
 		},

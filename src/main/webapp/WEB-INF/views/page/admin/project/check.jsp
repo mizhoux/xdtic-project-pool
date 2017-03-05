@@ -17,9 +17,11 @@
                     <tbody>
                         <tr is="tic-project-check"
                          @process="processProject"
+                         @toreject="toReject"
                          v-for="(project, index) in projects"
                          :project="project"
-                         :index="index"></tr>
+                         :index="index"
+                         :ensurereject="project.ensureReject"></tr>
                     </tbody>
                 </table>
                 <div class="weui-loadmore" v-show="isLoading">
@@ -30,6 +32,10 @@
                     <span class="weui-loadmore__tips">没有更多消息了</span>
                 </div>
             </div>
+            <tic-tag :projectindex="rejectProjectIndex"
+             :toshow="isShowReject"
+             @hide-reject-dialog="hideRejectDialog"
+             @ensure-reject="ensureReject"></tic-tag>
         </div>
 	</fis:block>
 
@@ -44,6 +50,26 @@
 		<fis:parent />
 
         <fis:require id="static/js/admin/project/check.js" />
+
+        <script type="text/x-template" id="tic-tag">
+            <div class="tic-tag-box">
+                <div v-show="toshow" v-cloak>
+                    <div class="weui-mask"></div>
+                    <div class="weui-dialog">
+                        <div class="weui-dialog__bd tic-form">
+                            <p>请简要说一下拒绝的原因（可选）</p>
+                            <input type="text" v-model="rejectReason">
+                        </div>
+                        <div class="weui-dialog__ft">
+                            <a class="weui-dialog__btn weui-dialog__btn_default"
+                             v-tap.prevent="{methods: hideRejectDialog}">取消</a>
+                            <a class="weui-dialog__btn weui-dialog__btn_primary"
+                             v-tap.prevent="{methods: ensureReject}">确定</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
 
         <script type="text/x-template" id="tic-project-check">
             <tr :class="{'project-slide': project.isProcessed}" v-show="!project.animationEnd" class="project-item">

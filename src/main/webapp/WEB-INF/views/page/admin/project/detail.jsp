@@ -36,6 +36,23 @@
 		        </div>
 	        </c:otherwise>
 	    </c:choose>
+	    <div class="tic-tag-box">
+            <div v-show="toshow" v-cloak>
+                <div class="weui-mask"></div>
+                <div class="weui-dialog">
+                    <div class="weui-dialog__bd tic-form">
+                        <p>请简要说一下拒绝的原因（可选）</p>
+                        <input type="text" v-model="rejectReason">
+                    </div>
+                    <div class="weui-dialog__ft">
+                        <a class="weui-dialog__btn weui-dialog__btn_default"
+                         v-tap.prevent="{methods: hideRejectDialog}">取消</a>
+                        <a class="weui-dialog__btn weui-dialog__btn_primary"
+                         v-tap.prevent="{methods: ensureReject}">确定</a>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="toast" v-show="isChecked" v-cloak>
 		    <div class="weui-mask_transparent"></div>
 		    <div class="weui-toast">

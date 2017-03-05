@@ -829,7 +829,8 @@
     ```
     {
         proId: p001,
-        operation: reject/accept/delete
+        operation: reject/accept/delete,
+        rejectReason: ""
     }
     ```
     - response `[JSON]`
