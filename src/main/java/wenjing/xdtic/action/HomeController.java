@@ -1,4 +1,4 @@
-package wenjing.xdtic.controller;
+package wenjing.xdtic.action;
 
 import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;

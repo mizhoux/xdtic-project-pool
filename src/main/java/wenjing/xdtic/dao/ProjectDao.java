@@ -4,10 +4,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -87,20 +86,14 @@ public class ProjectDao {
      * @param userId 当前 session 中的用户，用来判断项目是否已经被该用户收藏
      * @return
      */
-    public List<Project> getAcceptedProjects(String keyword, Integer offset, Integer size, Integer userId) {
+    public List<Project> getAcceptedProjects(String keyword, int offset, int size, Integer userId) {
         String SQL
                 = "SELECT p.* FROM project p "
                 + "WHERE p.status = 'pass' AND (p.tag LIKE ? OR p.name LIKE ?) "
                 + "ORDER BY p.date DESC LIMIT ?, ?";
 
         keyword = getMysqlLikeKeyword(keyword);
-        List<Project> projects = jdbcTmpl.query(
-                SQL, this::parseProject, keyword, keyword, offset, size);
-
-        Set<Integer> collectedProIds = getUserCollectedProjectIds(userId);
-        projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
-
-        return projects;
+        return jdbcTmpl.query(SQL, this::parseProject, keyword, keyword, offset, size);
     }
 
     /**
@@ -111,17 +104,14 @@ public class ProjectDao {
      * @param size
      * @return
      */
-    public List<Project> getAcceptedProjects(String keyword, Integer offset, Integer size) {
+    public List<Project> getAcceptedProjects(String keyword, int offset, int size) {
         String SQL
                 = "SELECT p.* FROM project AS p "
                 + "WHERE p.status = 'pass' AND (p.tag LIKE ? OR p.name LIKE ?) "
                 + "ORDER BY date DESC LIMIT ?, ?";
 
         keyword = getMysqlLikeKeyword(keyword);
-        List<Project> projects = jdbcTmpl.query(
-                SQL, this::parseProject, keyword, keyword, offset, size);
-
-        return projects;
+        return jdbcTmpl.query(SQL, this::parseProject, keyword, keyword, offset, size);
     }
 
     public long getAcceptedProjectsCount(String keyword) {
@@ -141,19 +131,14 @@ public class ProjectDao {
      * @param userId 当前 session 中的用户，用来判断项目是否已经被该用户收藏
      * @return
      */
-    public List<Project> getHotProjects(String keyword, Integer hotSize, Integer userId) {
+    public List<Project> getHotProjects(String keyword, int hotSize, Integer userId) {
 
         String SQL = "SELECT p.* FROM project AS p, "
                 + "(SELECT pc.pro_id, COUNT(*) AS num FROM pro_collection pc GROUP BY pc.pro_id ORDER BY num DESC LIMIT ?) AS t "
                 + "WHERE p.status = 'pass' AND p.id = t.pro_id AND (p.tag LIKE ? OR p.name LIKE ?)";
 
         keyword = getMysqlLikeKeyword(keyword);
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, hotSize, keyword, keyword);
-
-        Set<Integer> collectedProIds = getUserCollectedProjectIds(userId);
-        projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
-
-        return projects;
+        return jdbcTmpl.query(SQL, this::parseProject, hotSize, keyword, keyword);
     }
 
     /**
@@ -164,16 +149,14 @@ public class ProjectDao {
      * @param size
      * @return
      */
-    public List<Project> getUncheckedProjects(String keyword, Integer offset, Integer size) {
+    public List<Project> getUncheckedProjects(String keyword, int offset, int size) {
         String SQL
                 = "SELECT p.* FROM project AS p "
                 + "WHERE p.status = 'check' AND (p.tag LIKE ? OR p.name LIKE ?) "
                 + "ORDER BY date DESC LIMIT ?, ?";
 
         keyword = getMysqlLikeKeyword(keyword);
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, keyword, keyword, offset, size);
-
-        return projects;
+        return jdbcTmpl.query(SQL, this::parseProject, keyword, keyword, offset, size);
     }
 
     public long getUncheckedProjectsCount(String keyword) {
@@ -190,14 +173,9 @@ public class ProjectDao {
      * @param size
      * @return
      */
-    public List<Project> getPostedProjects(Integer userId, Integer offset, Integer size) {
+    public List<Project> getPostedProjects(Integer userId, int offset, int size) {
         String SQL = "SELECT p.* FROM project p WHERE p.user_id = ? ORDER BY date DESC LIMIT ?, ?";
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
-
-        Set<Integer> collectedProIds = getUserCollectedProjectIds(userId);
-        projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
-
-        return projects;
+        return jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
     }
 
     /**
@@ -219,16 +197,13 @@ public class ProjectDao {
      * @param size
      * @return
      */
-    public List<Project> getCollectedProjects(Integer userId, Integer offset, Integer size) {
+    public List<Project> getCollectedProjects(Integer userId, int offset, int size) {
         String SQL
                 = "SELECT p.* FROM project p "
                 + "WHERE p.id IN (SELECT pc.pro_id FROM pro_collection pc WHERE pc.user_id = ?)"
                 + "LIMIT ?, ?";
 
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
-        projects.forEach(project -> project.setIsCollected(true));
-
-        return projects;
+        return jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
     }
 
     /**
@@ -253,17 +228,13 @@ public class ProjectDao {
      * @param size
      * @return
      */
-    public List<Project> getJoinedProjects(Integer userId, Integer offset, Integer size) {
+    public List<Project> getJoinedProjects(Integer userId, int offset, int size) {
         String SQL
                 = "SELECT p.* FROM project p "
                 + "WHERE p.id IN (SELECT s.pro_id FROM sign_info s WHERE s.user_id = ?) "
                 + "ORDER BY date DESC LIMIT ?, ?";
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
 
-        Set<Integer> collectedProIds = getUserCollectedProjectIds(userId);
-        projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
-
-        return projects;
+        return jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
     }
 
     /**
@@ -329,15 +300,9 @@ public class ProjectDao {
         return result == 1;
     }
 
-    public boolean rejectProject(Integer proId) {
-        String SQL = "UPDATE project SET status = 'reject' WHERE id = ?";
-        return jdbcTmpl.update(SQL, proId) == 1;
-    }
-
-    public boolean acceptProject(Integer proId) {
-        String SQL = "UPDATE project SET status = 'pass' WHERE id = ?";
-
-        return jdbcTmpl.update(SQL, proId) == 1;
+    public boolean updateProjectStatus(Integer proId, String status) {
+        String SQL = "UPDATE project SET status = ? WHERE id = ?";
+        return jdbcTmpl.update(SQL, status, proId) == 1;
     }
 
     public boolean deleteProject(Integer proId) {
@@ -345,10 +310,15 @@ public class ProjectDao {
         return jdbcTmpl.update(SQL, proId) == 1;
     }
 
-    public Set<Integer> getUserCollectedProjectIds(Integer userId) {
+    public Collection<Integer> getCollectedProjectIds(Integer userId) {
         String SQL = "SELECT pc.pro_id FROM pro_collection pc WHERE pc.user_id = ?";
         List<Integer> ids = jdbcTmpl.queryForList(SQL, Integer.class, userId);
-        return new HashSet<>(ids);
+
+        if (ids.size() > 5) {
+            return new HashSet<>(ids);
+        }
+
+        return ids;
     }
 
     /**
@@ -382,16 +352,7 @@ public class ProjectDao {
         project.setContact(rs.getString("contact"));
         project.setStatus(rs.getString("status"));
         project.setDate(rs.getTimestamp("date"));
-
-        String tag = rs.getString("tag");
-        if (tag != null) {
-            project.setTag(tag);
-            List<String> tags = Arrays.asList(tag.split("&+"));
-            project.setTags(tags);
-        }
-
-        // 兼容前端
-        Project.syncDataForFront(project);
+        project.setTag(rs.getString("tag"));
 
         return project;
     }

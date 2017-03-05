@@ -37,6 +37,9 @@ public class SignInfo {
     private String time; // signTime HH:mm
 
     public static void syncDataForBack(SignInfo signInfo) {
+        if (signInfo == null) {
+            return;
+        }
         signInfo.setId(signInfo.getSid());
         signInfo.setUserId(signInfo.getUid());
         signInfo.setSkill(signInfo.getProfile());
@@ -47,6 +50,9 @@ public class SignInfo {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     public static void syncDataForFront(SignInfo signInfo) {
+        if (signInfo == null) {
+            return;
+        }
         signInfo.setSid(signInfo.getId());
         signInfo.setUid(signInfo.getUserId());
         signInfo.setProfile(signInfo.getSkill());

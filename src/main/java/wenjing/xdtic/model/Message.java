@@ -32,12 +32,18 @@ public class Message {
     private String massage; // content
 
     public static void syncDataForBack(Message message) {
+        if (message == null) {
+            return;
+        }
         message.setId(message.getMid());
         message.setUserId(message.getUid());
         message.setContent(message.getMassage());
     }
 
     public static void syncDataForFront(Message message) {
+        if (message == null) {
+            return;
+        }
         message.setMid(message.getId());
         message.setUid(message.getUserId());
         message.setMassage(message.getContent());
@@ -77,7 +83,7 @@ public class Message {
         }
 
         if (comment != null) {
-            content.append("。备注：").append(comment);
+            content.append("。备注：").append(comment.isEmpty() ? "无" : content);
         }
 
         return content.toString();

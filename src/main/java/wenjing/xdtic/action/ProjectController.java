@@ -1,4 +1,4 @@
-package wenjing.xdtic.controller;
+package wenjing.xdtic.action;
 
 import java.util.List;
 import javax.servlet.http.HttpSession;
@@ -7,12 +7,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import wenjing.xdtic.dao.ProjectDao;
-import wenjing.xdtic.dao.SignInfoDao;
-import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.SignInfo;
 import wenjing.xdtic.model.User;
+import wenjing.xdtic.service.ProjectService;
+import wenjing.xdtic.service.SignInfoService;
+import wenjing.xdtic.service.UserService;
 
 /**
  *
@@ -22,13 +22,13 @@ import wenjing.xdtic.model.User;
 public class ProjectController {
 
     @Autowired
-    private UserDao userDao;
+    private UserService userService;
 
     @Autowired
-    private ProjectDao projectDao;
+    private ProjectService proService;
 
     @Autowired
-    private SignInfoDao signInfoDao;
+    private SignInfoService siService;
 
     @GetMapping("myProject")
     public String getMyProjectPage() {
@@ -50,16 +50,16 @@ public class ProjectController {
         }
 
         User user = (User) session.getAttribute("user");
-        Project project = projectDao.getProject(proId);
-        project.setIsCollected(projectDao.isUserCollected(user.getId(), proId));
+        Project project = proService.getProject(proId);
+        project.setIsCollected(proService.isUserCollected(user.getId(), proId));
 
         ModelAndView mav = new ModelAndView("page/myProject/myCollect/detail");
         mav.addObject("project", project);
 
-        User projectCreator = userDao.getUser(project.getUserId());
+        User projectCreator = userService.getUser(project.getUserId());
         mav.addObject("projectCreator", projectCreator);
 
-        boolean userIsJoined = projectDao.isUserJoined(user.getId(), project.getId());
+        boolean userIsJoined = proService.isUserJoined(user.getId(), project.getId());
         mav.addObject("userIsJoined", userIsJoined);
 
         return mav;
@@ -69,10 +69,10 @@ public class ProjectController {
     public ModelAndView getPostProjectDetailPage(
             HttpSession session, @RequestParam Integer proId) {
 
-        Project project = projectDao.getProject(proId);
+        Project project = proService.getProject(proId);
         User user = (User) session.getAttribute("user");
 
-        project.setIsCollected(projectDao.isUserCollected(user.getId(), proId));
+        project.setIsCollected(proService.isUserCollected(user.getId(), proId));
 
         return new ModelAndView("page/myProject/myPost/detail", "project", project);
     }
@@ -81,17 +81,17 @@ public class ProjectController {
     public ModelAndView getProjectEditDetailPage(
             HttpSession session, @RequestParam Integer proId) {
 
-        Project project = projectDao.getProject(proId);
+        Project project = proService.getProject(proId);
         User user = (User) session.getAttribute("user");
-        project.setIsCollected(projectDao.isUserCollected(user.getId(), proId));
+        project.setIsCollected(proService.isUserCollected(user.getId(), proId));
 
         return new ModelAndView("/page/myProject/myPost/editDetail", "project", project);
     }
 
     @GetMapping("myProject/myPost/signInfo")
     public ModelAndView getSignInfosPage(@RequestParam Integer proId) {
-        Project project = projectDao.getProject(proId);
-        List<SignInfo> signInfos = signInfoDao.getSignInfos(proId);
+        Project project = proService.getProject(proId);
+        List<SignInfo> signInfos = siService.getSignInfos(proId);
 
         ModelAndView mav = new ModelAndView("page/myProject/myPost/signInfo");
         mav.addObject("project", project);
@@ -105,8 +105,8 @@ public class ProjectController {
             HttpSession session, @RequestParam Integer signId) {
         ModelAndView mav = new ModelAndView("page/myProject/myPost/signDetail");
 
-        SignInfo signInfo = signInfoDao.getSignInfo(signId);
-        User signUser = userDao.getUser(signInfo.getUid());
+        SignInfo signInfo = siService.getSignInfo(signId);
+        User signUser = userService.getUser(signInfo.getUid());
 
         mav.addObject("signUser", signUser);
         mav.addObject("signInfo", signInfo);
@@ -121,8 +121,8 @@ public class ProjectController {
 
         ModelAndView mav = new ModelAndView("page/myProject/myCollect/toJoin");
 
-        Project project = projectDao.getProject(proId);
-        project.setIsCollected(projectDao.isUserCollected(userId, proId));
+        Project project = proService.getProject(proId);
+        project.setIsCollected(proService.isUserCollected(userId, proId));
 
         User user = (User) session.getAttribute("user");
 

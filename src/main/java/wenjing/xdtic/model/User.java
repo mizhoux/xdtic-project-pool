@@ -43,6 +43,9 @@ public class User {
      * @param user
      */
     public static void syncDataForBack(User user) {
+        if (user == null) {
+            return;
+        }
         user.setRealname(user.getName());
         user.setGender(user.getSex());
         user.setSpecialty(user.getProfe());
@@ -57,6 +60,9 @@ public class User {
      * @param user
      */
     public static void syncDataForFront(User user) {
+        if (user == null) {
+            return;
+        }
         user.setName(user.getRealname());
         user.setSex(user.getGender());
         user.setProfe(user.getSpecialty());

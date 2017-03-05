@@ -46,6 +46,24 @@ public class UserDao {
     }
 
     /**
+     * 根据用户名和密码从数据库中查询出用户
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @return 查询的用户
+     */
+    public User getUser(String username, String password) {
+        String SQL = "SELECT * FROM user WHERE username = ? AND password = ?";
+        return jdbcTmpl.query(SQL, this::extractUser, username, password);
+    }
+
+    public List<User> getUsers(String keyword, int offset, int size) {
+        String SQL = "SELECT u.* FROM user AS u WHERE u.username LIKE ? OR u.realname LIKE ? LIMIT ?, ?";
+        keyword = getMysqlLikeKeyword(keyword);
+        return jdbcTmpl.query(SQL, this::parseUser, keyword, keyword, offset, size);
+    }
+
+    /**
      * 获得用户名
      *
      * @param id 用户 ID
@@ -87,24 +105,6 @@ public class UserDao {
         return jdbcTmpl.update(SQL, newPassword, username, oldPassword) == 1;
     }
 
-    /**
-     * 根据用户名和密码从数据库中查询出用户
-     *
-     * @param username 用户名
-     * @param password 密码
-     * @return 查询的用户
-     */
-    public User getUser(String username, String password) {
-        String SQL = "SELECT * FROM user WHERE username = ? AND password = ?";
-        return jdbcTmpl.query(SQL, this::extractUser, username, password);
-    }
-
-    public List<User> getUsers(String keyword, Integer offset, Integer size) {
-        String SQL = "SELECT u.* FROM user AS u WHERE u.username LIKE ? OR u.realname LIKE ? LIMIT ?, ?";
-        keyword = getMysqlLikeKeyword(keyword);
-        return jdbcTmpl.query(SQL, this::parseUser, keyword, keyword, offset, size);
-    }
-
     public Long getUsersCount(String keyword) {
         String SQL = "SELECT COUNT(*) FROM user u WHERE u.username LIKE ? OR u.realname LIKE ?";
         keyword = getMysqlLikeKeyword(keyword);
@@ -128,10 +128,6 @@ public class UserDao {
     }
 
     public boolean deleteUsers(List<Integer> ids) {
-        if (ids.isEmpty()) {
-            return true;
-        }
-
         String SQL = "DELETE FROM user WHERE id IN "
                 + ids.stream().map(String::valueOf).collect(Collectors.joining(",", "(", ")"));
         return jdbcTmpl.update(SQL) == ids.size();
@@ -171,9 +167,6 @@ public class UserDao {
         user.setStuNum(rs.getString("stu_num"));
         user.setSkill(rs.getString("skill"));
         user.setExperience(rs.getString("experience"));
-
-        // 兼容前端
-        User.syncDataForFront(user);
 
         return user;
     }
