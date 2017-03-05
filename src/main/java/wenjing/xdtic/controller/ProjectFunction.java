@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import wenjing.xdtic.dao.MessageDao;
 import wenjing.xdtic.dao.ProjectDao;
 import wenjing.xdtic.dao.SignInfoDao;
+import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.Project;
@@ -29,6 +30,9 @@ import wenjing.xdtic.model.SignInfo;
 public class ProjectFunction {
 
     @Autowired
+    private UserDao userDao;
+
+    @Autowired
     private ProjectDao projectDao;
 
     @Autowired
@@ -42,9 +46,11 @@ public class ProjectFunction {
             @RequestParam Integer uid,
             @RequestParam String title, Project project) {
 
-        project.setUserid(uid);
-        project.setProname(title);
-        Project.syscDataForBack(project);
+        Project.syncDataForBack(project);
+
+        project.setUserId(uid);
+        project.setName(title);
+        project.setUsername(userDao.getUsername(uid));
 
         boolean success = projectDao.addProject(project);
         if (success) {
@@ -56,12 +62,21 @@ public class ProjectFunction {
     }
 
     @PostMapping(value = "project/update", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode updateProject(@RequestParam("uid") Integer userId, Project project) {
+    public RespCode updateProject(
+            @RequestParam("uid") Integer userId,
+            @RequestParam boolean reject, Project project) {
 
-        project.setUserid(userId);
-        Project.syscDataForBack(project);
+        Project.syncDataForBack(project);
+        project.setUserId(userId);
 
-        boolean success = projectDao.updateProject(project);
+        boolean success;
+        if (reject) {
+            project.setStatus("check");
+            success = projectDao.updateProjectWithStatus(project);
+        } else {
+            success = projectDao.updateProject(project);
+        }
+
         return success ? RespCode.OK : RespCode.ERROR;
     }
 

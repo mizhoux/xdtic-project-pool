@@ -12,7 +12,7 @@ import java.util.Date;
 public class Message {
 
     public static enum Type {
-        POST, PASS, JOIN
+        POST, PASS, JOIN, REJECT
     }
 
     private Integer id;
@@ -44,31 +44,43 @@ public class Message {
     }
 
     public static Message of(Project project, Message.Type type) {
+        return of(project, type, null);
+    }
+
+    public static Message of(Project project, Message.Type type, String comment) {
         Message message = new Message();
 
         message.setUserId(project.getUserId());
         message.setProId(project.getId());
-        message.setContent(getMessageContent(project.getName(), type));
+        message.setContent(getMessageContent(project.getName(), type, comment));
         message.setType(type.name().toLowerCase());
 
         return message;
     }
 
-    private static String getMessageContent(String proName, Message.Type type) {
-        String content = "";
+    private static String getMessageContent(String proName, Message.Type type, String comment) {
+        StringBuilder content = new StringBuilder(50);
+
         switch (type) {
             case POST:
-                content = "棒棒哒~ 成功发布项目【" + proName + "】，请等待审核";
+                content.append("棒棒哒~ 已经发布项目【").append(proName).append("】，请等待审核");
                 break;
             case PASS:
-                content = "厉害了~ 项目【" + proName + "】通过了审核";
+                content.append("厉害了~ 项目【").append(proName).append("】通过了审核");
                 break;
             case JOIN:
-                content = "好开心~ 有用户报名了项目【" + proName + "】";
+                content.append("好开心~ 有用户报名了项目【").append(proName).append("】");
+                break;
+            case REJECT:
+                content.append("注意了~ 项目【").append(proName).append("】被拒绝了，请修改后重新提交");
                 break;
         }
 
-        return content;
+        if (comment != null) {
+            content.append("。备注：").append(comment);
+        }
+
+        return content.toString();
     }
 
     public Integer getId() {

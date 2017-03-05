@@ -15,6 +15,7 @@ public class Project {
     private Integer id;
 
     private Integer userId;
+    private String username;
 
     private String name;
     private String content;
@@ -29,9 +30,7 @@ public class Project {
     private Date date;
 
     // 非数据库中字段，前端需要
-    private String username;
     private boolean isCollected;
-    private boolean hasProcessed;
     private List<String> tags;
 
     // 兼容前端
@@ -44,7 +43,7 @@ public class Project {
     private String concat;  // contact
     private String statu;   // status
 
-    public static void syscDataForBack(Project project) {
+    public static void syncDataForBack(Project project) {
         project.setId(project.getProId());
         project.setUserId(project.getUserid());
         project.setName(project.getProname());
@@ -54,7 +53,7 @@ public class Project {
         project.setStatus(project.getStatu());
     }
 
-    public static void syscDataForFront(Project project) {
+    public static void syncDataForFront(Project project) {
         project.setProId(project.getId());
         project.setUserid(project.getUserId());
         project.setProname(project.getName());
@@ -233,14 +232,6 @@ public class Project {
 
     public void setPromassage(String promassage) {
         this.promassage = promassage;
-    }
-
-    public boolean isHasProcessed() {
-        return hasProcessed;
-    }
-
-    public void setHasProcessed(boolean hasProcessed) {
-        this.hasProcessed = hasProcessed;
     }
 
 }

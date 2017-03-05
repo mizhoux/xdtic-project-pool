@@ -25,13 +25,10 @@ public class ProjectDao {
     @Autowired
     private JdbcTemplate jdbcTmpl;
 
-    @Autowired
-    private UserDao userDao;
-
     public boolean addProject(Project project) {
         String SQL = "INSERT INTO project "
-                + "(user_id, name, content, recruit, tag, contact, date) "
-                + "VALUES (?, ?, ?, ?, ?, ?, NOW())";
+                + "(user_id, name, content, recruit, tag, contact, username, date) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int result = jdbcTmpl.update(conn -> {
@@ -44,6 +41,7 @@ public class ProjectDao {
             pstmt.setString(4, project.getRecruit());
             pstmt.setString(5, project.getTag());
             pstmt.setString(6, project.getContact());
+            pstmt.setString(7, project.getUsername());
 
             return pstmt;
 
@@ -66,6 +64,15 @@ public class ProjectDao {
                 project.getContact(), project.getUserId(), project.getId()) == 1;
     }
 
+    public boolean updateProjectWithStatus(Project project) {
+        String SQL
+                = "UPDATE project SET content = ?, recruit = ?, contact = ?, status = ?, date = NOW()"
+                + "WHERE user_id = ? AND id = ?";
+
+        return jdbcTmpl.update(SQL, project.getContent(), project.getRecruit(),
+                project.getContact(), project.getStatus(), project.getUserId(), project.getId()) == 1;
+    }
+
     public Project getProject(Integer id) {
         String SQL = "SELECT * FROM project WHERE id = ?";
         return jdbcTmpl.query(SQL, this::extractProject, id);
@@ -82,13 +89,13 @@ public class ProjectDao {
      */
     public List<Project> getAcceptedProjects(String keyword, Integer offset, Integer size, Integer userId) {
         String SQL
-                = "SELECT u.username, p.* FROM project p, user u "
+                = "SELECT p.* FROM project p "
                 + "WHERE p.status = 'pass' AND (p.tag LIKE ? OR p.name LIKE ?) "
-                + "AND u.id = p.user_id ORDER BY p.date DESC LIMIT ?, ?";
+                + "ORDER BY p.date DESC LIMIT ?, ?";
 
         keyword = getMysqlLikeKeyword(keyword);
         List<Project> projects = jdbcTmpl.query(
-                SQL, this::parseProjectWithUsername, keyword, keyword, offset, size);
+                SQL, this::parseProject, keyword, keyword, offset, size);
 
         Set<Integer> collectedProIds = getUserCollectedProjectIds(userId);
         projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
@@ -107,7 +114,8 @@ public class ProjectDao {
     public List<Project> getAcceptedProjects(String keyword, Integer offset, Integer size) {
         String SQL
                 = "SELECT p.* FROM project AS p "
-                + "WHERE p.status = 'pass' AND (p.tag LIKE ? OR p.name LIKE ?) LIMIT ?, ?";
+                + "WHERE p.status = 'pass' AND (p.tag LIKE ? OR p.name LIKE ?) "
+                + "ORDER BY date DESC LIMIT ?, ?";
 
         keyword = getMysqlLikeKeyword(keyword);
         List<Project> projects = jdbcTmpl.query(
@@ -135,13 +143,12 @@ public class ProjectDao {
      */
     public List<Project> getHotProjects(String keyword, Integer hotSize, Integer userId) {
 
-        String SQL = "SELECT u.username, p.* FROM project AS p, user AS u,"
+        String SQL = "SELECT p.* FROM project AS p, "
                 + "(SELECT pc.pro_id, COUNT(*) AS num FROM pro_collection pc GROUP BY pc.pro_id ORDER BY num DESC LIMIT ?) AS t "
-                + "WHERE p.status = 'pass' AND p.id = t.pro_id AND (p.tag LIKE ? OR p.name LIKE ?) AND u.id = p.user_id";
+                + "WHERE p.status = 'pass' AND p.id = t.pro_id AND (p.tag LIKE ? OR p.name LIKE ?)";
 
         keyword = getMysqlLikeKeyword(keyword);
-        List<Project> projects = jdbcTmpl.query(
-                SQL, this::parseProjectWithUsername, hotSize, keyword, keyword);
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, hotSize, keyword, keyword);
 
         Set<Integer> collectedProIds = getUserCollectedProjectIds(userId);
         projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
@@ -159,12 +166,12 @@ public class ProjectDao {
      */
     public List<Project> getUncheckedProjects(String keyword, Integer offset, Integer size) {
         String SQL
-                = "SELECT u.username, p.* FROM project AS p, user AS u "
-                + "WHERE p.status = 'check' AND (p.tag LIKE ? OR p.name LIKE ?) AND u.id = p.user_id LIMIT ?, ?";
+                = "SELECT p.* FROM project AS p "
+                + "WHERE p.status = 'check' AND (p.tag LIKE ? OR p.name LIKE ?) "
+                + "ORDER BY date DESC LIMIT ?, ?";
 
         keyword = getMysqlLikeKeyword(keyword);
-        List<Project> projects = jdbcTmpl.query(
-                SQL, this::parseProjectWithUsername, keyword, keyword, offset, size);
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, keyword, keyword, offset, size);
 
         return projects;
     }
@@ -184,10 +191,8 @@ public class ProjectDao {
      * @return
      */
     public List<Project> getPostedProjects(Integer userId, Integer offset, Integer size) {
-        String SQL
-                = "SELECT u.username, p.* FROM project p, user u "
-                + "WHERE p.user_id = ? AND u.id = ? LIMIT ?, ?";
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProjectWithUsername, userId, userId, offset, size);
+        String SQL = "SELECT p.* FROM project p WHERE p.user_id = ? ORDER BY date DESC LIMIT ?, ?";
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
 
         Set<Integer> collectedProIds = getUserCollectedProjectIds(userId);
         projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
@@ -216,12 +221,11 @@ public class ProjectDao {
      */
     public List<Project> getCollectedProjects(Integer userId, Integer offset, Integer size) {
         String SQL
-                = "SELECT u.username, p.* FROM project p, user u WHERE p.id IN "
-                + "(SELECT pc.pro_id FROM pro_collection pc WHERE pc.user_id = ?) AND u.id = p.user_id "
+                = "SELECT p.* FROM project p "
+                + "WHERE p.id IN (SELECT pc.pro_id FROM pro_collection pc WHERE pc.user_id = ?)"
                 + "LIMIT ?, ?";
 
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProjectWithUsername, userId, offset, size);
-
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
         projects.forEach(project -> project.setIsCollected(true));
 
         return projects;
@@ -251,10 +255,10 @@ public class ProjectDao {
      */
     public List<Project> getJoinedProjects(Integer userId, Integer offset, Integer size) {
         String SQL
-                = "SELECT u.username, p.* FROM project p, user u WHERE p.id IN "
-                + "(SELECT s.pro_id FROM sign_info s WHERE s.user_id = ?) AND u.id = p.user_id "
-                + "LIMIT ?, ?";
-        List<Project> projects = jdbcTmpl.query(SQL, this::parseProjectWithUsername, userId, offset, size);
+                = "SELECT p.* FROM project p "
+                + "WHERE p.id IN (SELECT s.pro_id FROM sign_info s WHERE s.user_id = ?) "
+                + "ORDER BY date DESC LIMIT ?, ?";
+        List<Project> projects = jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
 
         Set<Integer> collectedProIds = getUserCollectedProjectIds(userId);
         projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
@@ -371,6 +375,7 @@ public class ProjectDao {
 
         project.setId(rs.getInt("id"));
         project.setUserId(rs.getInt("user_id"));
+        project.setUsername(rs.getString("username"));
         project.setName(rs.getString("name"));
         project.setContent(rs.getString("content"));
         project.setRecruit(rs.getString("recruit"));
@@ -386,14 +391,8 @@ public class ProjectDao {
         }
 
         // 兼容前端
-        Project.syscDataForFront(project);
+        Project.syncDataForFront(project);
 
-        return project;
-    }
-
-    private Project parseProjectWithUsername(ResultSet rs, int rowNum) throws SQLException {
-        Project project = parseProject(rs, rowNum);
-        project.setUsername(rs.getString("username"));
         return project;
     }
 

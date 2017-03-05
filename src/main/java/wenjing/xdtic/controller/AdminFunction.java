@@ -82,27 +82,27 @@ public class AdminFunction {
     @PostMapping(value = "admin/project/operate", consumes = MediaType.APPLICATION_JSON_VALUE)
     public RespCode operateProject(@RequestBody Map<String, String> params) {
 
-        String proIdStr = params.get("proId");
-        if (proIdStr == null) {
-            proIdStr = params.get("proID");
-        }
-        Integer proId = Integer.parseInt(proIdStr);
+        Integer proId = Integer.parseInt(params.get("proId"));
         String operation = params.get("operation");
 
         boolean success = false;
         switch (operation) {
             case "reject":
                 success = projectDao.rejectProject(proId);
+                String comment = params.get("rejectReason");
+                Message reject = Message.of(projectDao.getProject(proId), Message.Type.REJECT, comment);
+                messageDao.addMessage(reject);
                 break;
             case "accept":
                 success = projectDao.acceptProject(proId);
-                Message message = Message.of(projectDao.getProject(proId), Message.Type.PASS);
-                messageDao.addMessage(message);
+                Message pass = Message.of(projectDao.getProject(proId), Message.Type.PASS);
+                messageDao.addMessage(pass);
                 break;
             case "delete":
                 success = projectDao.deleteProject(proId);
                 break;
         }
+
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
@@ -150,7 +150,7 @@ public class AdminFunction {
 
             return RespCode.OK;
         }
-        
+
         // delete ALL，不能给予管理员这样的权限，只能数据库管理才能删除所有用户
         return RespCode.ERROR;
     }
