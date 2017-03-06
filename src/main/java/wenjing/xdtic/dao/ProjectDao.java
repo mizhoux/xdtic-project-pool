@@ -4,8 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -79,25 +77,6 @@ public class ProjectDao {
 
     /**
      * 从数据中按分页条件获取审核通过的项目
-     *
-     * @param keyword 搜索关键字，默认为 ""
-     * @param offset 分页起始位置
-     * @param size 每页的元素数量
-     * @param userId 当前 session 中的用户，用来判断项目是否已经被该用户收藏
-     * @return
-     */
-    public List<Project> getAcceptedProjects(String keyword, int offset, int size, Integer userId) {
-        String SQL
-                = "SELECT p.* FROM project p "
-                + "WHERE p.status = 'pass' AND (p.tag LIKE ? OR p.name LIKE ?) "
-                + "ORDER BY p.date DESC LIMIT ?, ?";
-
-        keyword = getMysqlLikeKeyword(keyword);
-        return jdbcTmpl.query(SQL, this::parseProject, keyword, keyword, offset, size);
-    }
-
-    /**
-     * 从数据中按分页条件获取审核通过的项目，不需要判断该项目是否被某个用户收藏
      *
      * @param keyword
      * @param offset
@@ -282,7 +261,7 @@ public class ProjectDao {
      * @param proId 项目ID
      * @return
      */
-    public boolean isUserCollected(Integer userId, Integer proId) {
+    public boolean isCollected(Integer userId, Integer proId) {
         String SQL = "SELECT COUNT(*) FROM pro_collection WHERE user_id = ? AND pro_id = ?";
         return jdbcTmpl.queryForObject(SQL, Long.class, userId, proId) == 1;
     }
@@ -294,7 +273,7 @@ public class ProjectDao {
      * @param proId 项目 ID
      * @return
      */
-    public boolean isUserJoined(Integer userId, Integer proId) {
+    public boolean isJoined(Integer userId, Integer proId) {
         String SQL = "SELECT COUNT(*) FROM sign_info WHERE user_id = ? AND pro_id = ?";
         long result = jdbcTmpl.queryForObject(SQL, Long.class, userId, proId);
         return result == 1;
@@ -310,15 +289,9 @@ public class ProjectDao {
         return jdbcTmpl.update(SQL, proId) == 1;
     }
 
-    public Collection<Integer> getCollectedProjectIds(Integer userId) {
+    public List<Integer> getCollectedProjectIds(Integer userId) {
         String SQL = "SELECT pc.pro_id FROM pro_collection pc WHERE pc.user_id = ?";
-        List<Integer> ids = jdbcTmpl.queryForList(SQL, Integer.class, userId);
-
-        if (ids.size() > 5) {
-            return new HashSet<>(ids);
-        }
-
-        return ids;
+        return jdbcTmpl.queryForList(SQL, Integer.class, userId);
     }
 
     /**

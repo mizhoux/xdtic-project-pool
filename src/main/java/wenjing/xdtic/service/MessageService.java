@@ -23,7 +23,7 @@ public class MessageService {
 
     public Message getMessage(Integer id) {
         Message message = messageDao.getMessage(id);
-        Message.syncDataForFront(message);
+        syncDataForFront(message);
 
         return message;
     }
@@ -32,7 +32,7 @@ public class MessageService {
         int offset = pageNum * pageSize;
 
         List<Message> messages = messageDao.getMessages(userId, offset, pageSize);
-        messages.forEach(Message::syncDataForFront);
+        messages.forEach(this::syncDataForFront);
 
         return messages;
     }
@@ -67,6 +67,24 @@ public class MessageService {
 
     public long getUnreadMessagesCount(Integer userId) {
         return messageDao.getUnreadMessagesCount(userId);
+    }
+
+    public void syncDataForBack(Message message) {
+        if (message == null) {
+            return;
+        }
+        message.setId(message.getMid());
+        message.setUserId(message.getUid());
+        message.setContent(message.getMassage());
+    }
+
+    public void syncDataForFront(Message message) {
+        if (message == null) {
+            return;
+        }
+        message.setMid(message.getId());
+        message.setUid(message.getUserId());
+        message.setMassage(message.getContent());
     }
 
 }

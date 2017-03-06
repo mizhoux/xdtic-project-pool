@@ -1,7 +1,6 @@
 package wenjing.xdtic.action;
 
 import java.util.HashMap;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,15 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.RespCode;
 import wenjing.xdtic.model.SignInfo;
-import wenjing.xdtic.service.MessageService;
 import wenjing.xdtic.service.ProjectService;
 import wenjing.xdtic.service.SignInfoService;
-import wenjing.xdtic.service.UserService;
 
 /**
  *
@@ -29,13 +25,7 @@ import wenjing.xdtic.service.UserService;
 public class ProjectFunction {
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private ProjectService proService;
-
-    @Autowired
-    private MessageService msgService;
 
     @Autowired
     private SignInfoService siService;
@@ -45,18 +35,10 @@ public class ProjectFunction {
             @RequestParam Integer uid,
             @RequestParam String title, Project project) {
 
-        Project.syncDataForBack(project);
-
-        project.setUserId(uid);
-        project.setName(title);
-        project.setUsername(userService.getUsername(uid));
+        project.setUserid(uid); // 兼容前端
+        project.setProname(title); // 兼容前端
 
         boolean success = proService.addProject(project);
-        if (success) {
-            Message message = Message.of(project, Message.Type.POST);
-            msgService.addMessage(message);
-        }
-
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
@@ -65,14 +47,9 @@ public class ProjectFunction {
             @RequestParam("uid") Integer userId,
             @RequestParam boolean reject, Project project) {
 
-        Project.syncDataForBack(project);
-        project.setUserId(userId);
+        project.setUserid(userId); // 兼容前端
 
-        if (reject) { // 是之前被拒绝的项目
-            project.setStatus("check");
-        }
-
-        boolean success = proService.updateProject(project);
+        boolean success = proService.updateProject(project, reject);
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
@@ -129,26 +106,12 @@ public class ProjectFunction {
             @RequestParam("userid") Integer userId,
             @RequestParam("keyWords") String keyword, @RequestParam int hotSize) {
 
-        List<Project> projects = proService.getHotProjects(keyword, hotSize, userId);
-
-        HashMap<String, Object> hotProjects = new HashMap<>(2);
-        hotProjects.put("hotSize", projects.size());
-        hotProjects.put("projects", projects);
-
-        return hotProjects;
+        return proService.getHotProjects(keyword, hotSize, userId);
     }
 
     @PostMapping("project/toJoin")
     public RespCode toJoinProject(SignInfo signInfo) {
-        SignInfo.syncDataForBack(signInfo);
-
         boolean success = siService.addSignInfo(signInfo);
-        if (success) {
-            Project project = proService.getProject(signInfo.getProId());
-            Message message = Message.of(project, Message.Type.JOIN);
-            msgService.addMessage(message);
-        }
-
         return success ? RespCode.OK : RespCode.ERROR;
     }
 

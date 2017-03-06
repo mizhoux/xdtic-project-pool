@@ -2,7 +2,6 @@ package wenjing.xdtic.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -43,39 +42,6 @@ public class Project {
     private String prowant; // recruit
     private String concat;  // contact
     private String statu;   // status
-
-    public static void syncDataForBack(Project project) {
-        if (project == null) {
-            return;
-        }
-        project.setId(project.getProId());
-        project.setUserId(project.getUserid());
-        project.setName(project.getProname());
-        project.setContent(project.getPromassage());
-        project.setRecruit(project.getProwant());
-        project.setContact(project.getConcat());
-        project.setStatus(project.getStatu());
-    }
-
-    public static void syncDataForFront(Project project) {
-        if (project == null) {
-            return;
-        }
-
-        project.setProId(project.getId());
-        project.setUserid(project.getUserId());
-        project.setProname(project.getName());
-        project.setDesc(project.getContent());
-        project.setPromassage(project.getContent());
-        project.setProwant(project.getRecruit());
-        project.setConcat(project.getContact());
-        project.setStatu(project.getStatus());
-
-        if (project.getTag() != null) {
-            List<String> tags = Arrays.asList(project.getTag().split("&+"));
-            project.setTags(tags);
-        }
-    }
 
     public Integer getId() {
         return id;

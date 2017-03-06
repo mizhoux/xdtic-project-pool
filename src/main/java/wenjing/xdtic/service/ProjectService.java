@@ -1,12 +1,16 @@
 package wenjing.xdtic.service;
 
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wenjing.xdtic.dao.MessageDao;
 import wenjing.xdtic.dao.ProjectDao;
+import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.Project;
@@ -22,46 +26,75 @@ public class ProjectService {
     private ProjectDao projectDao;
 
     @Autowired
+    private UserDao userDao;
+
+    @Autowired
     private MessageDao messageDao;
 
     public boolean addProject(Project project) {
-        return projectDao.addProject(project);
+        syncDataForBack(project);
+        String username = userDao.getUsername(project.getUserId());
+        project.setUsername(username);
+
+        boolean success = projectDao.addProject(project);
+        if (success) {
+            Message message = Message.of(project, Message.Type.POST);
+            messageDao.addMessage(message);
+        }
+        return success;
     }
 
-    public boolean updateProject(Project project) {
-        if (project.getStatus() != null) {
+    public boolean updateProject(Project project, boolean reject) {
+        syncDataForBack(project);
+
+        if (reject) {
+            project.setStatus("check");
             return projectDao.updateProjectWithStatus(project);
         }
+        
         return projectDao.updateProject(project);
     }
 
     public Project getProject(Integer id) {
         Project project = projectDao.getProject(id);
-        Project.syncDataForFront(project);
+        syncDataForFront(project);
 
         return project;
     }
 
+    /**
+     * 从数据中按分页条件获取审核通过的项目
+     *
+     * @param keyword 搜索关键字，默认为 ""
+     * @param pageNum 此时的页数
+     * @param size 每页的元素数量
+     * @param userId 用来判断项目是否已经被该用户收藏
+     * @return
+     */
     public List<Project> getAcceptedProjects(
             String keyword, int pageNum, int size, Integer userId) {
 
-        int offset = pageNum * size;
-        List<Project> projects = projectDao.getAcceptedProjects(keyword, offset, size, userId);
+        List<Project> projects = getAcceptedProjects(keyword, pageNum, size);
 
-        Collection<Integer> collectedProIds = projectDao.getCollectedProjectIds(userId);
-        projects.forEach(p -> {
-            p.setIsCollected(collectedProIds.contains(p.getId()));
-            Project.syncDataForFront(p);
-        });
+        Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
+        projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
 
         return projects;
     }
 
+    /**
+     * 从数据中按分页条件获取审核通过的项目，不需要判断该项目是否被某个用户收藏
+     *
+     * @param keyword
+     * @param pageNum
+     * @param size
+     * @return
+     */
     public List<Project> getAcceptedProjects(String keyword, int pageNum, int size) {
         int offset = pageNum * size;
 
         List<Project> projects = projectDao.getAcceptedProjects(keyword, offset, size);
-        projects.forEach(Project::syncDataForFront);
+        projects.forEach(this::syncDataForFront);
 
         return projects;
     }
@@ -70,24 +103,28 @@ public class ProjectService {
         return projectDao.getAcceptedProjectsCount(keyword);
     }
 
-    public List<Project> getHotProjects(String keyword, int hotSize, Integer userId) {
+    public HashMap<String, Object> getHotProjects(String keyword, int hotSize, Integer userId) {
 
         List<Project> projects = projectDao.getHotProjects(keyword, hotSize, userId);
 
-        Collection<Integer> collectedProIds = projectDao.getCollectedProjectIds(userId);
+        Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
         projects.forEach(project -> {
             project.setIsCollected(collectedProIds.contains(project.getId()));
-            Project.syncDataForFront(project);
+            syncDataForFront(project);
         });
 
-        return projects;
+        HashMap<String, Object> hotProjects = new HashMap<>(2);
+        hotProjects.put("hotSize", projects.size());
+        hotProjects.put("projects", projects);
+
+        return hotProjects;
     }
 
     public List<Project> getUncheckedProjects(String keyword, int pageNum, int size) {
 
         int offset = pageNum * size;
         List<Project> projects = projectDao.getUncheckedProjects(keyword, offset, size);
-        projects.forEach(Project::syncDataForFront);
+        projects.forEach(this::syncDataForFront);
 
         return projects;
     }
@@ -101,10 +138,10 @@ public class ProjectService {
         int offset = pageNum * size;
         List<Project> projects = projectDao.getPostedProjects(userId, offset, size);
 
-        Collection<Integer> collectedProIds = projectDao.getCollectedProjectIds(userId);
+        Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
         projects.forEach(project -> {
             project.setIsCollected(collectedProIds.contains(project.getId()));
-            Project.syncDataForFront(project);
+            syncDataForFront(project);
         });
 
         return projects;
@@ -120,7 +157,7 @@ public class ProjectService {
         List<Project> projects = projectDao.getCollectedProjects(userId, offset, size);
         projects.forEach(project -> {
             project.setIsCollected(true);
-            Project.syncDataForFront(project);
+            syncDataForFront(project);
         });
 
         return projects;
@@ -135,10 +172,10 @@ public class ProjectService {
         int offset = pageNum * size;
         List<Project> projects = projectDao.getJoinedProjects(userId, offset, size);
 
-        Collection<Integer> collectedProIds = projectDao.getCollectedProjectIds(userId);
+        Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
         projects.forEach(project -> {
             project.setIsCollected(collectedProIds.contains(project.getId()));
-            Project.syncDataForFront(project);
+            syncDataForFront(project);
         });
 
         return projects;
@@ -156,20 +193,20 @@ public class ProjectService {
         return projectDao.uncollectProject(userId, proId);
     }
 
-    public boolean isUserCollected(Integer userId, Integer proId) {
-        return projectDao.isUserCollected(userId, proId);
+    public boolean isCollected(Integer userId, Integer proId) {
+        return projectDao.isCollected(userId, proId);
     }
 
-    public boolean isUserJoined(Integer userId, Integer proId) {
-        return projectDao.isUserJoined(userId, proId);
-    }
-
-    public boolean rejectProject(Integer proId) {
-        return projectDao.updateProjectStatus(proId, "reject");
+    public boolean isJoined(Integer userId, Integer proId) {
+        return projectDao.isJoined(userId, proId);
     }
 
     public boolean acceptProject(Integer proId) {
         return projectDao.updateProjectStatus(proId, "pass");
+    }
+
+    public boolean rejectProject(Integer proId) {
+        return projectDao.updateProjectStatus(proId, "reject");
     }
 
     public boolean deleteProject(Integer proId) {
@@ -243,5 +280,52 @@ public class ProjectService {
         }
 
         return success;
+    }
+
+    /**
+     * 获得所有被用户收藏的项目的 id
+     *
+     * @param userId 用户 id
+     * @return
+     */
+    private Collection<Integer> getCollectedProjectIds(Integer userId) {
+        List<Integer> collectedProjectIds = projectDao.getCollectedProjectIds(userId);
+        if (collectedProjectIds.size() > 5) {
+            return new HashSet<>(collectedProjectIds);
+        }
+        return collectedProjectIds;
+    }
+
+    public void syncDataForBack(Project project) {
+        if (project == null) {
+            return;
+        }
+        project.setId(project.getProId());
+        project.setUserId(project.getUserid());
+        project.setName(project.getProname());
+        project.setContent(project.getPromassage());
+        project.setRecruit(project.getProwant());
+        project.setContact(project.getConcat());
+        project.setStatus(project.getStatu());
+    }
+
+    public void syncDataForFront(Project project) {
+        if (project == null) {
+            return;
+        }
+
+        project.setProId(project.getId());
+        project.setUserid(project.getUserId());
+        project.setProname(project.getName());
+        project.setDesc(project.getContent());
+        project.setPromassage(project.getContent());
+        project.setProwant(project.getRecruit());
+        project.setConcat(project.getContact());
+        project.setStatu(project.getStatus());
+
+        if (project.getTag() != null) {
+            List<String> tags = Arrays.asList(project.getTag().split("&+"));
+            project.setTags(tags);
+        }
     }
 }

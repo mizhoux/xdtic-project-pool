@@ -25,11 +25,9 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
     
-    <!--
-    <mvc:resources mapping="xitic/static/**" location="/static/"/>
-    -->
+    <!-- <mvc:resources mapping="xitic/static/**" location="/static/"/> -->
     
-    <context:component-scan base-package="wenjing.xdtic.*" />
+    <context:component-scan base-package="wenjing.xdtic.action" />
 	
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     

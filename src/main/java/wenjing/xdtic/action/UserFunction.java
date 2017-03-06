@@ -111,7 +111,6 @@ public class UserFunction {
     @ResponseBody
     @PostMapping(value = "update/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode updateUserProfile(HttpSession session, User user) {
-        User.syncDataForBack(user);
 
         boolean success = userService.updateUser(user);
         if (success) {

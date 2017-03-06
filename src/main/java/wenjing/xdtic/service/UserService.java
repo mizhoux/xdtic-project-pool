@@ -23,14 +23,14 @@ public class UserService {
 
     public User getUser(Integer id) {
         User user = userDao.getUser(id);
-        User.syncDataForFront(user);
+        syncDataForFront(user);
 
         return user;
     }
 
     public User getUser(String username, String password) {
         User user = userDao.getUser(username, password);
-        User.syncDataForFront(user);
+        syncDataForFront(user);
 
         return user;
     }
@@ -38,7 +38,7 @@ public class UserService {
     public List<User> getUsers(String keyword, int pageNum, int size) {
         int offset = pageNum * size;
         List<User> users = userDao.getUsers(keyword, offset, size);
-        users.forEach(User::syncDataForFront);
+        users.forEach(this::syncDataForFront);
 
         return users;
     }
@@ -57,6 +57,7 @@ public class UserService {
     }
 
     public boolean updateUser(User user) {
+        syncDataForBack(user);
         return userDao.updateUser(user);
     }
 
@@ -82,6 +83,40 @@ public class UserService {
         }
 
         return userDao.deleteUsers(ids);
+    }
+
+    /**
+     * 为后端需求的字段同步 User
+     *
+     * @param user
+     */
+    public void syncDataForBack(User user) {
+        if (user == null) {
+            return;
+        }
+        user.setRealname(user.getName());
+        user.setGender(user.getSex());
+        user.setSpecialty(user.getProfe());
+        user.setStuNum(user.getStunum());
+        user.setSkill(user.getProfile());
+        user.setExperience(user.getPexperice());
+    }
+
+    /**
+     * 为前端需求的字段同步 User
+     *
+     * @param user
+     */
+    public void syncDataForFront(User user) {
+        if (user == null) {
+            return;
+        }
+        user.setName(user.getRealname());
+        user.setSex(user.getGender());
+        user.setProfe(user.getSpecialty());
+        user.setStunum(user.getStuNum());
+        user.setProfile(user.getSkill());
+        user.setPexperice(user.getExperience());
     }
 
 }

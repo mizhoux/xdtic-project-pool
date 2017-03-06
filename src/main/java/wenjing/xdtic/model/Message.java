@@ -31,24 +31,6 @@ public class Message {
     private Integer uid; // userId
     private String massage; // content
 
-    public static void syncDataForBack(Message message) {
-        if (message == null) {
-            return;
-        }
-        message.setId(message.getMid());
-        message.setUserId(message.getUid());
-        message.setContent(message.getMassage());
-    }
-
-    public static void syncDataForFront(Message message) {
-        if (message == null) {
-            return;
-        }
-        message.setMid(message.getId());
-        message.setUid(message.getUserId());
-        message.setMassage(message.getContent());
-    }
-
     public static Message of(Project project, Message.Type type) {
         return of(project, type, null);
     }
