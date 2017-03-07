@@ -73,7 +73,7 @@ public class AdminFunction {
         String operation = params.get("operation");
         String comment = params.get("rejectReason");
 
-        boolean success = proService.operateProject(proId, operation, comment);
+        boolean success = proService.updateProjectByOperation(proId, operation, comment);
         return success ? RespCode.OK : RespCode.ERROR;
     }
 

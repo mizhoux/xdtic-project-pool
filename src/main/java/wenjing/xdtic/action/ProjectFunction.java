@@ -56,14 +56,14 @@ public class ProjectFunction {
     @GetMapping("project/collect")
     public RespCode collectProject(
             @RequestParam("userid") Integer userId, @RequestParam Integer proId) {
-        boolean success = proService.collectProject(userId, proId);
+        boolean success = proService.addCollection(userId, proId);
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
     @GetMapping("project/uncollect")
     public RespCode uncollectProject(
             @RequestParam("userid") Integer userId, @RequestParam Integer proId) {
-        boolean success = proService.uncollectProject(userId, proId);
+        boolean success = proService.deleteCollection(userId, proId);
         return success ? RespCode.OK : RespCode.ERROR;
     }
 

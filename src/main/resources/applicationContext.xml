@@ -13,11 +13,37 @@
     <import resource="/dataSource-context.xml" />
         
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">  
-        <property name = "dataSource" ref="dataSource" />  
+        <property name="dataSource" ref="dataSource" />  
     </bean> 
     
     <context:component-scan base-package="wenjing.xdtic.*">
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
     </context:component-scan>
+    
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED" />
+            
+            <tx:method name="delete*" propagation="REQUIRED" />
+            
+            <tx:method name="set*" propagation="REQUIRED" isolation="READ_COMMITTED"/>
+            <tx:method name="update*" propagation="REQUIRED" isolation="READ_COMMITTED"/>
+             
+            <tx:method name="get*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="count*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="contains*" propagation="REQUIRED" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+    
+    <aop:config expose-proxy="true">
+        <!-- 只对业务逻辑层实施事务 -->
+        <aop:pointcut id="txPointcut" expression="execution(* wenjing.xdtic.service..*.*(..))" />
+        <aop:advisor pointcut-ref="txPointcut" advice-ref="txAdvice"/>
+    </aop:config>
+    
     
 </beans>

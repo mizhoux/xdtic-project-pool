@@ -43,7 +43,7 @@ public class MessageDao {
      * @param userId 用户的 id
      * @return 数据库中对应用户消息的数量
      */
-    public long getMessagesCount(Integer userId) {
+    public long countMessages(Integer userId) {
         String SQL = "SELECT COUNT(*) FROM message WHERE user_id = ?";
         return jdbcTmpl.queryForObject(SQL, Long.class, userId);
     }
@@ -71,7 +71,7 @@ public class MessageDao {
      * @param userId 用户的 id
      * @return 数据库中对应用户消息的数量
      */
-    public long getUnreadMessagesCount(Integer userId) {
+    public long countUnreadMessages(Integer userId) {
         String SQL = "SELECT COUNT(*) FROM message m WHERE m.user_id = ? AND m.read = FALSE";
         return jdbcTmpl.queryForObject(SQL, Long.class, userId);
     }

@@ -70,7 +70,7 @@ public class UserFunction {
 
         User user = userService.getUser(username, password);
         if (user != null) {
-            user.setHasMsg(msgService.getUnreadMessagesCount(user.getId()) > 0);
+            user.setHasMsg(msgService.countUnreadMessages(user.getId()) > 0);
             session.setAttribute("user", user);
             return "redirect:/user/loginBySession";
         }

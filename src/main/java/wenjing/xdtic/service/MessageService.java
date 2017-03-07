@@ -21,13 +21,6 @@ public class MessageService {
         return messageDao.addMessage(msg);
     }
 
-    public Message getMessage(Integer id) {
-        Message message = messageDao.getMessage(id);
-        syncDataForFront(message);
-
-        return message;
-    }
-
     public List<Message> getMessages(Integer userId, int pageNum, int pageSize) {
         int offset = pageNum * pageSize;
 
@@ -42,7 +35,7 @@ public class MessageService {
 
         PagingModel<Message> pagingMsgs = new PagingModel<>(msgs, pageNum, msgs.size());
 
-        long count = getMessagesCount(userId);
+        long count = countMessages(userId);
         pagingMsgs.setHasMore((pageNum + 1) * pageSize < count);
 
         pagingMsgs.setEntitiesName("msgs");
@@ -50,12 +43,8 @@ public class MessageService {
         return pagingMsgs;
     }
 
-    public long getMessagesCount(Integer userId) {
-        return messageDao.getMessagesCount(userId);
-    }
-
-    public boolean setMessageRead(Integer id) {
-        return messageDao.setMessageRead(id);
+    public long countMessages(Integer userId) {
+        return messageDao.countMessages(userId);
     }
 
     public boolean setMessagesRead(List<Integer> ids) {
@@ -65,8 +54,8 @@ public class MessageService {
         return messageDao.setMessagesRead(ids);
     }
 
-    public long getUnreadMessagesCount(Integer userId) {
-        return messageDao.getUnreadMessagesCount(userId);
+    public long countUnreadMessages(Integer userId) {
+        return messageDao.countUnreadMessages(userId);
     }
 
     public void syncDataForBack(Message message) {

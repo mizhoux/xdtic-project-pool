@@ -51,7 +51,7 @@ public class ProjectController {
 
         User user = (User) session.getAttribute("user");
         Project project = proService.getProject(proId);
-        project.setIsCollected(proService.isCollected(user.getId(), proId));
+        project.setIsCollected(proService.containsCollection(user.getId(), proId));
 
         ModelAndView mav = new ModelAndView("page/myProject/myCollect/detail");
         mav.addObject("project", project);
@@ -59,7 +59,7 @@ public class ProjectController {
         User projectCreator = userService.getUser(project.getUserId());
         mav.addObject("projectCreator", projectCreator);
 
-        boolean userIsJoined = proService.isJoined(user.getId(), project.getId());
+        boolean userIsJoined = proService.containsSignInfo(user.getId(), project.getId());
         mav.addObject("userIsJoined", userIsJoined);
 
         return mav;
@@ -72,7 +72,7 @@ public class ProjectController {
         Project project = proService.getProject(proId);
         User user = (User) session.getAttribute("user");
 
-        project.setIsCollected(proService.isCollected(user.getId(), proId));
+        project.setIsCollected(proService.containsCollection(user.getId(), proId));
 
         return new ModelAndView("page/myProject/myPost/detail", "project", project);
     }
@@ -83,7 +83,7 @@ public class ProjectController {
 
         Project project = proService.getProject(proId);
         User user = (User) session.getAttribute("user");
-        project.setIsCollected(proService.isCollected(user.getId(), proId));
+        project.setIsCollected(proService.containsCollection(user.getId(), proId));
 
         return new ModelAndView("/page/myProject/myPost/editDetail", "project", project);
     }
@@ -122,7 +122,7 @@ public class ProjectController {
         ModelAndView mav = new ModelAndView("page/myProject/myCollect/toJoin");
 
         Project project = proService.getProject(proId);
-        project.setIsCollected(proService.isCollected(userId, proId));
+        project.setIsCollected(proService.containsCollection(userId, proId));
 
         User user = (User) session.getAttribute("user");
 

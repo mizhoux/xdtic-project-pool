@@ -44,17 +44,6 @@ public class ProjectService {
         return success;
     }
 
-    public boolean updateProject(Project project, boolean reject) {
-        syncDataForBack(project);
-
-        if (reject) {
-            project.setStatus("check");
-            return projectDao.updateProjectWithStatus(project);
-        }
-        
-        return projectDao.updateProject(project);
-    }
-
     public Project getProject(Integer id) {
         Project project = projectDao.getProject(id);
         syncDataForFront(project);
@@ -99,8 +88,8 @@ public class ProjectService {
         return projects;
     }
 
-    public long getAcceptedProjectsCount(String keyword) {
-        return projectDao.getAcceptedProjectsCount(keyword);
+    public long countAcceptedProjects(String keyword) {
+        return projectDao.countAcceptedProjects(keyword);
     }
 
     public HashMap<String, Object> getHotProjects(String keyword, int hotSize, Integer userId) {
@@ -129,8 +118,8 @@ public class ProjectService {
         return projects;
     }
 
-    public long getUncheckedProjectsCount(String keyword) {
-        return projectDao.getUncheckedProjectsCount(keyword);
+    public long countUncheckedProjects(String keyword) {
+        return projectDao.countUncheckedProjects(keyword);
     }
 
     public List<Project> getPostedProjects(Integer userId, int pageNum, int size) {
@@ -147,8 +136,8 @@ public class ProjectService {
         return projects;
     }
 
-    public long getPostedProjectsCount(Integer userId) {
-        return projectDao.getPostedProjectsCount(userId);
+    public long countPostedProjects(Integer userId) {
+        return projectDao.countPostedProjects(userId);
     }
 
     public List<Project> getCollectedProjects(Integer userId, int pageNum, int size) {
@@ -163,8 +152,8 @@ public class ProjectService {
         return projects;
     }
 
-    public long getCollectedProjectsCount(Integer userId) {
-        return projectDao.getCollectedProjectsCount(userId);
+    public long countCollectedProjects(Integer userId) {
+        return projectDao.countCollectedProjects(userId);
     }
 
     public List<Project> getJoinedProjects(Integer userId, int pageNum, int size) {
@@ -181,32 +170,42 @@ public class ProjectService {
         return projects;
     }
 
-    public long getJoinedProjectsCount(Integer userId) {
-        return projectDao.getJoinedProjectsCount(userId);
+    public long countJoinedProjects(Integer userId) {
+        return projectDao.countJoinedProjects(userId);
     }
 
-    public boolean collectProject(Integer userId, Integer proId) {
-        return projectDao.collectProject(userId, proId);
+    public boolean updateProject(Project project, boolean reject) {
+        syncDataForBack(project);
+
+        if (reject) {
+            project.setStatus("check");
+            return projectDao.updateProjectWithStatus(project);
+        }
+
+        return projectDao.updateProject(project);
     }
 
-    public boolean uncollectProject(Integer userId, Integer proId) {
-        return projectDao.uncollectProject(userId, proId);
+    /**
+     * 添加收藏
+     *
+     * @param userId
+     * @param proId
+     * @return
+     */
+    public boolean addCollection(Integer userId, Integer proId) {
+        return projectDao.addCollection(userId, proId);
     }
 
-    public boolean isCollected(Integer userId, Integer proId) {
-        return projectDao.isCollected(userId, proId);
+    public boolean deleteCollection(Integer userId, Integer proId) {
+        return projectDao.deleteCollection(userId, proId);
     }
 
-    public boolean isJoined(Integer userId, Integer proId) {
-        return projectDao.isJoined(userId, proId);
+    public boolean containsCollection(Integer userId, Integer proId) {
+        return projectDao.containsCollection(userId, proId);
     }
 
-    public boolean acceptProject(Integer proId) {
-        return projectDao.updateProjectStatus(proId, "pass");
-    }
-
-    public boolean rejectProject(Integer proId) {
-        return projectDao.updateProjectStatus(proId, "reject");
+    public boolean containsSignInfo(Integer userId, Integer proId) {
+        return projectDao.containsSignInfo(userId, proId);
     }
 
     public boolean deleteProject(Integer proId) {
@@ -215,14 +214,14 @@ public class ProjectService {
 
     public PagingModel<Project> getPagingUncheckedProjects(String keyword, int pageNum, int size) {
 
-        Supplier<Long> count = () -> getUncheckedProjectsCount(keyword);
+        Supplier<Long> count = () -> countUncheckedProjects(keyword);
         Supplier<List<Project>> projects = () -> getUncheckedProjects(keyword, pageNum, size);
 
         return PagingModel.of(projects, "projects", count, pageNum, size);
     }
 
     public PagingModel<Project> getPagingAcceptedProjects(String keyword, int pageNum, int size, Integer userId) {
-        Supplier<Long> count = () -> getAcceptedProjectsCount(keyword);
+        Supplier<Long> count = () -> countAcceptedProjects(keyword);
         Supplier<List<Project>> projects = () -> getAcceptedProjects(keyword, pageNum, size, userId);
 
         return PagingModel.of(projects, "projects", count, pageNum, size);
@@ -230,7 +229,7 @@ public class ProjectService {
 
     public PagingModel<Project> getPagingCollectedProjects(Integer userId, int pageNum, int pageSize) {
 
-        Supplier<Long> count = () -> getCollectedProjectsCount(userId);
+        Supplier<Long> count = () -> countCollectedProjects(userId);
         Supplier<List<Project>> projects = () -> getCollectedProjects(userId, pageNum, pageSize);
 
         return PagingModel.of(projects, "projects", count, pageNum, pageSize);
@@ -238,7 +237,7 @@ public class ProjectService {
 
     public PagingModel<Project> getPagingPostedProjects(Integer userId, int pageNum, int pageSize) {
 
-        Supplier<Long> count = () -> getPostedProjectsCount(userId);
+        Supplier<Long> count = () -> countPostedProjects(userId);
         Supplier<List<Project>> projects = () -> getPostedProjects(userId, pageNum, pageSize);
 
         return PagingModel.of(projects, "projects", count, pageNum, pageSize);
@@ -246,7 +245,7 @@ public class ProjectService {
 
     public PagingModel<Project> getPagingAcceptedProjects(String keyword, int pageNum, int pageSize) {
 
-        Supplier<Long> count = () -> getAcceptedProjectsCount(keyword);
+        Supplier<Long> count = () -> countAcceptedProjects(keyword);
         Supplier<List<Project>> projects = () -> getAcceptedProjects(keyword, pageNum, pageSize);
 
         return PagingModel.of(projects, "projects", count, pageNum, pageSize);
@@ -254,23 +253,23 @@ public class ProjectService {
 
     public PagingModel<Project> getPagingJoinedProjects(Integer userId, int pageNum, int pageSize) {
 
-        Supplier<Long> count = () -> getJoinedProjectsCount(userId);
+        Supplier<Long> count = () -> countJoinedProjects(userId);
         Supplier<List<Project>> projects = () -> getJoinedProjects(userId, pageNum, pageSize);
 
         return PagingModel.of(projects, "projects", count, pageNum, pageSize);
     }
 
-    public boolean operateProject(Integer proId, String operation, String comment) {
+    public boolean updateProjectByOperation(Integer proId, String operation, String comment) {
         boolean success = false;
 
         switch (operation) {
             case "reject":
-                success = rejectProject(proId);
+                success = projectDao.updateProjectStatus(proId, "reject");
                 Message reject = Message.of(getProject(proId), Message.Type.REJECT, comment);
                 messageDao.addMessage(reject);
                 break;
             case "accept":
-                success = acceptProject(proId);
+                success = projectDao.updateProjectStatus(proId, "pass");
                 Message pass = Message.of(getProject(proId), Message.Type.PASS);
                 messageDao.addMessage(pass);
                 break;

@@ -44,9 +44,11 @@ public class UserService {
     }
 
     public PagingModel<User> getPagingUsers(String keyword, int pageNum, int size) {
+
         List<User> users = getUsers(keyword, pageNum, size);
         PagingModel<User> pagingUsers = new PagingModel<>(users, pageNum, users.size(), "users");
-        long count = getUsersCount(keyword);
+
+        long count = countUsers(keyword);
         pagingUsers.setHasMore((pageNum + 1) * size < count);
 
         return pagingUsers;
@@ -56,6 +58,14 @@ public class UserService {
         return userDao.getUsername(id);
     }
 
+    public boolean containsUsername(String username) {
+        return userDao.containsUsername(username);
+    }
+
+    public long countUsers(String keyword) {
+        return userDao.countUsers(keyword);
+    }
+
     public boolean updateUser(User user) {
         syncDataForBack(user);
         return userDao.updateUser(user);
@@ -63,14 +73,6 @@ public class UserService {
 
     public boolean updatePassword(String username, String oldPassword, String newPassword) {
         return userDao.updatePassword(username, oldPassword, newPassword);
-    }
-
-    public long getUsersCount(String keyword) {
-        return userDao.getUsersCount(keyword);
-    }
-
-    public boolean containsUsername(String username) {
-        return userDao.containsUsername(username);
     }
 
     public boolean deleteUser(Integer id) {

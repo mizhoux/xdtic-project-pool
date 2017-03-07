@@ -105,7 +105,7 @@ public class UserDao {
         return jdbcTmpl.update(SQL, newPassword, username, oldPassword) == 1;
     }
 
-    public Long getUsersCount(String keyword) {
+    public Long countUsers(String keyword) {
         String SQL = "SELECT COUNT(*) FROM user u WHERE u.username LIKE ? OR u.realname LIKE ?";
         keyword = getMysqlLikeKeyword(keyword);
         return jdbcTmpl.queryForObject(SQL, Long.class, keyword, keyword);

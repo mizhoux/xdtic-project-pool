@@ -93,7 +93,7 @@ public class ProjectDao {
         return jdbcTmpl.query(SQL, this::parseProject, keyword, keyword, offset, size);
     }
 
-    public long getAcceptedProjectsCount(String keyword) {
+    public long countAcceptedProjects(String keyword) {
         String SQL
                 = "SELECT COUNT(*) FROM project p "
                 + "WHERE p.status = 'pass' AND (p.tag LIKE ? OR p.name LIKE ?)";
@@ -138,7 +138,7 @@ public class ProjectDao {
         return jdbcTmpl.query(SQL, this::parseProject, keyword, keyword, offset, size);
     }
 
-    public long getUncheckedProjectsCount(String keyword) {
+    public long countUncheckedProjects(String keyword) {
         String SQL = "SELECT COUNT(*) FROM project p WHERE p.status = 'check' AND (p.tag LIKE ? OR p.name LIKE ?)";
         keyword = getMysqlLikeKeyword(keyword);
         return jdbcTmpl.queryForObject(SQL, Long.class, keyword, keyword);
@@ -163,7 +163,7 @@ public class ProjectDao {
      * @param userId 用户 ID
      * @return 用户发布的项目数量
      */
-    public long getPostedProjectsCount(Integer userId) {
+    public long countPostedProjects(Integer userId) {
         String SQL = "SELECT COUNT(*) FROM project WHERE user_id = ?";
         return jdbcTmpl.queryForObject(SQL, Long.class, userId);
     }
@@ -191,7 +191,7 @@ public class ProjectDao {
      * @param userId 用户 ID
      * @return 用户收藏的项目数量
      */
-    public long getCollectedProjectsCount(Integer userId) {
+    public long countCollectedProjects(Integer userId) {
         String SQL
                 = "SELECT COUNT(*) FROM project p WHERE p.id IN "
                 + "(SELECT pc.pro_id FROM pro_collection pc WHERE pc.user_id = ?)";
@@ -222,7 +222,7 @@ public class ProjectDao {
      * @param userId 用户 ID
      * @return 用户参加的项目数量
      */
-    public long getJoinedProjectsCount(Integer userId) {
+    public long countJoinedProjects(Integer userId) {
         String SQL
                 = "SELECT COUNT(*) FROM project p WHERE p.id IN "
                 + "(SELECT s.pro_id FROM sign_info s WHERE s.user_id = ?)";
@@ -237,7 +237,7 @@ public class ProjectDao {
      * @param proId
      * @return
      */
-    public boolean collectProject(Integer userId, Integer proId) {
+    public boolean addCollection(Integer userId, Integer proId) {
         String SQL = "INSERT INTO pro_collection SET user_id = ?, pro_id = ?";
         return jdbcTmpl.update(SQL, userId, proId) == 1;
     }
@@ -249,7 +249,7 @@ public class ProjectDao {
      * @param proId
      * @return
      */
-    public boolean uncollectProject(Integer userId, Integer proId) {
+    public boolean deleteCollection(Integer userId, Integer proId) {
         String SQL = "DELETE FROM pro_collection WHERE user_id = ? AND pro_id = ?";
         return jdbcTmpl.update(SQL, userId, proId) == 1;
     }
@@ -261,7 +261,7 @@ public class ProjectDao {
      * @param proId 项目ID
      * @return
      */
-    public boolean isCollected(Integer userId, Integer proId) {
+    public boolean containsCollection(Integer userId, Integer proId) {
         String SQL = "SELECT COUNT(*) FROM pro_collection WHERE user_id = ? AND pro_id = ?";
         return jdbcTmpl.queryForObject(SQL, Long.class, userId, proId) == 1;
     }
@@ -273,7 +273,7 @@ public class ProjectDao {
      * @param proId 项目 ID
      * @return
      */
-    public boolean isJoined(Integer userId, Integer proId) {
+    public boolean containsSignInfo(Integer userId, Integer proId) {
         String SQL = "SELECT COUNT(*) FROM sign_info WHERE user_id = ? AND pro_id = ?";
         long result = jdbcTmpl.queryForObject(SQL, Long.class, userId, proId);
         return result == 1;

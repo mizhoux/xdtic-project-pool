@@ -13,15 +13,16 @@
           p:location="classpath:database.properties" />
     
     <!-- Spring 的 DriverManagerDataSource，每次获取 Connection 时都会新建一个（开发用）-->
+    <!--
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource"
           p:driverClassName="${jdbc.driverClassName}"
           p:url="${jdbc.url}"
           p:username="${jdbc.username}"
           p:password="${jdbc.password}" />
+    -->
 
     <!-- 配置 c3p0数据库连接池 的 dataSource，每个参数的用途参见 database.properties -->
-    <!--
     <bean id="dataSource" 
           class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <property name="driverClass" value="${jdbc.driverClassName}"/>
@@ -37,5 +38,5 @@
         <property name="idleConnectionTestPeriod" value="${jdbc.idleConnectionTestPeriod}"/>
         <property name="acquireRetryAttempts" value="${jdbc.acquireRetryAttempts}" />
     </bean>
-    -->
+    
 </beans>
