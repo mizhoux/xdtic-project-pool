@@ -14,7 +14,7 @@ public class HomeController {
 
     @GetMapping({"/", "index", "home", "login"})
     public String index() {
-        return "page/user/login";
+        return "user/login";
     }
 
     @GetMapping("logout")
@@ -25,12 +25,12 @@ public class HomeController {
 
     @GetMapping("hall")
     public String getHallPage() {
-        return "page/hall/hall";
+        return "hall/hall";
     }
 
     @GetMapping("/**")
     public String get404Page() {
-        return "page/error";
+        return "error";
     }
 
 }

@@ -23,33 +23,34 @@ public class AdminController {
 
     @GetMapping("")
     public String index() {
-        return "page/admin/index";
+        return "admin/index";
     }
 
     @GetMapping("login")
     public String getLoginPage(HttpServletRequest request) {
         request.setAttribute("loginFail", Boolean.FALSE);
-        return "page/admin/login";
+        return "admin/login";
     }
 
     @GetMapping("project/check")
     public String getUnchekedProjectsPage() {
-        return "page/admin/project/check";
+        return "admin/project/check";
     }
 
     @GetMapping("project")
     public ModelAndView getProjectDetailPage(@RequestParam Integer proId) {
         Project project = proService.getProject(proId);
-        return new ModelAndView("page/admin/project/detail", "project", project);
+        return new ModelAndView("admin/project/detail", "project", project);
     }
 
     @GetMapping("project/look")
     public String getAcceptedProjectsPage() {
-        return "page/admin/project/look";
+        return "admin/project/look";
     }
 
     @GetMapping("user/look")
     public String getUsersPage() {
-        return "page/admin/user/look";
+        return "admin/user/look";
     }
+    
 }

@@ -33,7 +33,7 @@
     
     <bean id="viewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver"
-          p:prefix="/WEB-INF/views/"
+          p:prefix="/WEB-INF/views/page"
           p:suffix=".jsp" />
     
     <!--初始 fis 配置-->

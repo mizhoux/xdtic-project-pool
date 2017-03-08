@@ -51,9 +51,9 @@ public class UserFunction {
 
         boolean addSucc = userService.addUser(username, password);
         if (addSucc) {
-            return "page/user/login";
+            return "user/login";
         }
-        return "page/user/register";
+        return "user/register";
     }
 
     /**
@@ -75,7 +75,7 @@ public class UserFunction {
             return "redirect:/user/loginBySession";
         }
 
-        return "page/user/register";
+        return "user/register";
     }
 
     /**
@@ -95,10 +95,10 @@ public class UserFunction {
         if (passNew.equals(passNewConfirm)) {
             boolean success = userService.updatePassword(username, passOld, passNew);
             if (success) {
-                return "page/user/login";
+                return "user/login";
             }
         }
-        return "page/user/resetPass"; // 更新密码不成功
+        return "user/resetPass"; // 更新密码不成功
     }
 
     /**
