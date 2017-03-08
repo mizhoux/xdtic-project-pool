@@ -49,7 +49,7 @@ public class AdminFunction {
 
         if (admin == null) {
             request.setAttribute("loginFail", Boolean.TRUE);
-            return "page/admin/login";
+            return "admin/login";
         }
 
         session.setAttribute("admin", admin);
@@ -97,6 +97,7 @@ public class AdminFunction {
 
     @ResponseBody
     @PostMapping("admin/user/delete")
+    @SuppressWarnings("unchecked")
     public RespCode deleteUser(@RequestBody Map<String, Object> params) {
         List<Integer> userIds = (List<Integer>) params.get("uid");
 

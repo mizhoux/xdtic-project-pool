@@ -32,12 +32,12 @@ public class ProjectController {
 
     @GetMapping("myProject")
     public String getMyProjectPage() {
-        return "page/myProject/myProject";
+        return "myProject/myProject";
     }
 
     @GetMapping("myProject/postProject")
     public String getPostProjectPage() {
-        return "page/myProject/postProject";
+        return "myProject/postProject";
     }
 
     @GetMapping({"project", "myProject/myCollect/detail"})
@@ -53,7 +53,7 @@ public class ProjectController {
         Project project = proService.getProject(proId);
         project.setIsCollected(proService.containsCollection(user.getId(), proId));
 
-        ModelAndView mav = new ModelAndView("page/myProject/myCollect/detail");
+        ModelAndView mav = new ModelAndView("myProject/myCollect/detail");
         mav.addObject("project", project);
 
         User projectCreator = userService.getUser(project.getUserId());
@@ -74,7 +74,7 @@ public class ProjectController {
 
         project.setIsCollected(proService.containsCollection(user.getId(), proId));
 
-        return new ModelAndView("page/myProject/myPost/detail", "project", project);
+        return new ModelAndView("myProject/myPost/detail", "project", project);
     }
 
     @GetMapping("myProject/myPost/editDetail")
@@ -85,7 +85,7 @@ public class ProjectController {
         User user = (User) session.getAttribute("user");
         project.setIsCollected(proService.containsCollection(user.getId(), proId));
 
-        return new ModelAndView("/page/myProject/myPost/editDetail", "project", project);
+        return new ModelAndView("myProject/myPost/editDetail", "project", project);
     }
 
     @GetMapping("myProject/myPost/signInfo")
@@ -93,7 +93,7 @@ public class ProjectController {
         Project project = proService.getProject(proId);
         List<SignInfo> signInfos = siService.getSignInfos(proId);
 
-        ModelAndView mav = new ModelAndView("page/myProject/myPost/signInfo");
+        ModelAndView mav = new ModelAndView("myProject/myPost/signInfo");
         mav.addObject("project", project);
         mav.addObject("signInfos", signInfos);
 
@@ -103,7 +103,7 @@ public class ProjectController {
     @GetMapping("signInfo")
     public ModelAndView getSignInfoDetail(
             HttpSession session, @RequestParam Integer signId) {
-        ModelAndView mav = new ModelAndView("page/myProject/myPost/signDetail");
+        ModelAndView mav = new ModelAndView("myProject/myPost/signDetail");
 
         SignInfo signInfo = siService.getSignInfo(signId);
         User signUser = userService.getUser(signInfo.getUid());
@@ -119,7 +119,7 @@ public class ProjectController {
             @RequestParam Integer proId,
             @RequestParam("uid") Integer userId) {
 
-        ModelAndView mav = new ModelAndView("page/myProject/myCollect/toJoin");
+        ModelAndView mav = new ModelAndView("myProject/myCollect/toJoin");
 
         Project project = proService.getProject(proId);
         project.setIsCollected(proService.containsCollection(userId, proId));
