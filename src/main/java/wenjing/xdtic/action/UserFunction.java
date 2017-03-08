@@ -49,8 +49,7 @@ public class UserFunction {
             @RequestParam String username,
             @RequestParam("pass") String password, @RequestParam String passConfirm) {
 
-        boolean addSucc = userService.addUser(username, password);
-        if (addSucc) {
+        if (userService.addUser(username, password)) {
             return "user/login";
         }
         return "user/register";
@@ -93,8 +92,7 @@ public class UserFunction {
             @RequestParam String passNew, @RequestParam String passNewConfirm) {
 
         if (passNew.equals(passNewConfirm)) {
-            boolean success = userService.updatePassword(username, passOld, passNew);
-            if (success) {
+            if (userService.updatePassword(username, passOld, passNew)) {
                 return "user/login";
             }
         }
@@ -186,6 +184,7 @@ public class UserFunction {
     @ResponseBody
     @PostMapping("read/msg")
     public RespCode readMessage(@RequestBody Map<String, Object> params) {
+
         List<Integer> msgIds = (List<Integer>) params.get("mid");
         boolean success = msgService.setMessagesRead(msgIds);
 

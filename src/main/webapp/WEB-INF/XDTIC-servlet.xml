@@ -14,18 +14,12 @@
 
     <mvc:annotation-driven>
         <mvc:message-converters>
-            <bean id="jacksonHttpMessageConverter"
-                  class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-                <property name="prettyPrint" value="true" />
-            </bean>
             <bean id="stringHttpMessageConverter"
                   class="org.springframework.http.converter.StringHttpMessageConverter">
                 <constructor-arg value="UTF-8" />
             </bean>
         </mvc:message-converters>
     </mvc:annotation-driven>
-    
-    <!-- <mvc:resources mapping="xitic/static/**" location="/static/"/> -->
     
     <context:component-scan base-package="wenjing.xdtic.action" />
 	
@@ -43,7 +37,6 @@
         <mvc:interceptor>  
             <mvc:mapping path="/**"/>
             <mvc:exclude-mapping path="/user/register"/>
-            
             <mvc:exclude-mapping path="/fn/**"/>
             
             <mvc:exclude-mapping path="/admin/**"/>
