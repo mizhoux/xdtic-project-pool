@@ -1,4 +1,4 @@
-package wenjing.xdtic.aop;
+package wenjing.xdtic.action;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

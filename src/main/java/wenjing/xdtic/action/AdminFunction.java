@@ -28,7 +28,7 @@ import wenjing.xdtic.service.UserService;
  * @author Michael Chow <mizhoux@gmail.com>
  */
 @Controller
-@RequestMapping("fn")
+@RequestMapping("fn/admin")
 public class AdminFunction {
 
     @Autowired
@@ -40,7 +40,7 @@ public class AdminFunction {
     @Autowired
     private ProjectService proService;
 
-    @PostMapping(value = "admin/login", consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "login", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public String login(
             HttpServletRequest request, HttpSession session,
             @RequestParam String username, @RequestParam String password) {
@@ -57,7 +57,7 @@ public class AdminFunction {
     }
 
     @ResponseBody
-    @GetMapping("admin/get/project/uncheck")
+    @GetMapping("get/project/uncheck")
     public PagingModel<Project> getUncheckedProjects(
             @RequestParam("keyWords") String keyword,
             @RequestParam int pageNum, @RequestParam int size) {
@@ -66,7 +66,7 @@ public class AdminFunction {
     }
 
     @ResponseBody
-    @PostMapping(value = "admin/project/operate", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "project/operate", consumes = MediaType.APPLICATION_JSON_VALUE)
     public RespCode operateProject(@RequestBody Map<String, String> params) {
 
         Integer proId = Integer.parseInt(params.get("proId"));
@@ -78,7 +78,7 @@ public class AdminFunction {
     }
 
     @ResponseBody
-    @GetMapping("admin/get/project/accept")
+    @GetMapping("get/project/accept")
     public PagingModel<Project> getAcceptedProjects(
             @RequestParam("keyWords") String keyword,
             @RequestParam int pageNum, @RequestParam int size) {
@@ -87,7 +87,7 @@ public class AdminFunction {
     }
 
     @ResponseBody
-    @GetMapping("admin/get/user")
+    @GetMapping("get/user")
     public PagingModel<User> getUsers(
             @RequestParam("keyWords") String keyword,
             @RequestParam int pageNum, @RequestParam int size) {
@@ -96,7 +96,7 @@ public class AdminFunction {
     }
 
     @ResponseBody
-    @PostMapping("admin/user/delete")
+    @PostMapping("user/delete")
     @SuppressWarnings("unchecked")
     public RespCode deleteUser(@RequestBody Map<String, Object> params) {
         List<Integer> userIds = (List<Integer>) params.get("uid");
