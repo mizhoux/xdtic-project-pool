@@ -1,4 +1,4 @@
-package wenjing.xdtic.controller;
+package wenjing.xdtic.action;
 
 import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -17,12 +17,12 @@ public class UserController {
 
     @GetMapping("")
     public String index() {
-        return "page/user/center";
+        return "user/center";
     }
 
     @GetMapping("{pageName}")
     public String route(@PathVariable String pageName) {
-        return "page/user/" + pageName;
+        return "user/" + pageName;
     }
 
     @GetMapping(value = "loginBySession")
@@ -30,7 +30,7 @@ public class UserController {
         if (session.getAttribute("user") != null) {
             return "redirect:/user/center";
         }
-        return "page/user/login";
+        return "user/login";
     }
 
 }

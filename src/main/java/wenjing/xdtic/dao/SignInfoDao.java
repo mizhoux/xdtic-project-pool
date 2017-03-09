@@ -55,9 +55,6 @@ public class SignInfoDao {
         signInfo.setSignTime(rs.getTimestamp("sign_time"));
         signInfo.setUsername(rs.getString("username"));
 
-        // 兼容前端
-        SignInfo.syncDataForFront(signInfo);
-
         return signInfo;
     }
 

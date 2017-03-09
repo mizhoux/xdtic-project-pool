@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class LogAdvice {
 
     // 被 Log 标记的类或者方法会被该切面拦截
-    @Pointcut("@within(wenjing.xdtic.aop.Log)")
+    @Pointcut("@within(wenjing.xdtic.aop.Log) || @annotation(wenjing.xdtic.aop.Log)")
     public void advice() {
 
     }

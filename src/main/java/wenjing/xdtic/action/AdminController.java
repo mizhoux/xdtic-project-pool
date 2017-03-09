@@ -1,4 +1,4 @@
-package wenjing.xdtic.controller;
+package wenjing.xdtic.action;
 
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import wenjing.xdtic.dao.ProjectDao;
 import wenjing.xdtic.model.Project;
+import wenjing.xdtic.service.ProjectService;
 
 /**
  *
@@ -19,37 +19,38 @@ import wenjing.xdtic.model.Project;
 public class AdminController {
 
     @Autowired
-    private ProjectDao projectDao;
+    private ProjectService proService;
 
     @GetMapping("")
     public String index() {
-        return "page/admin/index";
+        return "admin/index";
     }
 
     @GetMapping("login")
     public String getLoginPage(HttpServletRequest request) {
         request.setAttribute("loginFail", Boolean.FALSE);
-        return "page/admin/login";
+        return "admin/login";
     }
 
     @GetMapping("project/check")
     public String getUnchekedProjectsPage() {
-        return "page/admin/project/check";
+        return "admin/project/check";
     }
 
     @GetMapping("project")
     public ModelAndView getProjectDetailPage(@RequestParam Integer proId) {
-        Project project = projectDao.getProject(proId);
-        return new ModelAndView("page/admin/project/detail", "project", project);
+        Project project = proService.getProject(proId);
+        return new ModelAndView("admin/project/detail", "project", project);
     }
 
     @GetMapping("project/look")
     public String getAcceptedProjectsPage() {
-        return "page/admin/project/look";
+        return "admin/project/look";
     }
 
     @GetMapping("user/look")
     public String getUsersPage() {
-        return "page/admin/user/look";
+        return "admin/user/look";
     }
+    
 }

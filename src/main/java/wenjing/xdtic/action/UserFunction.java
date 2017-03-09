@@ -1,4 +1,4 @@
-package wenjing.xdtic.controller;
+package wenjing.xdtic.action;
 
 import java.util.List;
 import java.util.Map;
@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wenjing.xdtic.dao.MessageDao;
-import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.RespCode;
 import wenjing.xdtic.model.User;
+import wenjing.xdtic.service.MessageService;
+import wenjing.xdtic.service.UserService;
 
 /**
  * api 功能 <br>
@@ -31,10 +31,10 @@ import wenjing.xdtic.model.User;
 public class UserFunction {
 
     @Autowired
-    private UserDao userDao;
+    private UserService userService;
 
     @Autowired
-    private MessageDao messageDao;
+    private MessageService msgService;
 
     /**
      * 根据用户名和密码进行注册（以 Form 提交）
@@ -49,11 +49,10 @@ public class UserFunction {
             @RequestParam String username,
             @RequestParam("pass") String password, @RequestParam String passConfirm) {
 
-        boolean addSucc = userDao.addUser(username, password);
-        if (addSucc) {
-            return "page/user/login";
+        if (userService.addUser(username, password)) {
+            return "user/login";
         }
-        return "page/user/register";
+        return "user/register";
     }
 
     /**
@@ -68,14 +67,14 @@ public class UserFunction {
     public String userLogin(HttpSession session,
             @RequestParam String username, @RequestParam String password) {
 
-        User user = userDao.getUser(username, password);
+        User user = userService.getUser(username, password);
         if (user != null) {
-            user.setHasMsg(messageDao.getUnreadMessagesCount(user.getId()) > 0);
+            user.setHasMsg(msgService.countUnreadMessages(user.getId()) > 0);
             session.setAttribute("user", user);
             return "redirect:/user/loginBySession";
         }
 
-        return "page/user/register";
+        return "user/register";
     }
 
     /**
@@ -93,12 +92,11 @@ public class UserFunction {
             @RequestParam String passNew, @RequestParam String passNewConfirm) {
 
         if (passNew.equals(passNewConfirm)) {
-            boolean success = userDao.updatePassword(username, passOld, passNew);
-            if (success) {
-                return "page/user/login";
+            if (userService.updatePassword(username, passOld, passNew)) {
+                return "user/login";
             }
         }
-        return "page/user/resetPass"; // 更新密码不成功
+        return "user/resetPass"; // 更新密码不成功
     }
 
     /**
@@ -111,9 +109,8 @@ public class UserFunction {
     @ResponseBody
     @PostMapping(value = "update/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode updateUserProfile(HttpSession session, User user) {
-        User.syncDataForBack(user);
 
-        boolean success = userDao.updateUser(user);
+        boolean success = userService.updateUser(user);
         if (success) {
             session.setAttribute("user", user);
         }
@@ -132,7 +129,7 @@ public class UserFunction {
     public RespCode validUsername(@RequestBody Map<String, String> params) {
 
         String username = params.get("username");
-        return userDao.containsUsername(username) ? RespCode.ERROR : RespCode.OK;
+        return userService.containsUsername(username) ? RespCode.ERROR : RespCode.OK;
     }
 
     /**
@@ -147,7 +144,7 @@ public class UserFunction {
         String username = params.get("username");
         String password = params.get("password");
 
-        User user = userDao.getUser(username, password);
+        User user = userService.getUser(username, password);
         return user == null ? RespCode.ERROR : RespCode.OK;
     }
 
@@ -163,7 +160,7 @@ public class UserFunction {
     public RespCode validUserByFormValue(
             @RequestParam String username, @RequestParam String password) {
 
-        User user = userDao.getUser(username, password);
+        User user = userService.getUser(username, password);
         return user == null ? RespCode.ERROR : RespCode.OK;
     }
 
@@ -181,23 +178,15 @@ public class UserFunction {
             @RequestParam("uid") Integer userId,
             @RequestParam Integer pageNum, @RequestParam Integer size) {
 
-        int offset = pageNum * size;
-        List<Message> msgs = messageDao.getMessages(userId, offset, size);
-
-        PagingModel<Message> pagingMsgs = new PagingModel<>(msgs, pageNum, msgs.size());
-
-        long count = messageDao.getMessagesCount(userId);
-        pagingMsgs.setHasMore((pageNum + 1) * size < count);
-
-        pagingMsgs.setEntitiesName("msgs");
-        return pagingMsgs;
+        return msgService.getPagingMessages(userId, pageNum, size);
     }
 
     @ResponseBody
     @PostMapping("read/msg")
     public RespCode readMessage(@RequestBody Map<String, Object> params) {
+
         List<Integer> msgIds = (List<Integer>) params.get("mid");
-        boolean success = messageDao.setMessagesRead(msgIds);
+        boolean success = msgService.setMessagesRead(msgIds);
 
         return success ? RespCode.OK : RespCode.ERROR;
     }

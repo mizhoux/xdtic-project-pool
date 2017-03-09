@@ -1,4 +1,4 @@
-package wenjing.xdtic.aop;
+package wenjing.xdtic.action;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +21,7 @@ public class UserLoginInterceptor extends HandlerInterceptorAdapter {
         }
 
         request.getRequestDispatcher("/WEB-INF/views/page/user/login.jsp").forward(request, response);
-
+        
         return false;
     }
 

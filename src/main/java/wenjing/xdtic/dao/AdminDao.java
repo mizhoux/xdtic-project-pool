@@ -26,24 +26,21 @@ public class AdminDao {
      */
     public Admin getAdmin(String username, String password) {
         String SQL = "SELECT * FROM admin WHERE username = ? AND password = ?";
-        Admin admin = jdbcTmpl.query(SQL, this::extractAdmin, username, password);
+        Admin admin = jdbcTmpl.query(SQL,
+                rs -> rs.next() ? parseAdmin(rs) : null, username, password);
         return admin;
     }
 
-    private Admin extractAdmin(ResultSet rs) throws SQLException {
-        if (rs.next()) {
-            Admin admin = new Admin();
+    private Admin parseAdmin(ResultSet rs) throws SQLException {
+        Admin admin = new Admin();
 
-            admin.setId(rs.getInt("id"));
-            admin.setEmail(rs.getString("email"));
-            admin.setPhone(rs.getString("phone"));
-            admin.setRealname(rs.getString("realname"));
-            admin.setUsername(rs.getString("username"));
+        admin.setId(rs.getInt("id"));
+        admin.setEmail(rs.getString("email"));
+        admin.setPhone(rs.getString("phone"));
+        admin.setRealname(rs.getString("realname"));
+        admin.setUsername(rs.getString("username"));
 
-            return admin;
-        }
-
-        return null;
+        return admin;
     }
 
 }

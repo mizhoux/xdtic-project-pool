@@ -14,10 +14,6 @@
 
     <mvc:annotation-driven>
         <mvc:message-converters>
-            <bean id="jacksonHttpMessageConverter"
-                  class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
-                <property name="prettyPrint" value="true" />
-            </bean>
             <bean id="stringHttpMessageConverter"
                   class="org.springframework.http.converter.StringHttpMessageConverter">
                 <constructor-arg value="UTF-8" />
@@ -25,17 +21,13 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
     
-    <!--
-    <mvc:resources mapping="xitic/static/**" location="/static/"/>
-    -->
-    
-    <context:component-scan base-package="wenjing.xdtic.*" />
+    <context:component-scan base-package="wenjing.xdtic.action" />
 	
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     
     <bean id="viewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver"
-          p:prefix="/WEB-INF/views/"
+          p:prefix="/WEB-INF/views/page/"
           p:suffix=".jsp" />
     
     <!--初始 fis 配置-->
@@ -44,15 +36,16 @@
     <mvc:interceptors>
         <mvc:interceptor>  
             <mvc:mapping path="/**"/>
-            <mvc:exclude-mapping path="/fn/**"/>
-            <mvc:exclude-mapping path="/admin/**"/>
             <mvc:exclude-mapping path="/user/register"/>
-            <bean class="wenjing.xdtic.aop.UserLoginInterceptor" />
+            <mvc:exclude-mapping path="/fn/**"/>
+            
+            <mvc:exclude-mapping path="/admin/**"/>
+            <bean class="wenjing.xdtic.action.UserLoginInterceptor" />
         </mvc:interceptor>  
         <mvc:interceptor>  
             <mvc:mapping path="/admin/**"/>
             <mvc:exclude-mapping path="/fn/admin/**"/>
-            <bean class="wenjing.xdtic.aop.AdminLoginInterceptor" />
+            <bean class="wenjing.xdtic.action.AdminLoginInterceptor" />
         </mvc:interceptor>  
     </mvc:interceptors>
     
