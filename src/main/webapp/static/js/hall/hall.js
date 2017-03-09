@@ -195,6 +195,9 @@ var searchBar = new Vue({
 		cancelSearch: function cancelSearch() {
 			this.keyWords = '';
 			this.isFocusing = false;
+			if (this.projects.length === 0 && this.hotProjects.length === 0) {
+				window.location.reload();
+			}
 		},
 
 		search: function search() {
@@ -218,7 +221,7 @@ function loadProject() {
 
 	this.busy = true;
 	this.isLoading = true;
-	self = this;
+	var self = this;
 
 	fetch(url, {
 		method: 'GET',
@@ -252,7 +255,7 @@ function loadProject() {
 function loadHotProject() {
 	var url = urlSearchHotProject + '?hotSize=' + this.hotSize + '&keyWords=' + this.keyWords + '&userid=' + this.user.id;
 
-	self = this;
+	var self = this;
 
 	fetch(url, {
 		method: 'GET',

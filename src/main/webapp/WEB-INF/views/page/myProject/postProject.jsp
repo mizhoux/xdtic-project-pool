@@ -7,24 +7,32 @@
 		<div id="appPostProject">
 			<header>
 				<div class="tic-header-three">
-					<span v-tap="{methods:navBack}">&lt;</span>
-					<h2>发布项目</h2>
-					<span></span>
+					<a v-tap.prevent="{methods:navBack}" class="tic-header-three-aside">
+				        <img src="/xdtic/static/images/arrow_prev.png" alt="后退">
+				    </a>
+				    <div class="tic-header-three-center">
+				        <p class="tic-title-main">发布项目</p>
+				    </div>
+				    <span class="tic-header-three-aside">
+				    </span>
 				</div>
 			</header>
 			<main>
 				<div>
 					<form id="formPostProject">
-						<tic-tag-box></tic-tag-box>
+						<tic-tag-box @tagchange="updateTag"></tic-tag-box>
+						<p class="tic-error-tip" v-show="hasError" v-cloak>{{errorMsg}}</p>
 						<div class="weui-cells weui-cells_form">
 							<div class="weui-cell">
 							    <div class="weui-cell__bd">
-							        <input class="weui-input" type="text" name="title" placeholder="标题"/>
+							        <input class="weui-input" type="text" name="title" placeholder="标题（至少2个字）"
+									 v-model="title" />
 							    </div>
 							</div>
 							<div class="weui-cell">
 							    <div class="weui-cell__bd">
-							        <textarea class="weui-textarea" name="promassage" placeholder="项目详情介绍" rows="5"></textarea>
+							        <textarea class="weui-textarea" name="promassage" placeholder="项目详情介绍（至少10个字）" rows="5"
+									 v-model="promassage"></textarea>
 							    </div>
 							</div>
 						</div>
@@ -33,7 +41,8 @@
 						<div class="weui-cells weui-cells_form">
 						    <div class="weui-cell">
 						        <div class="weui-cell__bd">
-						            <textarea class="weui-textarea" name="prowant" placeholder="招聘信息" rows="3"></textarea>
+						            <textarea class="weui-textarea" name="prowant" placeholder="招聘信息（至少6个字）" rows="3"
+									 v-model="prowant"></textarea>
 						        </div>
 							   </div>
 						</div>
@@ -41,12 +50,13 @@
 						<div class="weui-cells weui-cells_form">
 						    <div class="weui-cell">
 						        <div class="weui-cell__bd">
-						            <textarea class="weui-textarea" name="concat" placeholder="请注明电话或邮箱或其他联系方式" rows="3"></textarea>
+						            <textarea class="weui-textarea" name="concat" placeholder="请注明电话或邮箱或其他联系方式" rows="3"
+									 v-model="concat"></textarea>
 						        </div>
 							   </div>
 						</div>
 						<input type="hidden" name="uid" value="<c:out value='${user.id}' />">
-						<button class="weui-btn weui-btn_primary" id="btnConfirm" v-tap.prevent="{methods: postProject}">发布</button>
+						<button class="weui-btn weui-btn_primary" id="btnConfirm" v-tap.prevent="{methods: validForm}">发布</button>
 					</form>
 				</div>
 			</main>
@@ -60,11 +70,11 @@
 			        </div>
 			    </div>
 			</div>
-			<div id="toast" v-show="postIsSucc">
+			<div id="toast" v-show="postIsSucc" v-cloak>
 			    <div class="weui-mask_transparent"></div>
 			    <div class="weui-toast">
 			        <i class="weui-icon-success-no-circle weui-icon_toast"></i>
-			        <p class="weui-toast__content">成功发布</p>
+			        <p class="weui-toast__content">发布成功</p>
 			    </div>
 			</div>
 		</div>

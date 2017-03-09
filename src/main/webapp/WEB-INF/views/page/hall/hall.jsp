@@ -119,10 +119,10 @@
 				            	</span>
 				            	<span class="tic-collect">
 				                	<img src="<c:url value='/static/images/hall/uncollect.png' />" alt="收藏"
-				                	 v-tap="{methods: collect, projectIndex: index, userid: userid}"
+				                	 v-tap.prevent="{methods: collect, projectIndex: index, userid: userid}"
 				                	 v-show="!project.isCollected" />
 				                	<img src="<c:url value='/static/images/hall/collect.png' />" alt="取消收藏"
-				                	 v-tap="{methods: uncollect, projectIndex: index, userid: userid}"
+				                	 v-tap.prevent="{methods: uncollect, projectIndex: index, userid: userid}"
 				                	 v-show="project.isCollected" />
 			                	</span>
 				            </h4>

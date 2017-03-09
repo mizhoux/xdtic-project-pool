@@ -17,12 +17,13 @@
 					 :class="{ 'tic-error': usernameError }">
 					<input type="text" name="username" placeholder="用户名" 
 						 v-model="username"
-						 @blur="validName"/>
+						 @blur="validUsername"/>
 				</div>
 				<div class="tic-field"
 					 :class="{ 'tic-error': passError }">
 					<input type="password" name="pass" placeholder="密码" 
-						 v-model="password"/>
+						 v-model="password"
+						 @blur="validPass"/>
 				</div>
 				<div class="tic-field"
 					 :class="{ 'tic-error': passError }">
@@ -30,10 +31,10 @@
 						 v-model="passConfirm"/>
 				</div>
 				<div class="tic-field">
-					<button class="weui-btn weui-btn_primary" id="btnRegister" v-tap.prevent="{ methods: validRegister }">注册</button>
+					<button class="weui-btn weui-btn_primary" id="btnRegister" v-tap.prevent="{ methods: validForm }">注册</button>
 				</div>
 				<a href="<c:url value='/user/login' />" class="tic-form-para">
-					已经有账号？快快登录
+					已有账号？返回登录
 				</a>
 			</form>
 		</main>

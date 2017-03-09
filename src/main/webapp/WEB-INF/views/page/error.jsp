@@ -6,7 +6,7 @@
 	<fis:block name="body">
 		<div class="tic-gallery">
 			<p class="tic-description">
-				页面出错了，看会漫画放松下撒~
+				页面找不到了，看会漫画放松下撒~
 			</p>
 			<img src="/xdtic/static/images/404.jpg" alt="404 NOT FOUND">
 		</div>

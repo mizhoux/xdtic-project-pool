@@ -61,3 +61,10 @@
 .tic-header-three > .tic-header-three-aside:nth-child(3) {
   visibility: hidden;
 }
+
+.tic-error-tip {
+  color: #f05979;
+  text-align: left;
+  margin-bottom: .6rem;
+  padding: 10px 15px;
+}
