@@ -20,7 +20,7 @@ public class UserLoginInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-        response.sendRedirect("/WEB-INF/views/page/user/login.jsp");
+        request.getRequestDispatcher("/WEB-INF/views/page/user/login.jsp").forward(request, response);
         
         return false;
     }

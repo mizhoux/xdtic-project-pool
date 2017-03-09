@@ -40,12 +40,12 @@
             <mvc:exclude-mapping path="/fn/**"/>
             
             <mvc:exclude-mapping path="/admin/**"/>
-            <bean class="wenjing.xdtic.aop.UserLoginInterceptor" />
+            <bean class="wenjing.xdtic.action.UserLoginInterceptor" />
         </mvc:interceptor>  
         <mvc:interceptor>  
             <mvc:mapping path="/admin/**"/>
             <mvc:exclude-mapping path="/fn/admin/**"/>
-            <bean class="wenjing.xdtic.aop.AdminLoginInterceptor" />
+            <bean class="wenjing.xdtic.action.AdminLoginInterceptor" />
         </mvc:interceptor>  
     </mvc:interceptors>
     
