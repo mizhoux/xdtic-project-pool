@@ -28,6 +28,11 @@ public class HomeController {
         return "hall/hall";
     }
 
+    /**
+     * 当没有控制器可以匹配输入的 url 时，会进入次方法
+     *
+     * @return
+     */
     @GetMapping("/**")
     public String get404Page() {
         return "error";

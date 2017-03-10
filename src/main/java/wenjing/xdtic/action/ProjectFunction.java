@@ -1,6 +1,6 @@
 package wenjing.xdtic.action;
 
-import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -102,7 +102,7 @@ public class ProjectFunction {
 
     @ResponseBody
     @GetMapping("get/hotProject")
-    public HashMap<String, Object> getHotProjects(
+    public Map<String, Object> getHotProjects(
             @RequestParam("userid") Integer userId,
             @RequestParam("keyWords") String keyword, @RequestParam int hotSize) {
 

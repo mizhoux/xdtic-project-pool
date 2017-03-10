@@ -41,8 +41,7 @@ public class AdminFunction {
     private ProjectService proService;
 
     @PostMapping(value = "login", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public String login(
-            HttpServletRequest request, HttpSession session,
+    public String login(HttpServletRequest request, HttpSession session,
             @RequestParam String username, @RequestParam String password) {
 
         Admin admin = adminService.getAdmin(username, password);

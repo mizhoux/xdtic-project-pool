@@ -25,7 +25,7 @@ public class UserController {
         return "user/" + pageName;
     }
 
-    @GetMapping(value = "loginBySession")
+    @GetMapping("loginBySession")
     public String userLoginBySession(HttpSession session) {
         if (session.getAttribute("user") != null) {
             return "redirect:/user/center";

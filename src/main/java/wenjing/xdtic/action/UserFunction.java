@@ -41,17 +41,20 @@ public class UserFunction {
      *
      * @param username 用户名
      * @param password 密码
-     * @param passConfirm
+     * @param passwordConfirm 确定密码时输入的密码
      * @return
      */
     @PostMapping(value = "user/register", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public String userRegister(
-            @RequestParam String username,
-            @RequestParam("pass") String password, @RequestParam String passConfirm) {
+    public String register(@RequestParam String username,
+            @RequestParam("pass") String password,
+            @RequestParam("passConfirm") String passwordConfirm) {
 
-        if (userService.addUser(username, password)) {
-            return "user/login";
+        if (password.equals(passwordConfirm)) {
+            if (userService.addUser(username, password)) {
+                return "user/login";
+            }
         }
+
         return "user/register";
     }
 
@@ -68,6 +71,7 @@ public class UserFunction {
             @RequestParam String username, @RequestParam String password) {
 
         User user = userService.getUser(username, password);
+
         if (user != null) {
             user.setHasMsg(msgService.countUnreadMessages(user.getId()) > 0);
             session.setAttribute("user", user);
@@ -140,7 +144,7 @@ public class UserFunction {
      */
     @ResponseBody
     @PostMapping(value = "valid/user", consumes = APPLICATION_JSON_VALUE)
-    public RespCode validUserByJsonValue(@RequestBody Map<String, String> params) {
+    public RespCode validUser(@RequestBody Map<String, String> params) {
         String username = params.get("username");
         String password = params.get("password");
 
@@ -157,7 +161,7 @@ public class UserFunction {
      */
     @ResponseBody
     @PostMapping(value = "valid/user", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode validUserByFormValue(
+    public RespCode validUser(
             @RequestParam String username, @RequestParam String password) {
 
         User user = userService.getUser(username, password);
@@ -183,6 +187,7 @@ public class UserFunction {
 
     @ResponseBody
     @PostMapping("read/msg")
+    @SuppressWarnings("unchecked")
     public RespCode readMessage(@RequestBody Map<String, Object> params) {
 
         List<Integer> msgIds = (List<Integer>) params.get("mid");
