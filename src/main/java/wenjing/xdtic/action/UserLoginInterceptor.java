@@ -3,13 +3,19 @@ package wenjing.xdtic.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+import wenjing.xdtic.cache.XdticCache;
+import wenjing.xdtic.model.User;
 
 /**
  *
  * @author Michael
  */
 public class UserLoginInterceptor extends HandlerInterceptorAdapter {
+
+    @Autowired
+    private XdticCache cache;
 
     @Override
     public boolean preHandle(HttpServletRequest request,
@@ -20,8 +26,13 @@ public class UserLoginInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
+        Object user = cache.get(request.getRemoteAddr());
+        if (user != null && user instanceof User) {
+            return true;
+        }
+
         request.getRequestDispatcher("/WEB-INF/views/page/user/login.jsp").forward(request, response);
-        
+
         return false;
     }
 

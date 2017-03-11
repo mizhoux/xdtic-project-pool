@@ -2,6 +2,7 @@ package wenjing.xdtic.action;
 
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import wenjing.xdtic.cache.XdticCache;
 import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.RespCode;
@@ -35,6 +37,9 @@ public class UserFunction {
 
     @Autowired
     private MessageService msgService;
+
+    @Autowired
+    private XdticCache cache;
 
     /**
      * 根据用户名和密码进行注册（以 Form 提交）
@@ -61,20 +66,25 @@ public class UserFunction {
     /**
      * 根据用户名和密码进行登录（以 Form 提交）
      *
+     * @param request
      * @param username 用户名
      * @param password 密码
-     * @param session
      * @return
      */
     @PostMapping(value = "user/login", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public String userLogin(HttpSession session,
+    public String userLogin(HttpServletRequest request,
             @RequestParam String username, @RequestParam String password) {
 
         User user = userService.getUser(username, password);
 
         if (user != null) {
             user.setHasMsg(msgService.countUnreadMessages(user.getId()) > 0);
+            HttpSession session = request.getSession();
             session.setAttribute("user", user);
+
+            String remoteAddr = request.getRemoteAddr();
+            cache.put(remoteAddr, user);
+
             return "redirect:/user/loginBySession";
         }
 

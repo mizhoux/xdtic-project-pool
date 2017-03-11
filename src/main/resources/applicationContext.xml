@@ -45,5 +45,11 @@
         <aop:advisor pointcut-ref="txPointcut" advice-ref="txAdvice"/>
     </aop:config>
     
+    <bean id="guavaCacheBuilder"
+          class="com.google.common.cache.CacheBuilder" factory-method="from">
+        <constructor-arg value="expireAfterWrite=30m" />
+    </bean>
+    
+    <bean id="guavaCache" factory-bean="guavaCacheBuilder" factory-method="build" />
     
 </beans>
