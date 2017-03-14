@@ -16,14 +16,32 @@ public class RespCode {
      */
     public static RespCode ERROR = new RespCode("error");
 
-    private final String code;
+    public static RespCode okOf(String comment) {
+        return new RespCode("ok", comment);
+    }
 
-    public RespCode(String code) {
+    public static RespCode errorOf(String comment) {
+        return new RespCode("error", comment);
+    }
+
+    private final String code;
+    private final String comment;
+
+    private RespCode(String code) {
+        this(code, "");
+    }
+
+    private RespCode(String code, String comment) {
         this.code = code;
+        this.comment = comment;
     }
 
     public String getCode() {
         return code;
+    }
+
+    public String getComment() {
+        return comment;
     }
 
 }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wenjing.xdtic.cache.XdticCache;
+import wenjing.xdtic.cache.IpAddressCache;
 import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.RespCode;
@@ -39,7 +39,7 @@ public class UserFunction {
     private MessageService msgService;
 
     @Autowired
-    private XdticCache cache;
+    private IpAddressCache ipCache;
 
     /**
      * 根据用户名和密码进行注册（以 Form 提交）
@@ -83,7 +83,7 @@ public class UserFunction {
             session.setAttribute("user", user);
 
             String remoteAddr = request.getRemoteAddr();
-            cache.put(remoteAddr, user);
+            ipCache.put(remoteAddr, user);
 
             return "redirect:/user/loginBySession";
         }

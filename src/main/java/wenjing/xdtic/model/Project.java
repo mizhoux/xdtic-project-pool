@@ -213,4 +213,9 @@ public class Project {
         this.promassage = promassage;
     }
 
+    @Override
+    public String toString() {
+        return "Project{" + "id=" + id + ", username=" + username + ", name=" + name + ", content=" + content + ", tag=" + tag + '}';
+    }
+
 }

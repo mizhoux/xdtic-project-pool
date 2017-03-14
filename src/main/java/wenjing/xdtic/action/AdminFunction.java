@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wenjing.xdtic.cache.XdticCache;
+import wenjing.xdtic.cache.IpAddressCache;
 import wenjing.xdtic.model.Admin;
 import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.Project;
@@ -42,7 +42,7 @@ public class AdminFunction {
     private ProjectService proService;
 
     @Autowired
-    private XdticCache cache;
+    private IpAddressCache ipCache;
 
     @PostMapping(value = "login", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public String login(HttpServletRequest request, HttpSession session,
@@ -55,7 +55,7 @@ public class AdminFunction {
             return "admin/login";
         }
 
-        cache.put(request.getRemoteAddr(), admin);
+        ipCache.put(request.getRemoteAddr(), admin);
         session.setAttribute("admin", admin);
         return "redirect:/admin";
     }

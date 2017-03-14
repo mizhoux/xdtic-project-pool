@@ -22,9 +22,9 @@
     </mvc:annotation-driven>
     
     <context:component-scan base-package="wenjing.xdtic.action" />
-	
-    <aop:aspectj-autoproxy proxy-target-class="true"/>
     
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
+	
     <bean id="viewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver"
           p:prefix="/WEB-INF/views/page/"

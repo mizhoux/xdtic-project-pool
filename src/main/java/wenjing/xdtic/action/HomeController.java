@@ -1,10 +1,10 @@
 package wenjing.xdtic.action;
 
-import wenjing.xdtic.cache.XdticCache;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import wenjing.xdtic.cache.IpAddressCache;
 
 /**
  * 基本的路由控制器
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
 
     @Autowired
-    private XdticCache cache;
+    private IpAddressCache ipCache;
 
     @GetMapping({"/", "index", "home", "login"})
     public String index() {
@@ -24,10 +24,10 @@ public class HomeController {
 
     @GetMapping("logout")
     public String logout(HttpServletRequest request) {
-        cache.remove(request.getRemoteAddr());
+        ipCache.remove(request.getRemoteAddr());
         request.getSession().invalidate();
 
-        return "redirect:/index";
+        return "redirect:/";
     }
 
     @GetMapping("hall")

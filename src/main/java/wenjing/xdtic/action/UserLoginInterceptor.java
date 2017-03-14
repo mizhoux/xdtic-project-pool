@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import wenjing.xdtic.cache.XdticCache;
+import wenjing.xdtic.cache.IpAddressCache;
 import wenjing.xdtic.model.User;
 
 /**
@@ -15,7 +15,7 @@ import wenjing.xdtic.model.User;
 public class UserLoginInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
-    private XdticCache cache;
+    private IpAddressCache ipCache;
 
     @Override
     public boolean preHandle(HttpServletRequest request,
@@ -26,7 +26,7 @@ public class UserLoginInterceptor extends HandlerInterceptorAdapter {
             return true;
         }
 
-        Object user = cache.get(request.getRemoteAddr());
+        Object user = ipCache.get(request.getRemoteAddr());
         if (user != null && user instanceof User) {
             return true;
         }

@@ -86,20 +86,18 @@ public class ProjectDao {
     public List<Project> getAcceptedProjects(String keyword, int offset, int size) {
         String SQL
                 = "SELECT p.* FROM project AS p "
-                + "WHERE p.status = 'pass' AND (p.tag LIKE ? OR p.name LIKE ?) "
+                + "WHERE p.status = 'pass' AND  " + getSearchCondition(keyword)
                 + "ORDER BY date DESC LIMIT ?, ?";
 
-        keyword = getMysqlLikeKeyword(keyword);
-        return jdbcTmpl.query(SQL, this::parseProject, keyword, keyword, offset, size);
+        return jdbcTmpl.query(SQL, this::parseProject, offset, size);
     }
 
     public long countAcceptedProjects(String keyword) {
         String SQL
                 = "SELECT COUNT(*) FROM project p "
-                + "WHERE p.status = 'pass' AND (p.tag LIKE ? OR p.name LIKE ?)";
+                + "WHERE p.status = 'pass' AND " + getSearchCondition(keyword);
 
-        keyword = getMysqlLikeKeyword(keyword);
-        return jdbcTmpl.queryForObject(SQL, Long.class, keyword, keyword);
+        return jdbcTmpl.queryForObject(SQL, Long.class);
     }
 
     /**
@@ -114,10 +112,9 @@ public class ProjectDao {
 
         String SQL = "SELECT p.* FROM project AS p, "
                 + "(SELECT pc.pro_id, COUNT(*) AS num FROM pro_collection pc GROUP BY pc.pro_id ORDER BY num DESC LIMIT ?) AS t "
-                + "WHERE p.status = 'pass' AND p.id = t.pro_id AND (p.tag LIKE ? OR p.name LIKE ?)";
+                + "WHERE p.status = 'pass' AND p.id = t.pro_id AND " + getSearchCondition(keyword);
 
-        keyword = getMysqlLikeKeyword(keyword);
-        return jdbcTmpl.query(SQL, this::parseProject, hotSize, keyword, keyword);
+        return jdbcTmpl.query(SQL, this::parseProject, hotSize);
     }
 
     /**
@@ -131,17 +128,17 @@ public class ProjectDao {
     public List<Project> getUncheckedProjects(String keyword, int offset, int size) {
         String SQL
                 = "SELECT p.* FROM project AS p "
-                + "WHERE p.status = 'check' AND (p.tag LIKE ? OR p.name LIKE ?) "
+                + "WHERE p.status = 'check' AND " + getSearchCondition(keyword)
                 + "ORDER BY date DESC LIMIT ?, ?";
 
-        keyword = getMysqlLikeKeyword(keyword);
-        return jdbcTmpl.query(SQL, this::parseProject, keyword, keyword, offset, size);
+        return jdbcTmpl.query(SQL, this::parseProject, offset, size);
     }
 
     public long countUncheckedProjects(String keyword) {
-        String SQL = "SELECT COUNT(*) FROM project p WHERE p.status = 'check' AND (p.tag LIKE ? OR p.name LIKE ?)";
-        keyword = getMysqlLikeKeyword(keyword);
-        return jdbcTmpl.queryForObject(SQL, Long.class, keyword, keyword);
+        String SQL = "SELECT COUNT(*) FROM project p "
+                + "WHERE p.status = 'check' AND " + getSearchCondition(keyword);
+
+        return jdbcTmpl.queryForObject(SQL, Long.class);
     }
 
     /**
@@ -330,8 +327,15 @@ public class ProjectDao {
         return project;
     }
 
-    private String getMysqlLikeKeyword(String keyword) {
-        return "%" + keyword + "%";
+    private String getSearchCondition(String keyword) {
+
+        StringBuilder condition = new StringBuilder(80);
+
+        condition.append("(p.tag LIKE '%").append(keyword).append("%'")
+                .append(" OR p.name LIKE '%").append(keyword).append("%'")
+                .append(" OR p.content LIKE '%").append(keyword).append("%')");
+
+        return condition.toString();
     }
 
 }
