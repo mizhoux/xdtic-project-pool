@@ -58,9 +58,9 @@ public class UserDao {
     }
 
     public List<User> getUsers(String keyword, int offset, int size) {
-        String SQL = "SELECT u.* FROM user AS u WHERE u.username LIKE ? OR u.realname LIKE ? LIMIT ?, ?";
-        keyword = getMysqlLikeKeyword(keyword);
-        return jdbcTmpl.query(SQL, this::parseUser, keyword, keyword, offset, size);
+        String SQL = "SELECT u.* FROM user AS u WHERE "
+                + getSearchCondition(keyword) + " LIMIT ?, ?";
+        return jdbcTmpl.query(SQL, this::parseUser, offset, size);
     }
 
     /**
@@ -106,9 +106,8 @@ public class UserDao {
     }
 
     public Long countUsers(String keyword) {
-        String SQL = "SELECT COUNT(*) FROM user u WHERE u.username LIKE ? OR u.realname LIKE ?";
-        keyword = getMysqlLikeKeyword(keyword);
-        return jdbcTmpl.queryForObject(SQL, Long.class, keyword, keyword);
+        String SQL = "SELECT COUNT(*) FROM user u WHERE " + getSearchCondition(keyword);
+        return jdbcTmpl.queryForObject(SQL, Long.class);
     }
 
     /**
@@ -171,8 +170,13 @@ public class UserDao {
         return user;
     }
 
-    private String getMysqlLikeKeyword(String keyword) {
-        return "%" + keyword + "%";
+    private String getSearchCondition(String keyword) {
+        StringBuilder condition = new StringBuilder(55);
+
+        condition.append("u.username LIKE '%").append(keyword).append("%'")
+                .append(" OR u.realname LIKE '%").append(keyword).append("%'");
+
+        return condition.toString();
     }
 
 }

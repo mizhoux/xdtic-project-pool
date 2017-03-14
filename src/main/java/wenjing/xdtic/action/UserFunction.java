@@ -2,6 +2,7 @@ package wenjing.xdtic.action;
 
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import wenjing.xdtic.cache.IpAddressCache;
 import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.RespCode;
@@ -36,41 +38,53 @@ public class UserFunction {
     @Autowired
     private MessageService msgService;
 
+    @Autowired
+    private IpAddressCache ipCache;
+
     /**
      * 根据用户名和密码进行注册（以 Form 提交）
      *
      * @param username 用户名
      * @param password 密码
-     * @param passConfirm
+     * @param passwordConfirm 确定密码时输入的密码
      * @return
      */
     @PostMapping(value = "user/register", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public String userRegister(
-            @RequestParam String username,
-            @RequestParam("pass") String password, @RequestParam String passConfirm) {
+    public String register(@RequestParam String username,
+            @RequestParam("pass") String password,
+            @RequestParam("passConfirm") String passwordConfirm) {
 
-        if (userService.addUser(username, password)) {
-            return "user/login";
+        if (password.equals(passwordConfirm)) {
+            if (userService.addUser(username, password)) {
+                return "user/login";
+            }
         }
+
         return "user/register";
     }
 
     /**
      * 根据用户名和密码进行登录（以 Form 提交）
      *
+     * @param request
      * @param username 用户名
      * @param password 密码
-     * @param session
      * @return
      */
     @PostMapping(value = "user/login", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public String userLogin(HttpSession session,
+    public String userLogin(HttpServletRequest request,
             @RequestParam String username, @RequestParam String password) {
 
         User user = userService.getUser(username, password);
+
         if (user != null) {
             user.setHasMsg(msgService.countUnreadMessages(user.getId()) > 0);
+            HttpSession session = request.getSession();
             session.setAttribute("user", user);
+
+            String remoteAddr = request.getRemoteAddr();
+            ipCache.put(remoteAddr, user);
+
             return "redirect:/user/loginBySession";
         }
 
@@ -140,7 +154,7 @@ public class UserFunction {
      */
     @ResponseBody
     @PostMapping(value = "valid/user", consumes = APPLICATION_JSON_VALUE)
-    public RespCode validUserByJsonValue(@RequestBody Map<String, String> params) {
+    public RespCode validUser(@RequestBody Map<String, String> params) {
         String username = params.get("username");
         String password = params.get("password");
 
@@ -157,7 +171,7 @@ public class UserFunction {
      */
     @ResponseBody
     @PostMapping(value = "valid/user", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode validUserByFormValue(
+    public RespCode validUser(
             @RequestParam String username, @RequestParam String password) {
 
         User user = userService.getUser(username, password);
@@ -183,6 +197,7 @@ public class UserFunction {
 
     @ResponseBody
     @PostMapping("read/msg")
+    @SuppressWarnings("unchecked")
     public RespCode readMessage(@RequestBody Map<String, Object> params) {
 
         List<Integer> msgIds = (List<Integer>) params.get("mid");

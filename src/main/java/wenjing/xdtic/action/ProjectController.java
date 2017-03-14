@@ -41,19 +41,15 @@ public class ProjectController {
     }
 
     @GetMapping({"project", "myProject/myCollect/detail"})
-    public ModelAndView getProjectDetailPage(HttpSession session,
-            @RequestParam(required = false) Integer proId,
-            @RequestParam(required = false) Integer id) {
+    public ModelAndView getProjectDetailPage(
+            HttpSession session, @RequestParam Integer proId) {
 
-        if (proId == null) {
-            proId = id;
-        }
+        ModelAndView mav = new ModelAndView("myProject/myCollect/detail");
 
         User user = (User) session.getAttribute("user");
         Project project = proService.getProject(proId);
         project.setIsCollected(proService.containsCollection(user.getId(), proId));
 
-        ModelAndView mav = new ModelAndView("myProject/myCollect/detail");
         mav.addObject("project", project);
 
         User projectCreator = userService.getUser(project.getUserId());
@@ -71,7 +67,6 @@ public class ProjectController {
 
         Project project = proService.getProject(proId);
         User user = (User) session.getAttribute("user");
-
         project.setIsCollected(proService.containsCollection(user.getId(), proId));
 
         return new ModelAndView("myProject/myPost/detail", "project", project);

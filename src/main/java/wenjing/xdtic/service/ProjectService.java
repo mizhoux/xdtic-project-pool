@@ -1,12 +1,15 @@
 package wenjing.xdtic.service;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import wenjing.xdtic.dao.MessageDao;
 import wenjing.xdtic.dao.ProjectDao;
@@ -23,7 +26,7 @@ import wenjing.xdtic.model.Project;
 public class ProjectService {
 
     @Autowired
-    private ProjectDao projectDao;
+    private ProjectDao proDao;
 
     @Autowired
     private UserDao userDao;
@@ -36,7 +39,7 @@ public class ProjectService {
         String username = userDao.getUsername(project.getUserId());
         project.setUsername(username);
 
-        boolean success = projectDao.addProject(project);
+        boolean success = proDao.addProject(project);
         if (success) {
             Message message = Message.of(project, Message.Type.POST);
             messageDao.addMessage(message);
@@ -44,8 +47,9 @@ public class ProjectService {
         return success;
     }
 
+    @Cacheable(value = "project", key = "#id")
     public Project getProject(Integer id) {
-        Project project = projectDao.getProject(id);
+        Project project = proDao.getProject(id);
         syncDataForFront(project);
 
         return project;
@@ -82,19 +86,19 @@ public class ProjectService {
     public List<Project> getAcceptedProjects(String keyword, int pageNum, int size) {
         int offset = pageNum * size;
 
-        List<Project> projects = projectDao.getAcceptedProjects(keyword, offset, size);
+        List<Project> projects = proDao.getAcceptedProjects(keyword, offset, size);
         projects.forEach(this::syncDataForFront);
 
         return projects;
     }
 
     public long countAcceptedProjects(String keyword) {
-        return projectDao.countAcceptedProjects(keyword);
+        return proDao.countAcceptedProjects(keyword);
     }
 
-    public HashMap<String, Object> getHotProjects(String keyword, int hotSize, Integer userId) {
+    public Map<String, Object> getHotProjects(String keyword, int hotSize, Integer userId) {
 
-        List<Project> projects = projectDao.getHotProjects(keyword, hotSize, userId);
+        List<Project> projects = proDao.getHotProjects(keyword, hotSize, userId);
 
         Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
         projects.forEach(project -> {
@@ -102,30 +106,26 @@ public class ProjectService {
             syncDataForFront(project);
         });
 
-        HashMap<String, Object> hotProjects = new HashMap<>(2);
-        hotProjects.put("hotSize", projects.size());
-        hotProjects.put("projects", projects);
-
-        return hotProjects;
+        return ImmutableMap.of("hotSize", projects.size(), "projects", projects);
     }
 
     public List<Project> getUncheckedProjects(String keyword, int pageNum, int size) {
 
         int offset = pageNum * size;
-        List<Project> projects = projectDao.getUncheckedProjects(keyword, offset, size);
+        List<Project> projects = proDao.getUncheckedProjects(keyword, offset, size);
         projects.forEach(this::syncDataForFront);
 
         return projects;
     }
 
     public long countUncheckedProjects(String keyword) {
-        return projectDao.countUncheckedProjects(keyword);
+        return proDao.countUncheckedProjects(keyword);
     }
 
     public List<Project> getPostedProjects(Integer userId, int pageNum, int size) {
 
         int offset = pageNum * size;
-        List<Project> projects = projectDao.getPostedProjects(userId, offset, size);
+        List<Project> projects = proDao.getPostedProjects(userId, offset, size);
 
         Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
         projects.forEach(project -> {
@@ -137,13 +137,13 @@ public class ProjectService {
     }
 
     public long countPostedProjects(Integer userId) {
-        return projectDao.countPostedProjects(userId);
+        return proDao.countPostedProjects(userId);
     }
 
     public List<Project> getCollectedProjects(Integer userId, int pageNum, int size) {
 
         int offset = pageNum * size;
-        List<Project> projects = projectDao.getCollectedProjects(userId, offset, size);
+        List<Project> projects = proDao.getCollectedProjects(userId, offset, size);
         projects.forEach(project -> {
             project.setIsCollected(true);
             syncDataForFront(project);
@@ -153,13 +153,13 @@ public class ProjectService {
     }
 
     public long countCollectedProjects(Integer userId) {
-        return projectDao.countCollectedProjects(userId);
+        return proDao.countCollectedProjects(userId);
     }
 
     public List<Project> getJoinedProjects(Integer userId, int pageNum, int size) {
 
         int offset = pageNum * size;
-        List<Project> projects = projectDao.getJoinedProjects(userId, offset, size);
+        List<Project> projects = proDao.getJoinedProjects(userId, offset, size);
 
         Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
         projects.forEach(project -> {
@@ -171,18 +171,7 @@ public class ProjectService {
     }
 
     public long countJoinedProjects(Integer userId) {
-        return projectDao.countJoinedProjects(userId);
-    }
-
-    public boolean updateProject(Project project, boolean reject) {
-        syncDataForBack(project);
-
-        if (reject) {
-            project.setStatus("check");
-            return projectDao.updateProjectWithStatus(project);
-        }
-
-        return projectDao.updateProject(project);
+        return proDao.countJoinedProjects(userId);
     }
 
     /**
@@ -193,23 +182,23 @@ public class ProjectService {
      * @return
      */
     public boolean addCollection(Integer userId, Integer proId) {
-        return projectDao.addCollection(userId, proId);
+        return proDao.addCollection(userId, proId);
     }
 
     public boolean deleteCollection(Integer userId, Integer proId) {
-        return projectDao.deleteCollection(userId, proId);
+        return proDao.deleteCollection(userId, proId);
     }
 
     public boolean containsCollection(Integer userId, Integer proId) {
-        return projectDao.containsCollection(userId, proId);
+        return proDao.containsCollection(userId, proId);
     }
 
     public boolean containsSignInfo(Integer userId, Integer proId) {
-        return projectDao.containsSignInfo(userId, proId);
+        return proDao.containsSignInfo(userId, proId);
     }
 
     public boolean deleteProject(Integer proId) {
-        return projectDao.deleteProject(proId);
+        return proDao.deleteProject(proId);
     }
 
     public PagingModel<Project> getPagingUncheckedProjects(String keyword, int pageNum, int size) {
@@ -259,17 +248,30 @@ public class ProjectService {
         return PagingModel.of(projects, "projects", count, pageNum, pageSize);
     }
 
+    @CacheEvict(value = "project", key = "#project.id")
+    public boolean updateProject(Project project, boolean reject) {
+        syncDataForBack(project);
+
+        if (reject) {
+            project.setStatus("check");
+            return proDao.updateProjectWithStatus(project);
+        }
+
+        return proDao.updateProject(project);
+    }
+
+    @CacheEvict(value = "project", key = "@proId")
     public boolean updateProjectByOperation(Integer proId, String operation, String comment) {
         boolean success = false;
 
         switch (operation) {
             case "reject":
-                success = projectDao.updateProjectStatus(proId, "reject");
+                success = proDao.updateProjectStatus(proId, "reject");
                 Message reject = Message.of(getProject(proId), Message.Type.REJECT, comment);
                 messageDao.addMessage(reject);
                 break;
             case "accept":
-                success = projectDao.updateProjectStatus(proId, "pass");
+                success = proDao.updateProjectStatus(proId, "pass");
                 Message pass = Message.of(getProject(proId), Message.Type.PASS);
                 messageDao.addMessage(pass);
                 break;
@@ -288,7 +290,7 @@ public class ProjectService {
      * @return
      */
     private Collection<Integer> getCollectedProjectIds(Integer userId) {
-        List<Integer> collectedProjectIds = projectDao.getCollectedProjectIds(userId);
+        List<Integer> collectedProjectIds = proDao.getCollectedProjectIds(userId);
         if (collectedProjectIds.size() > 5) {
             return new HashSet<>(collectedProjectIds);
         }
