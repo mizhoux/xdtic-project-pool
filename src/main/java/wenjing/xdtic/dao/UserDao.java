@@ -30,8 +30,8 @@ public class UserDao {
      * @return 是否添加成功
      */
     public boolean addUser(String username, String password) {
-        String SQL = "INSERT INTO user SET username = ?, password = ?";
-        return jdbcTmpl.update(SQL, username, password) == 1;
+        String sql = "INSERT INTO user SET username = ?, password = ?";
+        return jdbcTmpl.update(sql, username, password) == 1;
     }
 
     /**
@@ -41,8 +41,8 @@ public class UserDao {
      * @return 查询到的用户
      */
     public User getUser(Integer id) {
-        String SQL = "SELECT * FROM user WHERE id = ?";
-        return jdbcTmpl.query(SQL, this::extractUser, id);
+        String sql = "SELECT * FROM user WHERE id = ?";
+        return jdbcTmpl.query(sql, this::extractUser, id);
     }
 
     /**
@@ -53,8 +53,8 @@ public class UserDao {
      * @return 查询的用户
      */
     public User getUser(String username, String password) {
-        String SQL = "SELECT * FROM user WHERE username = ? AND password = ?";
-        return jdbcTmpl.query(SQL, this::extractUser, username, password);
+        String sql = "SELECT * FROM user WHERE username = ? AND password = ?";
+        return jdbcTmpl.query(sql, this::extractUser, username, password);
     }
 
     public List<User> getUsers(String keyword, int offset, int size) {
@@ -70,9 +70,13 @@ public class UserDao {
      * @return 用户名
      */
     public String getUsername(Integer id) {
-        String SQL = "SELECT username FROM user WHERE id = ?";
-        return jdbcTmpl.queryForObject(SQL, String.class, id);
+        String sql = "SELECT username FROM user WHERE id = ?";
+        return jdbcTmpl.queryForObject(sql, String.class, id);
     }
+
+    private static final String SQL_UPDATE_USER
+            = "UPDATE user SET username = ?, realname = ?, nickname= ?, email = ?, gender = ?, "
+            + "specialty = ?, phone = ?, stu_num = ?, skill = ?, experience = ? WHERE id = ?";
 
     /**
      * 更新用户
@@ -81,10 +85,8 @@ public class UserDao {
      * @return 是否更新成功
      */
     public boolean updateUser(User user) {
-        String SQL
-                = "UPDATE user SET username = ?, realname = ?, nickname= ?, email = ?, gender = ?, "
-                + "specialty = ?, phone = ?, stu_num = ?, skill = ?, experience = ? WHERE id = ?";
-        int result = jdbcTmpl.update(SQL,
+
+        int result = jdbcTmpl.update(SQL_UPDATE_USER,
                 user.getUsername(), user.getRealname(), user.getNickname(),
                 user.getEmail(), user.getGender(), user.getSpecialty(), user.getPhone(),
                 user.getStuNum(), user.getSkill(), user.getExperience(), user.getId());
@@ -101,8 +103,8 @@ public class UserDao {
      * @return 是否更新成功
      */
     public boolean updatePassword(String username, String oldPassword, String newPassword) {
-        String SQL = "UPDATE user SET password = ? WHERE username = ? AND password = ?";
-        return jdbcTmpl.update(SQL, newPassword, username, oldPassword) == 1;
+        String sql = "UPDATE user SET password = ? WHERE username = ? AND password = ?";
+        return jdbcTmpl.update(sql, newPassword, username, oldPassword) == 1;
     }
 
     public Long countUsers(String keyword) {
@@ -117,13 +119,13 @@ public class UserDao {
      * @return 用户名是否已经存在
      */
     public boolean containsUsername(String username) {
-        String SQL = "SELECT id FROM user WHERE username = ?";
-        return jdbcTmpl.query(SQL, rs -> rs.next() ? TRUE : FALSE, username);
+        String sql = "SELECT id FROM user WHERE username = ?";
+        return jdbcTmpl.query(sql, rs -> rs.next() ? TRUE : FALSE, username);
     }
 
     public boolean deleteUser(Integer id) {
-        String SQL = "DELETE FROM user WHERE id = ?";
-        return jdbcTmpl.update(SQL, id) == 1;
+        String sql = "DELETE FROM user WHERE id = ?";
+        return jdbcTmpl.update(sql, id) == 1;
     }
 
     public boolean deleteUsers(List<Integer> ids) {

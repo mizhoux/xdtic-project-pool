@@ -1,6 +1,7 @@
 package wenjing.xdtic.service;
 
 import java.util.List;
+import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wenjing.xdtic.dao.UserDao;
@@ -35,23 +36,21 @@ public class UserService {
         return user;
     }
 
-    public List<User> getUsers(String keyword, int pageNum, int size) {
-        int offset = pageNum * size;
-        List<User> users = userDao.getUsers(keyword, offset, size);
+    public List<User> getUsers(String keyword, int pageNum, int pageSize) {
+        
+        int offset = pageNum * pageSize;
+        List<User> users = userDao.getUsers(keyword, offset, pageSize);
         users.forEach(this::syncDataForFront);
 
         return users;
     }
 
-    public PagingModel<User> getPagingUsers(String keyword, int pageNum, int size) {
+    public PagingModel<User> getPagingUsers(String keyword, int pageNum, int pageSize) {
 
-        List<User> users = getUsers(keyword, pageNum, size);
-        PagingModel<User> pagingUsers = new PagingModel<>("users", users, pageNum, users.size());
+        Supplier<List<User>> users = () -> getUsers(keyword, pageNum, pageSize);
+        Supplier<Long> totalNumberOfUsers = () -> countUsers(keyword);
 
-        long totalNumOfUsers = countUsers(keyword);
-        pagingUsers.setHasMore((pageNum + 1) * size < totalNumOfUsers);
-
-        return pagingUsers;
+        return PagingModel.of("users", users, totalNumberOfUsers, pageNum, pageSize);
     }
 
     public String getUsername(Integer id) {

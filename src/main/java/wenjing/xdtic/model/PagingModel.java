@@ -27,7 +27,7 @@ public class PagingModel<T> {
     public PagingModel() {
     }
 
-    public PagingModel(String entitiesName, List<T> entities, Integer pageNum, Integer size) {
+    private PagingModel(String entitiesName, List<T> entities, Integer pageNum, Integer size) {
         this.pageNum = pageNum;
         this.size = size;
         this.entities = entities;

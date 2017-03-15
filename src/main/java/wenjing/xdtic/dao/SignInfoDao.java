@@ -18,29 +18,34 @@ public class SignInfoDao {
     @Autowired
     private JdbcTemplate jdbcTmpl;
 
-    public boolean addSignInfo(SignInfo signInfo) {
-        String SQL
-                = "INSERT INTO sign_info (pro_id, user_id, apply, skill, experience, sign_time) "
-                + "VALUES (?, ?, ?, ?, ?, NOW())";
+    private static final String SQL_ADD_SIGN_INFO
+            = "INSERT INTO sign_info "
+            + "(pro_id, user_id, apply, skill, experience, sign_time) "
+            + "VALUES (?, ?, ?, ?, ?, NOW())";
 
-        int result = jdbcTmpl.update(SQL, signInfo.getProId(), signInfo.getUserId(),
+    public boolean addSignInfo(SignInfo signInfo) {
+
+        int result = jdbcTmpl.update(SQL_ADD_SIGN_INFO,
+                signInfo.getProId(), signInfo.getUserId(),
                 signInfo.getApply(), signInfo.getSkill(), signInfo.getExperience());
 
         return result == 1;
     }
 
+    private static final String SQL_GET_SIGN_INFO
+            = "SELECT u.username, s.* FROM sign_info s, user u "
+            + "WHERE s.id = ? AND u.id = s.user_id";
+
     public SignInfo getSignInfo(Integer id) {
-        String SQL
-                = "SELECT u.username, s.* FROM sign_info s, user u "
-                + "WHERE s.id = ? AND u.id = s.user_id";
-        return jdbcTmpl.query(SQL, rs -> rs.next() ? parseSignInfo(rs, 1) : null, id);
+        return jdbcTmpl.query(SQL_GET_SIGN_INFO, rs -> rs.next() ? parseSignInfo(rs, 1) : null, id);
     }
 
+    private static final String SQL_GET_SIGN_INFOS
+            = "SELECT u.username, s.* FROM sign_info s, user u "
+            + "WHERE pro_id = ? AND u.id = s.user_id";
+
     public List<SignInfo> getSignInfos(Integer proId) {
-        String SQL
-                = "SELECT u.username, s.* FROM sign_info s, user u "
-                + "WHERE pro_id = ? AND u.id = s.user_id";
-        return jdbcTmpl.query(SQL, this::parseSignInfo, proId);
+        return jdbcTmpl.query(SQL_GET_SIGN_INFOS, this::parseSignInfo, proId);
     }
 
     private SignInfo parseSignInfo(ResultSet rs, int rowNum) throws SQLException {

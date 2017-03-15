@@ -25,8 +25,8 @@ public class AdminDao {
      * @return
      */
     public Admin getAdmin(String username, String password) {
-        String SQL = "SELECT * FROM admin WHERE username = ? AND password = ?";
-        Admin admin = jdbcTmpl.query(SQL,
+        String sql = "SELECT * FROM admin WHERE username = ? AND password = ?";
+        Admin admin = jdbcTmpl.query(sql,
                 rs -> rs.next() ? parseAdmin(rs) : null, username, password);
         return admin;
     }

@@ -36,7 +36,7 @@ public class HomeController {
     }
 
     /**
-     * 当没有控制器可以匹配输入的 url 时，会进入次方法
+     * 当没有控制器可以匹配输入的 url 时，会进入此方法
      *
      * @return
      */

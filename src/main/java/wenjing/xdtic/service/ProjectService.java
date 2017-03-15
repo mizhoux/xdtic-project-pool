@@ -60,14 +60,14 @@ public class ProjectService {
      *
      * @param keyword 搜索关键字，默认为 ""
      * @param pageNum 此时的页数
-     * @param size 每页的元素数量
+     * @param pageSize 每页的元素数量
      * @param userId 用来判断项目是否已经被该用户收藏
      * @return
      */
     public List<Project> getAcceptedProjects(
-            String keyword, int pageNum, int size, Integer userId) {
+            String keyword, int pageNum, int pageSize, Integer userId) {
 
-        List<Project> projects = getAcceptedProjects(keyword, pageNum, size);
+        List<Project> projects = getAcceptedProjects(keyword, pageNum, pageSize);
 
         Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
         projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
@@ -80,13 +80,13 @@ public class ProjectService {
      *
      * @param keyword
      * @param pageNum
-     * @param size
+     * @param pageSize
      * @return
      */
-    public List<Project> getAcceptedProjects(String keyword, int pageNum, int size) {
-        int offset = pageNum * size;
+    public List<Project> getAcceptedProjects(String keyword, int pageNum, int pageSize) {
+        int offset = pageNum * pageSize;
 
-        List<Project> projects = proDao.getAcceptedProjects(keyword, offset, size);
+        List<Project> projects = proDao.getAcceptedProjects(keyword, offset, pageSize);
         projects.forEach(this::syncDataForFront);
 
         return projects;
@@ -109,10 +109,10 @@ public class ProjectService {
         return ImmutableMap.of("hotSize", projects.size(), "projects", projects);
     }
 
-    public List<Project> getUncheckedProjects(String keyword, int pageNum, int size) {
+    public List<Project> getUncheckedProjects(String keyword, int pageNum, int pageSize) {
 
-        int offset = pageNum * size;
-        List<Project> projects = proDao.getUncheckedProjects(keyword, offset, size);
+        int offset = pageNum * pageSize;
+        List<Project> projects = proDao.getUncheckedProjects(keyword, offset, pageSize);
         projects.forEach(this::syncDataForFront);
 
         return projects;
@@ -122,10 +122,10 @@ public class ProjectService {
         return proDao.countUncheckedProjects(keyword);
     }
 
-    public List<Project> getPostedProjects(Integer userId, int pageNum, int size) {
+    public List<Project> getPostedProjects(Integer userId, int pageNum, int pageSize) {
 
-        int offset = pageNum * size;
-        List<Project> projects = proDao.getPostedProjects(userId, offset, size);
+        int offset = pageNum * pageSize;
+        List<Project> projects = proDao.getPostedProjects(userId, offset, pageSize);
 
         Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
         projects.forEach(project -> {
@@ -140,10 +140,10 @@ public class ProjectService {
         return proDao.countPostedProjects(userId);
     }
 
-    public List<Project> getCollectedProjects(Integer userId, int pageNum, int size) {
+    public List<Project> getCollectedProjects(Integer userId, int pageNum, int pageSize) {
 
-        int offset = pageNum * size;
-        List<Project> projects = proDao.getCollectedProjects(userId, offset, size);
+        int offset = pageNum * pageSize;
+        List<Project> projects = proDao.getCollectedProjects(userId, offset, pageSize);
         projects.forEach(project -> {
             project.setIsCollected(true);
             syncDataForFront(project);
@@ -156,10 +156,10 @@ public class ProjectService {
         return proDao.countCollectedProjects(userId);
     }
 
-    public List<Project> getJoinedProjects(Integer userId, int pageNum, int size) {
+    public List<Project> getJoinedProjects(Integer userId, int pageNum, int pageSize) {
 
-        int offset = pageNum * size;
-        List<Project> projects = proDao.getJoinedProjects(userId, offset, size);
+        int offset = pageNum * pageSize;
+        List<Project> projects = proDao.getJoinedProjects(userId, offset, pageSize);
 
         Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
         projects.forEach(project -> {
