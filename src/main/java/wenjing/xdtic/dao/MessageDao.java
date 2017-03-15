@@ -3,6 +3,7 @@ package wenjing.xdtic.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -28,14 +29,14 @@ public class MessageDao {
                 msg.getUserId(), msg.getProId(), msg.getContent(), msg.getType()) == 1;
     }
 
-    public Message getMessage(Integer id) {
+    public Optional<Message> getMessage(Integer id) {
         String sql = "SELECT * FROM message WHERE id = ?";
-        return jdbcTmpl.query(sql, rs -> rs.next() ? parseMessage(rs, 1) : null, id);
+        return jdbcTmpl.query(sql, this::extractMessage, id);
     }
 
     public List<Message> getMessages(Integer userId, int offset, int size) {
         String sql = "SELECT * FROM message WHERE user_id = ? ORDER BY date DESC LIMIT ?, ?";
-        return jdbcTmpl.query(sql, this::parseMessage, userId, offset, size);
+        return jdbcTmpl.query(sql, this::mapMessage, userId, offset, size);
     }
 
     /**
@@ -77,7 +78,28 @@ public class MessageDao {
         return jdbcTmpl.queryForObject(sql, Long.class, userId);
     }
 
-    private Message parseMessage(ResultSet rs, int rowNum) throws SQLException {
+    /**
+     * 从 ResultSet 提取数据，将其映射为 Message，目标函数为 ResultSetExtractor.extractData
+     *
+     * @param rs
+     * @return
+     * @throws SQLException
+     * @see org.springframework.jdbc.core.ResultSetExtractor
+     */
+    private Optional<Message> extractMessage(ResultSet rs) throws SQLException {
+        return rs.next() ? Optional.of(mapMessage(rs, 1)) : Optional.empty();
+    }
+
+    /**
+     * 将 ResultSet 中的数据其映射为 Message，目标函数为 RowMapper.mapRow
+     *
+     * @param rs
+     * @param rowNum
+     * @return
+     * @throws SQLException
+     * @see org.springframework.jdbc.core.RowMapper
+     */
+    private Message mapMessage(ResultSet rs, int rowNum) throws SQLException {
         Message message = new Message();
 
         message.setId(rs.getInt("id"));

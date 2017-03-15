@@ -1,12 +1,12 @@
 package wenjing.xdtic.action;
 
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import wenjing.xdtic.model.Project;
 import wenjing.xdtic.service.ProjectService;
 
@@ -38,9 +38,13 @@ public class AdminController {
     }
 
     @GetMapping("project")
-    public ModelAndView getProjectDetailPage(@RequestParam Integer proId) {
-        Project project = proService.getProject(proId);
-        return new ModelAndView("admin/project/detail", "project", project);
+    public String getProjectDetailPage(
+            HttpServletRequest request, @RequestParam Integer proId) {
+
+        Optional<Project> project = proService.getProject(proId);
+        project.ifPresent(p -> request.setAttribute("project", p));
+
+        return project.map(p -> "admin/project/detail").orElse("error");
     }
 
     @GetMapping("project/look")
@@ -52,5 +56,5 @@ public class AdminController {
     public String getUsersPage() {
         return "admin/user/look";
     }
-    
+
 }

@@ -3,6 +3,7 @@ package wenjing.xdtic.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -36,8 +37,8 @@ public class SignInfoDao {
             = "SELECT u.username, s.* FROM sign_info s, user u "
             + "WHERE s.id = ? AND u.id = s.user_id";
 
-    public SignInfo getSignInfo(Integer id) {
-        return jdbcTmpl.query(SQL_GET_SIGN_INFO, rs -> rs.next() ? parseSignInfo(rs, 1) : null, id);
+    public Optional<SignInfo> getSignInfo(Integer id) {
+        return jdbcTmpl.query(SQL_GET_SIGN_INFO, this::extractSignInfo, id);
     }
 
     private static final String SQL_GET_SIGN_INFOS
@@ -45,10 +46,14 @@ public class SignInfoDao {
             + "WHERE pro_id = ? AND u.id = s.user_id";
 
     public List<SignInfo> getSignInfos(Integer proId) {
-        return jdbcTmpl.query(SQL_GET_SIGN_INFOS, this::parseSignInfo, proId);
+        return jdbcTmpl.query(SQL_GET_SIGN_INFOS, this::mapSignInfo, proId);
     }
 
-    private SignInfo parseSignInfo(ResultSet rs, int rowNum) throws SQLException {
+    private Optional<SignInfo> extractSignInfo(ResultSet rs) throws SQLException {
+        return rs.next() ? Optional.of(mapSignInfo(rs, 1)) : Optional.empty();
+    }
+
+    private SignInfo mapSignInfo(ResultSet rs, int rowNum) throws SQLException {
         SignInfo signInfo = new SignInfo();
 
         signInfo.setId(rs.getInt("id"));

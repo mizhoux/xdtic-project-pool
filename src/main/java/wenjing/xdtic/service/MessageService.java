@@ -54,22 +54,20 @@ public class MessageService {
         return messageDao.countUnreadMessages(userId);
     }
 
-    public void syncDataForBack(Message message) {
-        if (message == null) {
-            return;
-        }
+    public Message syncDataForBack(Message message) {
         message.setId(message.getMid());
         message.setUserId(message.getUid());
         message.setContent(message.getMassage());
+
+        return message;
     }
 
-    public void syncDataForFront(Message message) {
-        if (message == null) {
-            return;
-        }
+    public Message syncDataForFront(Message message) {
         message.setMid(message.getId());
         message.setUid(message.getUserId());
         message.setMassage(message.getContent());
+
+        return message;
     }
 
 }

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -71,7 +72,7 @@ public class ProjectDao {
                 project.getContact(), project.getStatus(), project.getUserId(), project.getId()) == 1;
     }
 
-    public Project getProject(Integer id) {
+    public Optional<Project> getProject(Integer id) {
         String sql = "SELECT * FROM project WHERE id = ?";
         return jdbcTmpl.query(sql, this::extractProject, id);
     }
@@ -90,7 +91,7 @@ public class ProjectDao {
                 + "WHERE p.status = 'pass' AND  " + getSearchCondition(keyword)
                 + "ORDER BY date DESC LIMIT ?, ?";
 
-        return jdbcTmpl.query(SQL, this::parseProject, offset, size);
+        return jdbcTmpl.query(SQL, this::mapProject, offset, size);
     }
 
     public long countAcceptedProjects(String keyword) {
@@ -115,7 +116,7 @@ public class ProjectDao {
                 + "(SELECT pc.pro_id, COUNT(*) AS num FROM pro_collection pc GROUP BY pc.pro_id ORDER BY num DESC LIMIT ?) AS t "
                 + "WHERE p.status = 'pass' AND p.id = t.pro_id AND " + getSearchCondition(keyword);
 
-        return jdbcTmpl.query(sql, this::parseProject, hotSize);
+        return jdbcTmpl.query(sql, this::mapProject, hotSize);
     }
 
     /**
@@ -132,7 +133,7 @@ public class ProjectDao {
                 + "WHERE p.status = 'check' AND " + getSearchCondition(keyword)
                 + "ORDER BY date DESC LIMIT ?, ?";
 
-        return jdbcTmpl.query(sql, this::parseProject, offset, size);
+        return jdbcTmpl.query(sql, this::mapProject, offset, size);
     }
 
     public long countUncheckedProjects(String keyword) {
@@ -152,7 +153,7 @@ public class ProjectDao {
      */
     public List<Project> getPostedProjects(Integer userId, int offset, int size) {
         String sql = "SELECT p.* FROM project p WHERE p.user_id = ? ORDER BY date DESC LIMIT ?, ?";
-        return jdbcTmpl.query(sql, this::parseProject, userId, offset, size);
+        return jdbcTmpl.query(sql, this::mapProject, userId, offset, size);
     }
 
     /**
@@ -180,7 +181,7 @@ public class ProjectDao {
      * @return
      */
     public List<Project> getCollectedProjects(Integer userId, int offset, int size) {
-        return jdbcTmpl.query(SQL_GET_COLLECTED_PROJECTS, this::parseProject, userId, offset, size);
+        return jdbcTmpl.query(SQL_GET_COLLECTED_PROJECTS, this::mapProject, userId, offset, size);
     }
 
     private static final String SQL_COUNT_COLLECTED_PROJECTS
@@ -211,7 +212,7 @@ public class ProjectDao {
      * @return
      */
     public List<Project> getJoinedProjects(Integer userId, int offset, int size) {
-        return jdbcTmpl.query(SQL_GET_JOINED_PROJECTS, this::parseProject, userId, offset, size);
+        return jdbcTmpl.query(SQL_GET_JOINED_PROJECTS, this::mapProject, userId, offset, size);
     }
 
     private static final String SQL_COUNT_JOINED_PROJECTS
@@ -292,25 +293,27 @@ public class ProjectDao {
     }
 
     /**
-     * 将 ResultSet 中的数据转化为 Project （用于 ResultSetExtractor）
+     * 从 ResultSet 提取数据，将其映射为 Project，目标函数为 ResultSetExtractor.extractData
      *
      * @param rs
      * @return
      * @throws SQLException
+     * @see org.springframework.jdbc.core.ResultSetExtractor
      */
-    private Project extractProject(ResultSet rs) throws SQLException {
-        return rs.next() ? parseProject(rs, 1) : null;
+    private Optional<Project> extractProject(ResultSet rs) throws SQLException {
+        return rs.next() ? Optional.of(mapProject(rs, 1)) : Optional.empty();
     }
 
     /**
-     * 将 ResultSet 中的数据转化为 Project （用于 RowMapper）
+     * 将 ResultSet 中的数据其映射为 Project，目标函数为 RowMapper.mapRow
      *
-     * @param rs ResultSet
-     * @param rowNum 数据的行号
+     * @param rs
+     * @param rowNum
      * @return
      * @throws SQLException
+     * @see org.springframework.jdbc.core.RowMapper
      */
-    private Project parseProject(ResultSet rs, int rowNum) throws SQLException {
+    private Project mapProject(ResultSet rs, int rowNum) throws SQLException {
         Project project = new Project();
 
         project.setId(rs.getInt("id"));
@@ -333,7 +336,7 @@ public class ProjectDao {
 
         condition.append("(p.tag LIKE '%").append(keyword).append("%'")
                 .append(" OR p.name LIKE '%").append(keyword).append("%'")
-                .append(" OR p.content LIKE '%").append(keyword).append("%')");
+                .append(" OR p.content LIKE '%").append(keyword).append("%') ");
 
         return condition.toString();
     }

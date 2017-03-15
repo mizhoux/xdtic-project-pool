@@ -5,6 +5,7 @@ import static java.lang.Boolean.TRUE;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -40,7 +41,7 @@ public class UserDao {
      * @param id 用户ID
      * @return 查询到的用户
      */
-    public User getUser(Integer id) {
+    public Optional<User> getUser(Integer id) {
         String sql = "SELECT * FROM user WHERE id = ?";
         return jdbcTmpl.query(sql, this::extractUser, id);
     }
@@ -52,7 +53,7 @@ public class UserDao {
      * @param password 密码
      * @return 查询的用户
      */
-    public User getUser(String username, String password) {
+    public Optional<User> getUser(String username, String password) {
         String sql = "SELECT * FROM user WHERE username = ? AND password = ?";
         return jdbcTmpl.query(sql, this::extractUser, username, password);
     }
@@ -60,7 +61,7 @@ public class UserDao {
     public List<User> getUsers(String keyword, int offset, int size) {
         String SQL = "SELECT u.* FROM user AS u WHERE "
                 + getSearchCondition(keyword) + " LIMIT ?, ?";
-        return jdbcTmpl.query(SQL, this::parseUser, offset, size);
+        return jdbcTmpl.query(SQL, this::mapUser, offset, size);
     }
 
     /**
@@ -135,25 +136,27 @@ public class UserDao {
     }
 
     /**
-     * 将 ResultSet 中的数据转换为用户（用于 ResultSetExtractor，rs 的游标需要自己处理）
+     * 从 ResultSet 提取数据，将其映射为 User，目标函数为 ResultSetExtractor.extractData
      *
-     * @param rs ResultSet
-     * @return 用户
+     * @param rs
+     * @return
      * @throws SQLException
+     * @see org.springframework.jdbc.core.ResultSetExtractor
      */
-    private User extractUser(ResultSet rs) throws SQLException {
-        return rs.next() ? parseUser(rs, 1) : null;
+    private Optional<User> extractUser(ResultSet rs) throws SQLException {
+        return rs.next() ? Optional.of(mapUser(rs, 1)) : Optional.empty();
     }
 
     /**
-     * 将 ResultSet 中的数据转换为用户（用于 RowMapper，rs 的游标会自动移动）
+     * 将 ResultSet 中的数据其映射为 User，目标函数为 RowMapper.mapRow
      *
      * @param rs
      * @param rowNum
-     * @return 用户
+     * @return
      * @throws SQLException
+     * @see org.springframework.jdbc.core.RowMapper
      */
-    private User parseUser(ResultSet rs, int rowNum) throws SQLException {
+    private User mapUser(ResultSet rs, int rowNum) throws SQLException {
         User user = new User();
 
         user.setId(rs.getInt("id"));

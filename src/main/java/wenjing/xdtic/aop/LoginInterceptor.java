@@ -30,7 +30,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 return true;
             }
 
-            Object admin = ipCache.get(request.getRemoteAddr());
+            Object admin = ipCache.get("A" + request.getRemoteAddr());
             if (admin != null && admin instanceof Admin) {
                 return true;
             }
@@ -43,7 +43,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 return true;
             }
 
-            Object user = ipCache.get(request.getRemoteAddr());
+            Object user = ipCache.get("U" + request.getRemoteAddr());
             if (user != null && user instanceof User) {
                 return true;
             }

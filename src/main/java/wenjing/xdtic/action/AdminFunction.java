@@ -2,8 +2,8 @@ package wenjing.xdtic.action;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
@@ -45,19 +45,21 @@ public class AdminFunction {
     private IpAddressCache ipCache;
 
     @PostMapping(value = "login", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public String login(HttpServletRequest request, HttpSession session,
+    public String login(HttpServletRequest request,
             @RequestParam String username, @RequestParam String password) {
 
-        Admin admin = adminService.getAdmin(username, password);
+        Optional<Admin> admin = adminService.getAdmin(username, password);
 
-        if (admin == null) {
+        admin.ifPresent(a -> {
+            ipCache.put("A" + request.getRemoteAddr(), a);
+            request.getSession().setAttribute("admin", a);
+        });
+
+        if (!admin.isPresent()) {
             request.setAttribute("loginFail", Boolean.TRUE);
-            return "admin/login";
         }
 
-        ipCache.put(request.getRemoteAddr(), admin);
-        session.setAttribute("admin", admin);
-        return "redirect:/admin";
+        return admin.map(a -> "redirect:/admin").orElse("admin/login");
     }
 
     @ResponseBody
