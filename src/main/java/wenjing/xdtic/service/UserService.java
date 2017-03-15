@@ -46,10 +46,10 @@ public class UserService {
     public PagingModel<User> getPagingUsers(String keyword, int pageNum, int size) {
 
         List<User> users = getUsers(keyword, pageNum, size);
-        PagingModel<User> pagingUsers = new PagingModel<>(users, pageNum, users.size(), "users");
+        PagingModel<User> pagingUsers = new PagingModel<>("users", users, pageNum, users.size());
 
-        long count = countUsers(keyword);
-        pagingUsers.setHasMore((pageNum + 1) * size < count);
+        long totalNumOfUsers = countUsers(keyword);
+        pagingUsers.setHasMore((pageNum + 1) * size < totalNumOfUsers);
 
         return pagingUsers;
     }

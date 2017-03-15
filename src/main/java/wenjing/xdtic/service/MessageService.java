@@ -1,6 +1,7 @@
 package wenjing.xdtic.service;
 
 import java.util.List;
+import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wenjing.xdtic.dao.MessageDao;
@@ -31,16 +32,11 @@ public class MessageService {
     }
 
     public PagingModel<Message> getPagingMessages(Integer userId, int pageNum, int pageSize) {
-        List<Message> msgs = getMessages(userId, pageNum, pageSize);
 
-        PagingModel<Message> pagingMsgs = new PagingModel<>(msgs, pageNum, msgs.size());
+        Supplier<List<Message>> msgs = () -> getMessages(userId, pageNum, pageSize);
+        Supplier<Long> totalNumOfMsgs = () -> countMessages(userId);
 
-        long count = countMessages(userId);
-        pagingMsgs.setHasMore((pageNum + 1) * pageSize < count);
-
-        pagingMsgs.setEntitiesName("msgs");
-
-        return pagingMsgs;
+        return PagingModel.of("msgs", msgs, totalNumOfMsgs, pageNum, pageSize);
     }
 
     public long countMessages(Integer userId) {

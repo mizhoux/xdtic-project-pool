@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.function.Supplier;
 
 /**
+ * 分页模型，包括当前页面的实体 {@code entities}，当前页号 {@code pageNum}<br>
+ * 当前页面实体数量 {@code size}，以及是否之后还有页面 {@code hasMore}
  *
  * @author Michael Chow
- * @param <T>
+ * @param <T> 实体类型
  */
 @JsonSerialize(using = PagingModelSerializer.class)
 public class PagingModel<T> {
@@ -25,28 +27,34 @@ public class PagingModel<T> {
     public PagingModel() {
     }
 
-    public PagingModel(List<T> entities, Integer pageNum, Integer size) {
-        this.pageNum = pageNum;
-        this.size = size;
-        this.entities = entities;
-    }
-
-    public PagingModel(List<T> entities, Integer pageNum, Integer size, String entitiesName) {
+    public PagingModel(String entitiesName, List<T> entities, Integer pageNum, Integer size) {
         this.pageNum = pageNum;
         this.size = size;
         this.entities = entities;
         this.entitiesName = entitiesName;
     }
 
+    /**
+     * 获得一个分页模型
+     *
+     * @param <T> 实体类型
+     * @param entitiesName 实体名称
+     * @param entitiesSupplier 实体获取器
+     * @param totalNumberSupplier 实体总数获取器
+     * @param pageNum 请求的页面的页号
+     * @param pageSize 请求的页面实体数量
+     * @return
+     */
     public static <T> PagingModel<T> of(
-            Supplier<List<T>> entitiesSupplier, String entitiesName,
-            Supplier<Long> countSupplier, int pageNum, int pageSize) {
+            String entitiesName, Supplier<List<T>> entitiesSupplier,
+            Supplier<Long> totalNumberSupplier, int pageNum, int pageSize) {
 
+        long number = totalNumberSupplier.get();
         List<T> entities = entitiesSupplier.get();
-        long count = countSupplier.get();
 
-        PagingModel<T> pagingModel = new PagingModel<>(entities, pageNum, entities.size(), entitiesName);
-        pagingModel.setHasMore((pageNum + 1) * pageSize < count);
+        PagingModel<T> pagingModel = new PagingModel<>(
+                entitiesName, entities, pageNum, entities.size());
+        pagingModel.setHasMore((pageNum + 1) * pageSize < number);
 
         return pagingModel;
     }

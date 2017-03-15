@@ -174,13 +174,6 @@ public class ProjectService {
         return proDao.countJoinedProjects(userId);
     }
 
-    /**
-     * 添加收藏
-     *
-     * @param userId
-     * @param proId
-     * @return
-     */
     public boolean addCollection(Integer userId, Integer proId) {
         return proDao.addCollection(userId, proId);
     }
@@ -201,51 +194,53 @@ public class ProjectService {
         return proDao.deleteProject(proId);
     }
 
-    public PagingModel<Project> getPagingUncheckedProjects(String keyword, int pageNum, int size) {
+    public PagingModel<Project> getPagingUncheckedProjects(String keyword, int pageNum, int pageSize) {
 
-        Supplier<Long> count = () -> countUncheckedProjects(keyword);
-        Supplier<List<Project>> projects = () -> getUncheckedProjects(keyword, pageNum, size);
+        Supplier<Long> totalNumOfProjects = () -> countUncheckedProjects(keyword);
+        Supplier<List<Project>> projects = () -> getUncheckedProjects(keyword, pageNum, pageSize);
 
-        return PagingModel.of(projects, "projects", count, pageNum, size);
+        return PagingModel.of("projects", projects, totalNumOfProjects, pageNum, pageSize);
     }
 
-    public PagingModel<Project> getPagingAcceptedProjects(String keyword, int pageNum, int size, Integer userId) {
-        Supplier<Long> count = () -> countAcceptedProjects(keyword);
-        Supplier<List<Project>> projects = () -> getAcceptedProjects(keyword, pageNum, size, userId);
+    public PagingModel<Project> getPagingAcceptedProjects(
+            String keyword, int pageNum, int pageSize, Integer userId) {
 
-        return PagingModel.of(projects, "projects", count, pageNum, size);
+        Supplier<Long> totalNumOfProjects = () -> countAcceptedProjects(keyword);
+        Supplier<List<Project>> projects = () -> getAcceptedProjects(keyword, pageNum, pageSize, userId);
+
+        return PagingModel.of("projects", projects, totalNumOfProjects, pageNum, pageSize);
     }
 
     public PagingModel<Project> getPagingCollectedProjects(Integer userId, int pageNum, int pageSize) {
 
-        Supplier<Long> count = () -> countCollectedProjects(userId);
+        Supplier<Long> totalNumOfProjects = () -> countCollectedProjects(userId);
         Supplier<List<Project>> projects = () -> getCollectedProjects(userId, pageNum, pageSize);
 
-        return PagingModel.of(projects, "projects", count, pageNum, pageSize);
+        return PagingModel.of("projects", projects, totalNumOfProjects, pageNum, pageSize);
     }
 
     public PagingModel<Project> getPagingPostedProjects(Integer userId, int pageNum, int pageSize) {
 
-        Supplier<Long> count = () -> countPostedProjects(userId);
+        Supplier<Long> totalNumOfProjects = () -> countPostedProjects(userId);
         Supplier<List<Project>> projects = () -> getPostedProjects(userId, pageNum, pageSize);
 
-        return PagingModel.of(projects, "projects", count, pageNum, pageSize);
+        return PagingModel.of("projects", projects, totalNumOfProjects, pageNum, pageSize);
     }
 
     public PagingModel<Project> getPagingAcceptedProjects(String keyword, int pageNum, int pageSize) {
 
-        Supplier<Long> count = () -> countAcceptedProjects(keyword);
+        Supplier<Long> totalNumOfProjects = () -> countAcceptedProjects(keyword);
         Supplier<List<Project>> projects = () -> getAcceptedProjects(keyword, pageNum, pageSize);
 
-        return PagingModel.of(projects, "projects", count, pageNum, pageSize);
+        return PagingModel.of("projects", projects, totalNumOfProjects, pageNum, pageSize);
     }
 
     public PagingModel<Project> getPagingJoinedProjects(Integer userId, int pageNum, int pageSize) {
 
-        Supplier<Long> count = () -> countJoinedProjects(userId);
+        Supplier<Long> totalNumOfProjects = () -> countJoinedProjects(userId);
         Supplier<List<Project>> projects = () -> getJoinedProjects(userId, pageNum, pageSize);
 
-        return PagingModel.of(projects, "projects", count, pageNum, pageSize);
+        return PagingModel.of("projects", projects, totalNumOfProjects, pageNum, pageSize);
     }
 
     @CacheEvict(value = "project", key = "#project.id")
