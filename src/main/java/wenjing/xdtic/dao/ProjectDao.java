@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Optional;
+import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -88,7 +89,7 @@ public class ProjectDao {
     public List<Project> getAcceptedProjects(String keyword, int offset, int size) {
         String SQL
                 = "SELECT p.* FROM project AS p "
-                + "WHERE p.status = 'pass' AND  " + getSearchCondition(keyword)
+                + "WHERE p.status = 'pass' AND " + getSearchCondition(keyword)
                 + "ORDER BY date DESC LIMIT ?, ?";
 
         return jdbcTmpl.query(SQL, this::mapProject, offset, size);
@@ -113,7 +114,7 @@ public class ProjectDao {
     public List<Project> getHotProjects(String keyword, int hotSize, Integer userId) {
 
         String sql = "SELECT p.* FROM project AS p, "
-                + "(SELECT pc.pro_id, COUNT(*) AS num FROM pro_collection pc GROUP BY pc.pro_id ORDER BY num DESC LIMIT ?) AS t "
+                + "(SELECT ps.pro_id, COUNT(*) AS num FROM pro_stars ps GROUP BY ps.pro_id ORDER BY num DESC LIMIT ?) AS t "
                 + "WHERE p.status = 'pass' AND p.id = t.pro_id AND " + getSearchCondition(keyword);
 
         return jdbcTmpl.query(sql, this::mapProject, hotSize);
@@ -169,7 +170,7 @@ public class ProjectDao {
 
     private static final String SQL_GET_COLLECTED_PROJECTS
             = "SELECT p.* FROM project p "
-            + "WHERE p.id IN (SELECT pc.pro_id FROM pro_collection pc WHERE pc.user_id = ?)"
+            + "WHERE p.id IN (SELECT ps.pro_id FROM pro_stars ps WHERE ps.user_id = ?)"
             + "LIMIT ?, ?";
 
     /**
@@ -186,7 +187,7 @@ public class ProjectDao {
 
     private static final String SQL_COUNT_COLLECTED_PROJECTS
             = "SELECT COUNT(*) FROM project p WHERE p.id IN "
-            + "(SELECT pc.pro_id FROM pro_collection pc WHERE pc.user_id = ?)";
+            + "(SELECT ps.pro_id FROM pro_stars ps WHERE ps.user_id = ?)";
 
     /**
      * 获得用户收藏的项目数量
@@ -237,7 +238,7 @@ public class ProjectDao {
      * @return
      */
     public boolean addCollection(Integer userId, Integer proId) {
-        String sql = "INSERT INTO pro_collection SET user_id = ?, pro_id = ?";
+        String sql = "INSERT INTO pro_stars SET user_id = ?, pro_id = ?";
         return jdbcTmpl.update(sql, userId, proId) == 1;
     }
 
@@ -249,7 +250,7 @@ public class ProjectDao {
      * @return
      */
     public boolean deleteCollection(Integer userId, Integer proId) {
-        String sql = "DELETE FROM pro_collection WHERE user_id = ? AND pro_id = ?";
+        String sql = "DELETE FROM pro_stars WHERE user_id = ? AND pro_id = ?";
         return jdbcTmpl.update(sql, userId, proId) == 1;
     }
 
@@ -261,7 +262,7 @@ public class ProjectDao {
      * @return
      */
     public boolean containsCollection(Integer userId, Integer proId) {
-        String sql = "SELECT COUNT(*) FROM pro_collection WHERE user_id = ? AND pro_id = ?";
+        String sql = "SELECT COUNT(*) FROM pro_stars WHERE user_id = ? AND pro_id = ?";
         return jdbcTmpl.queryForObject(sql, Long.class, userId, proId) == 1;
     }
 
@@ -288,7 +289,7 @@ public class ProjectDao {
     }
 
     public List<Integer> getCollectedProjectIds(Integer userId) {
-        String sql = "SELECT pc.pro_id FROM pro_collection pc WHERE pc.user_id = ?";
+        String sql = "SELECT ps.pro_id FROM pro_stars ps WHERE ps.user_id = ?";
         return jdbcTmpl.queryForList(sql, Integer.class, userId);
     }
 
@@ -330,15 +331,38 @@ public class ProjectDao {
         return project;
     }
 
-    private String getSearchCondition(String keyword) {
+    private String getSearchCondition(String keywords) {
+        StringJoiner columnJoiner = new StringJoiner(",',',", "CONCAT(", ")");
+        columnJoiner.add("p.tag").add("p.name").add("p.content").add("p.username");
+        String columns = columnJoiner.toString();
 
+        String[] keys = keywords.split("\\s+");
         StringBuilder condition = new StringBuilder(80);
-
-        condition.append("(p.tag LIKE '%").append(keyword).append("%'")
-                .append(" OR p.name LIKE '%").append(keyword).append("%'")
-                .append(" OR p.content LIKE '%").append(keyword).append("%') ");
+        for (String keyword : keys) {
+            keyword = getSearchKeyword(keyword);
+            condition.append(columns).append(" LIKE '%")
+                    .append(keyword).append("%' AND ");
+        }
+        condition.delete(condition.length() - 4, condition.length());
 
         return condition.toString();
+    }
+
+    private String getSearchKeyword(String keyword) {
+        if (keyword.isEmpty()) {
+            return keyword;
+        }
+
+        keyword = keyword.toLowerCase();
+        if (keyword.equals("android")) {
+            return "安卓";
+        }
+
+        if (keyword.equals("网站") || keyword.equals("前端") || keyword.equals("后端")) {
+            return "web";
+        }
+
+        return keyword;
     }
 
 }

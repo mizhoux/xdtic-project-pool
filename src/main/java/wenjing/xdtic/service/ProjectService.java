@@ -67,27 +67,15 @@ public class ProjectService {
     public List<Project> getAcceptedProjects(
             String keyword, int pageNum, int pageSize, Integer userId) {
 
-        List<Project> projects = getAcceptedProjects(keyword, pageNum, pageSize);
-
-        Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
-        projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
-
-        return projects;
-    }
-
-    /**
-     * 从数据中按分页条件获取审核通过的项目，不需要判断该项目是否被某个用户收藏
-     *
-     * @param keyword
-     * @param pageNum
-     * @param pageSize
-     * @return
-     */
-    public List<Project> getAcceptedProjects(String keyword, int pageNum, int pageSize) {
         int offset = pageNum * pageSize;
 
         List<Project> projects = projectDao.getAcceptedProjects(keyword, offset, pageSize);
         projects.forEach(this::syncDataForFront);
+
+        if (userId != null) {
+            Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
+            projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
+        }
 
         return projects;
     }
@@ -101,9 +89,9 @@ public class ProjectService {
         List<Project> projects = projectDao.getHotProjects(keyword, hotSize, userId);
 
         Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
-        projects.forEach(project -> {
-            project.setIsCollected(collectedProIds.contains(project.getId()));
-            syncDataForFront(project);
+        projects.forEach(pro -> {
+            pro.setIsCollected(collectedProIds.contains(pro.getId()));
+            syncDataForFront(pro);
         });
 
         return ImmutableMap.of("hotSize", projects.size(), "projects", projects);
@@ -128,9 +116,9 @@ public class ProjectService {
         List<Project> projects = projectDao.getPostedProjects(userId, offset, pageSize);
 
         Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
-        projects.forEach(project -> {
-            project.setIsCollected(collectedProIds.contains(project.getId()));
-            syncDataForFront(project);
+        projects.forEach(pro -> {
+            pro.setIsCollected(collectedProIds.contains(pro.getId()));
+            syncDataForFront(pro);
         });
 
         return projects;
@@ -144,9 +132,9 @@ public class ProjectService {
 
         int offset = pageNum * pageSize;
         List<Project> projects = projectDao.getCollectedProjects(userId, offset, pageSize);
-        projects.forEach(project -> {
-            project.setIsCollected(true);
-            syncDataForFront(project);
+        projects.forEach(pro -> {
+            pro.setIsCollected(true);
+            syncDataForFront(pro);
         });
 
         return projects;
@@ -162,9 +150,9 @@ public class ProjectService {
         List<Project> projects = projectDao.getJoinedProjects(userId, offset, pageSize);
 
         Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
-        projects.forEach(project -> {
-            project.setIsCollected(collectedProIds.contains(project.getId()));
-            syncDataForFront(project);
+        projects.forEach(pro -> {
+            pro.setIsCollected(collectedProIds.contains(pro.getId()));
+            syncDataForFront(pro);
         });
 
         return projects;
@@ -202,6 +190,16 @@ public class ProjectService {
         return PagingModel.of("projects", projects, totalNumOfProjects, pageNum, pageSize);
     }
 
+    /**
+     * 从数据中按分页条件获取审核通过的项目，封装为一个分页模型
+     *
+     * @param keyword 搜索关键字，默认为 ""
+     * @param pageNum 此时的页数
+     * @param pageSize 每页的元素数量
+     * @param userId 用来判断项目是否已经被该用户收藏
+     * @return 分页模型
+     * @see wenjing.xdtic.model.PagingModel
+     */
     public PagingModel<Project> getPagingAcceptedProjects(
             String keyword, int pageNum, int pageSize, Integer userId) {
 
@@ -223,14 +221,6 @@ public class ProjectService {
 
         Supplier<Long> totalNumOfProjects = () -> countPostedProjects(userId);
         Supplier<List<Project>> projects = () -> getPostedProjects(userId, pageNum, pageSize);
-
-        return PagingModel.of("projects", projects, totalNumOfProjects, pageNum, pageSize);
-    }
-
-    public PagingModel<Project> getPagingAcceptedProjects(String keyword, int pageNum, int pageSize) {
-
-        Supplier<Long> totalNumOfProjects = () -> countAcceptedProjects(keyword);
-        Supplier<List<Project>> projects = () -> getAcceptedProjects(keyword, pageNum, pageSize);
 
         return PagingModel.of("projects", projects, totalNumOfProjects, pageNum, pageSize);
     }

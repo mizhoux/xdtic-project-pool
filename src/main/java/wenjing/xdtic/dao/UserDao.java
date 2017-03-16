@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -59,9 +60,9 @@ public class UserDao {
     }
 
     public List<User> getUsers(String keyword, int offset, int size) {
-        String SQL = "SELECT u.* FROM user AS u WHERE "
+        String sql = "SELECT u.* FROM user AS u WHERE "
                 + getSearchCondition(keyword) + " LIMIT ?, ?";
-        return jdbcTmpl.query(SQL, this::mapUser, offset, size);
+        return jdbcTmpl.query(sql, this::mapUser, offset, size);
     }
 
     /**
@@ -77,7 +78,7 @@ public class UserDao {
 
     private static final String SQL_UPDATE_USER
             = "UPDATE user SET username = ?, realname = ?, nickname= ?, email = ?, gender = ?, "
-            + "specialty = ?, phone = ?, stu_num = ?, skill = ?, experience = ? WHERE id = ?";
+            + "major = ?, phone = ?, stu_num = ?, skill = ?, experience = ? WHERE id = ?";
 
     /**
      * 更新用户
@@ -89,7 +90,7 @@ public class UserDao {
 
         int result = jdbcTmpl.update(SQL_UPDATE_USER,
                 user.getUsername(), user.getRealname(), user.getNickname(),
-                user.getEmail(), user.getGender(), user.getSpecialty(), user.getPhone(),
+                user.getEmail(), user.getGender(), user.getMajor(), user.getPhone(),
                 user.getStuNum(), user.getSkill(), user.getExperience(), user.getId());
 
         return result == 1;
@@ -109,8 +110,8 @@ public class UserDao {
     }
 
     public Long countUsers(String keyword) {
-        String SQL = "SELECT COUNT(*) FROM user u WHERE " + getSearchCondition(keyword);
-        return jdbcTmpl.queryForObject(SQL, Long.class);
+        String sql = "SELECT COUNT(*) FROM user u WHERE " + getSearchCondition(keyword);
+        return jdbcTmpl.queryForObject(sql, Long.class);
     }
 
     /**
@@ -130,9 +131,9 @@ public class UserDao {
     }
 
     public boolean deleteUsers(List<Integer> ids) {
-        String SQL = "DELETE FROM user WHERE id IN "
+        String sql = "DELETE FROM user WHERE id IN "
                 + ids.stream().map(String::valueOf).collect(Collectors.joining(",", "(", ")"));
-        return jdbcTmpl.update(SQL) == ids.size();
+        return jdbcTmpl.update(sql) == ids.size();
     }
 
     /**
@@ -167,7 +168,7 @@ public class UserDao {
         user.setNickname(rs.getString("nickname"));
         user.setRealname(rs.getString("realname"));
         user.setGender(rs.getString("gender"));
-        user.setSpecialty(rs.getString("specialty"));
+        user.setMajor(rs.getString("major"));
         user.setStuNum(rs.getString("stu_num"));
         user.setSkill(rs.getString("skill"));
         user.setExperience(rs.getString("experience"));
@@ -176,10 +177,12 @@ public class UserDao {
     }
 
     private String getSearchCondition(String keyword) {
-        StringBuilder condition = new StringBuilder(55);
+        StringJoiner columnJoiner = new StringJoiner(",',',", "CONCAT(", ")");
+        columnJoiner.add("u.username").add("IFNULL(u.realname, '')");
+        String columns = columnJoiner.toString();
 
-        condition.append("u.username LIKE '%").append(keyword).append("%'")
-                .append(" OR u.realname LIKE '%").append(keyword).append("%'");
+        StringBuilder condition = new StringBuilder(55);
+        condition.append(columns).append(" LIKE '%").append(keyword).append("%'");
 
         return condition.toString();
     }

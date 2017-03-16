@@ -89,7 +89,7 @@ public class AdminFunction {
             @RequestParam("keyWords") String keyword,
             @RequestParam int pageNum, @RequestParam int size) {
 
-        return proService.getPagingAcceptedProjects(keyword, pageNum, size);
+        return proService.getPagingAcceptedProjects(keyword, pageNum, size, null);
     }
 
     @ResponseBody

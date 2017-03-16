@@ -85,7 +85,7 @@ public class UserService {
     public User syncDataForBack(User user) {
         user.setRealname(user.getName());
         user.setGender(user.getSex());
-        user.setSpecialty(user.getProfe());
+        user.setMajor(user.getProfe());
         user.setStuNum(user.getStunum());
         user.setSkill(user.getProfile());
         user.setExperience(user.getPexperice());
@@ -102,7 +102,7 @@ public class UserService {
     public User syncDataForFront(User user) {
         user.setName(user.getRealname());
         user.setSex(user.getGender());
-        user.setProfe(user.getSpecialty());
+        user.setProfe(user.getMajor());
         user.setStunum(user.getStuNum());
         user.setProfile(user.getSkill());
         user.setPexperice(user.getExperience());

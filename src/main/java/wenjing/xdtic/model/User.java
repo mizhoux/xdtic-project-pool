@@ -16,13 +16,12 @@ public class User {
     private String email;
     private String phone;
 
-    private String nickname;
-
     private String realname;
+    private String nickname;
 
     private String gender;
 
-    private String specialty;
+    private String major;
     private String stuNum;
     private String skill;
     private String experience;
@@ -109,12 +108,12 @@ public class User {
         this.gender = gender;
     }
 
-    public String getSpecialty() {
-        return specialty;
+    public String getMajor() {
+        return major;
     }
 
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
+    public void setMajor(String major) {
+        this.major = major;
     }
 
     public String getStuNum() {
@@ -191,7 +190,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", username=" + username + ", password=" + password + ", email=" + email + ", phone=" + phone + ", nickname=" + nickname + ", realname=" + realname + ", gender=" + gender + '}';
+        return "User{" + "id=" + id + ", username=" + username + ", realname=" + realname + ", email=" + email + ", phone=" + phone + '}';
     }
 
 }

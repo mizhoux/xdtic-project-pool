@@ -44,10 +44,7 @@ public class MessageService {
     }
 
     public boolean setMessagesRead(List<Integer> ids) {
-        if (ids.isEmpty()) {
-            return true;
-        }
-        return messageDao.setMessagesRead(ids);
+        return ids.isEmpty() ? true : messageDao.setMessagesRead(ids);
     }
 
     public long countUnreadMessages(Integer userId) {
