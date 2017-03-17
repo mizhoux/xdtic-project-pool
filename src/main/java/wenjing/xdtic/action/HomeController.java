@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import wenjing.xdtic.cache.IpAddressCache;
+import wenjing.xdtic.core.RemoteAddressCache;
 
 /**
  * 基本的路由控制器
@@ -15,16 +15,16 @@ import wenjing.xdtic.cache.IpAddressCache;
 public class HomeController {
 
     @Autowired
-    private IpAddressCache ipCache;
+    private RemoteAddressCache addrCache;
 
-    @GetMapping({"/", "index", "home", "login"})
+    @GetMapping({"/", "index", "login"})
     public String index() {
         return "user/login";
     }
 
     @GetMapping("logout")
     public String logout(HttpServletRequest request) {
-        ipCache.remove(request.getRemoteAddr());
+        addrCache.remove("U".concat(request.getRemoteAddr()));
         request.getSession().invalidate();
 
         return "redirect:/";

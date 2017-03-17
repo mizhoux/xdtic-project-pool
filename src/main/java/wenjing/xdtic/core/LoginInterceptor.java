@@ -1,13 +1,10 @@
-package wenjing.xdtic.aop;
+package wenjing.xdtic.core;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
-import wenjing.xdtic.cache.IpAddressCache;
-import wenjing.xdtic.model.Admin;
-import wenjing.xdtic.model.User;
 
 /**
  *
@@ -16,7 +13,7 @@ import wenjing.xdtic.model.User;
 public class LoginInterceptor extends HandlerInterceptorAdapter {
 
     @Autowired
-    private IpAddressCache ipCache;
+    private RemoteAddressCache addrCache;
 
     @Override
     public boolean preHandle(HttpServletRequest request,
@@ -30,8 +27,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 return true;
             }
 
-            Object admin = ipCache.get("A" + request.getRemoteAddr());
-            if (admin != null && admin instanceof Admin) {
+            if (addrCache.containsKey("A".concat(request.getRemoteAddr()))) {
                 return true;
             }
 
@@ -43,8 +39,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 return true;
             }
 
-            Object user = ipCache.get("U" + request.getRemoteAddr());
-            if (user != null && user instanceof User) {
+            if (addrCache.containsKey("U".concat(request.getRemoteAddr()))) {
                 return true;
             }
 
