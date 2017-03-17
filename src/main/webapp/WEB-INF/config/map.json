@@ -212,6 +212,10 @@
                 "isPage": true
             }
         },
+        "page/widget/main/projectDetail.js": {
+            "uri": "/xdtic/static/page/widget/main/projectDetail.js",
+            "type": "js"
+        },
         "page/widget/main/projectDetail.jsp": {
             "uri": "/page/widget/main/projectDetail.jsp",
             "type": "jsp",

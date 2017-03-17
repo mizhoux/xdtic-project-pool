@@ -3,7 +3,7 @@
 <%@ taglib uri="/fis" prefix="fis"%>
 
 <fis:extends name="page/layout/frame_admin.jsp">
-    <fis:block name="article">
+    <fis:block name="app">
 		<header>
 			<div class="tic-header-three">
 				<div class="tic-header-three-center">
@@ -21,39 +21,40 @@
 		<main>
 			<fis:widget name="page/widget/main/projectDetail.jsp" />	
 		</main>
-	
-        <c:choose>
-        	<c:when test="${project.statu != 'check'}">
-	        	<div class="ui buttons tic-buttons" id="projectOperation">
-		            <button class="ui red button" v-tap="{methods: deleteProject}">删除</button>
-		        </div>
-        	</c:when>
-        	<c:otherwise>
-				<div class="ui buttons tic-buttons" id="projectOperation">
-		            <button class="ui button" v-tap="{methods: reject}">拒绝</button>
-		            <div class="or"></div>
-		            <button class="ui positive button" v-tap="{methods: accept}">通过</button>
-		        </div>
-	        </c:otherwise>
-	    </c:choose>
-	    <div class="tic-tag-box">
-            <div v-show="toshow" v-cloak>
-                <div class="weui-mask"></div>
-                <div class="weui-dialog">
-                    <div class="weui-dialog__bd tic-form">
-                        <p>请简要说一下拒绝的原因（可选）</p>
-                        <input type="text" v-model="rejectReason">
-                    </div>
-                    <div class="weui-dialog__ft">
-                        <a class="weui-dialog__btn weui-dialog__btn_default"
-                         v-tap.prevent="{methods: hideRejectDialog}">取消</a>
-                        <a class="weui-dialog__btn weui-dialog__btn_primary"
-                         v-tap.prevent="{methods: ensureReject}">确定</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="toast" v-show="isChecked" v-cloak>
+
+		<div id="operationArea">
+			<c:choose>
+				<c:when test="${project.statu != 'check'}">
+					<div class="ui buttons tic-buttons" id="projectOperation">
+						<button class="ui red button" v-tap="{methods: deleteProject}">删除</button>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<div class="ui buttons tic-buttons" id="projectOperation">
+						<button class="ui button" v-tap="{methods: reject}">拒绝</button>
+						<div class="or"></div>
+						<button class="ui positive button" v-tap="{methods: accept}">通过</button>
+					</div>
+				</c:otherwise>
+			</c:choose>
+			<div class="tic-tag-box">
+				<div v-show="toshow" v-cloak>
+					<div class="weui-mask"></div>
+					<div class="weui-dialog">
+						<div class="weui-dialog__bd tic-form">
+							<p>请简要说一下拒绝的原因（可选）</p>
+							<input type="text" v-model="rejectReason">
+						</div>
+						<div class="weui-dialog__ft">
+							<a class="weui-dialog__btn weui-dialog__btn_default"
+							 v-tap.prevent="{methods: hideRejectDialog}">取消</a>
+							<a class="weui-dialog__btn weui-dialog__btn_primary"
+							 v-tap.prevent="{methods: ensureReject}">确定</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="toast" v-show="isChecked" v-cloak>
 		    <div class="weui-mask_transparent"></div>
 		    <div class="weui-toast">
 		        <i class="weui-icon-success-no-circle weui-icon_toast"></i>
@@ -67,6 +68,7 @@
 		        </c:choose>
 		    </div>
 		</div>
+		</div>
 	</fis:block>
 
 	<fis:block name="style">
@@ -77,10 +79,28 @@
 	</fis:block>
 
 	<fis:block name="jsPre">
+		<script>
+			var getMultiline = function(f) {
+				return f.toString().replace(/^[^\/]+\/\*!?\s?/, '')
+							.replace(/\*\/[^\/]+$/, '').trim();
+			};
+		</script>
 		<script type="text/javascript">
 		    var projectInfo = {
 		        "proId": "<c:out value="${project.proId}" />",
-		        "proname": "<c:out value="${project.proname}" />"
+		        "proname": "<c:out value="${project.proname}" />",
+				"promassage": getMultiline(function() {/*
+					<c:out value="${project.promassage}" />
+				*/
+				}),
+				"prowant": getMultiline(function() {/*
+					<c:out value="${project.prowant}" />
+				*/
+				}),
+				"concat": getMultiline(function() {/*
+					<c:out value="${project.concat}" />
+				*/
+				})
 		    };
 
 		    var userInfo = {};

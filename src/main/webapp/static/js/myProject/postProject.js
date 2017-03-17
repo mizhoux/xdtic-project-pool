@@ -100,11 +100,11 @@ var appPostProject = new Vue({
                 errorMsg: '项目名称至少2个字'
             }],
             promassage: [{
-                pattern: /^.{10,}$/,
+                pattern: /^(.|\n|\t){10,}$/m,
                 errorMsg: '项目详情至少10个字'
             }],
             prowant: [{
-                pattern: /^.{6,}$/,
+                pattern: /^(.|\n|\t){6,}$/m,
                 errorMsg: '招聘详情至少6个字'
             }],
             concat: [{

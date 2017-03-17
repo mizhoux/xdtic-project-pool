@@ -46,11 +46,10 @@
 
 .tic-hot::after {
   content: "HOT";
-  font-size: 1rem;
+  font-size: .6rem;
   vertical-align: top;
   color: #ff3333;
   font-weight: 600;
-  padding-left: .4rem;
 }
 
 .tic-header-hall {

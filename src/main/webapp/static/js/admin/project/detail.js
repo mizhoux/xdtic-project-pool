@@ -14,13 +14,8 @@ require('node_modules/whatwg-fetch/fetch');
 var urlOperateProject = urlPrefix + '/fn/admin/project/operate';
 
 var appBox = new Vue({
-	el: '#app',
+	el: '#operationArea',
 	data: {
-		sidePush: false,
-
-		placeholder: '随心所搜...',
-		keyWords: '',
-
 		project: projectInfo,
 
 		isChecked: false,
@@ -30,10 +25,6 @@ var appBox = new Vue({
 	},
 
 	methods: {
-		push: function push() {
-			this.sidePush = !this.sidePush;
-		},
-
 		accept: function accept() {
 			var self = this;
 
@@ -48,8 +39,6 @@ var appBox = new Vue({
 			var self = this;
 			requestProcessProject(self, 'delete');
 		},
-
-		search: function search() {},
 
 		hideRejectDialog: function hideRejectDialog() {
 			this.toshow = false;

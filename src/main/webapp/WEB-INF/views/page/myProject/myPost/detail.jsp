@@ -37,11 +37,29 @@
 	</fis:block>
 
 	<fis:block name="jsPre">
+		<script>
+			var getMultiline = function(f) {
+				return f.toString().replace(/^[^\/]+\/\*!?\s?/, '')
+                            .replace(/\*\/[^\/]+$/, '').trim();
+			};
+		</script>
 		<script type="text/javascript">
 		    var projectInfo = {
 		        "proId": '<c:out value="${project.proId}" />',
 		        "proname": '<c:out value="${project.proname}" />',
-		        "isCollected": <c:out value="${project.isCollected}" />
+		        "isCollected": <c:out value="${project.isCollected}" />,
+				"promassage": getMultiline(function() {/*
+					<c:out value="${project.promassage}" />
+				*/
+				}),
+				"prowant": getMultiline(function() {/*
+					<c:out value="${project.prowant}" />
+				*/
+				}),
+				"concat": getMultiline(function() {/*
+					<c:out value="${project.concat}" />
+				*/
+				})
 		    };
 		    var userInfo = {
 		        "id": '<c:out value="${user.id}" />'

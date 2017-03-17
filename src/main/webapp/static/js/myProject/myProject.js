@@ -16,6 +16,7 @@ var tools = require('static/js/module/tools');
 
 var urlCollect = urlPrefix + '/fn/project/collect';
 var urlUnCollect = urlPrefix + '/fn/project/uncollect';
+var urlOperate = urlPrefix + '/fn/admin/project/operate';
 
 var urlLoadProjectMap = {
 	'post': urlPrefix + '/fn/get/project/myPost',
@@ -94,6 +95,12 @@ Vue.component('tic-project', {
 					self.$emit('collectfail');
 				}
 			});
+		},
+
+		deletePost: function deletePost() {
+			if (confirm('你确定要终止该项目吗？')) {
+				this.$emit('deletepost', this.index);
+			}
 		}
 	},
 
@@ -164,6 +171,35 @@ var projectBox = new Vue({
 
 		openDialog: function openDialog() {
 			this.collectIsFail = true;
+		},
+
+		deletePost: function deletePost(index) {
+			var _this = this;
+
+			var project = this.projects[index];
+
+			fetch(urlOperate, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json'
+				},
+				body: JSON.stringify({
+					"operation": 'delete',
+					"proId": project.proId,
+					"rejectReason": ''
+				})
+			}).then(function (response) {
+				return response.json();
+			}).then(function (data) {
+				if (data.code === 'ok') {
+					_this.projects.splice(index, 1);
+				} else {
+					alert('终止项目失败，请稍后重试。');
+				}
+			})['catch'](function (error) {
+				alert('出错了，请稍后重试。');
+			});
 		}
 	}
 });
@@ -200,7 +236,7 @@ function loadProject() {
 
 	this.busy = true;
 	this.isLoading = true;
-	self = this;
+	var self = this;
 
 	fetch(url, {
 		method: 'GET',

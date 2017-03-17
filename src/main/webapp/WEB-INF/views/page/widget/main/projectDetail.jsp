@@ -1,10 +1,11 @@
 <%@ page contentType="text/html;charset=utf-8" %>
 <%@ taglib uri="/fis" prefix="fis"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <fis:require id="page/widget/main/projectDetail.scss" />
 
-<article class="tic-article">
+<article class="tic-article" id="detailProjectMain">
     <div class="tic-article-header">
         <div class="tic-article-header-left">
             <img src="/xdtic/static/images/avatar.png" alt="adoug">     
@@ -17,35 +18,31 @@
         <c:if test="${project.statu != null}">
             <c:choose>
                 <c:when test="${project.statu == 'pass'}">
-                    <c:set var="projectStatu" value="审核通过" />
+                    <c:set var="projectStatu" value="" />
                 </c:when>
                 <c:when test="${project.statu == 'reject'}">
-                    <c:set var="projectStatu" value="审核被拒" />
+                    <c:set var="projectStatu" value="状态：审核被拒" />
                 </c:when>
                 <c:otherwise>
-                    <c:set var="projectStatu" value="审核中" />
+                    <c:set var="projectStatu" value="状态：审核中" />
                 </c:otherwise>
             </c:choose>
-            <p class="tic-article-header-right tic-title-em">状态：<c:out value="${projectStatu}" /></p>
+            <p class="tic-article-header-right tic-title-em"><c:out value="${projectStatu}" /></p>
         </c:if>
     </div>
     <section class="tic-article-section">
-        <p>
-            <c:out value="${project.promassage}" />
-        </p>
+        <multiline-content :content="project.promassage"></multiline-content>
     </section>
     <hr>
     <section class="tic-article-section">
         <p class="tic-title-strong">招聘详情</p>
-        <p>
-            <c:out value="${project.prowant}" />
-        </p>
+        <multiline-content :content="project.prowant"></multiline-content>
     </section>
     <hr/>
     <section class="tic-article-section">
         <p class="tic-title-strong">联系方式</p>
-        <p>
-            <c:out value="${project.concat}" />
-        </p>
+        <multiline-content :content="project.concat"></multiline-content>
     </section>
 </article>
+
+<fis:require id="page/widget/main/projectDetail.js" />

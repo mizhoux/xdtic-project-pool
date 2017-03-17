@@ -40,7 +40,8 @@
 					 userid="<c:out value='${user.id}' />"
 					 @collect="collect"
 					 @uncollect="uncollect"
-					 @collectfail="openDialog" >
+					 @collectfail="openDialog"
+					 @deletepost="deletePost" >
 					</tic-project>
 				</div>
 			</div>
@@ -105,7 +106,10 @@
 				                	 v-tap="{methods: uncollect, projectIndex: index, userid: userid}"
 				                	 v-show="project.isCollected" />
 			                	</span>
-				            </h4>
+								<span class="tic-delete"
+		 						 v-if="projecttype === 'post'"
+								 v-tap="{methods: deletePost}">删</span>
+							</h4>
 				            <p class="tic-media-box__label">
 				            	<span
 				            	 v-for="tag in project.tags">{{tag}}</span>

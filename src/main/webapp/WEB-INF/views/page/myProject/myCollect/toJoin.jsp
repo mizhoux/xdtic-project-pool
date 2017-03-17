@@ -11,12 +11,12 @@
 			<main id="appToJoin">
 				<div class="tic-table-head">
 					<h3>个人资料填写</h3>
-					<p>(记得在个人中心完善简历，系统可帮您预填哦~)</p>
+					<p>(请先在个人中心完善简历，系统可帮您预填哦~)</p>
 				</div>
 				<div class="tic-table">
 					<form class="tic-form" id="formToJoin"
 					 @blur.capture="validateToJoin">
-						<div class="tic-form-error" v-if="hasError">
+						<div class="tic-form-error" v-if="hasError" v-cloak>
 							<p>还有必填项没有填~</p>
 						</div>
 						<div class="tic-tr-two">
@@ -116,7 +116,7 @@
 				        </div>
 				    </div>
 				</div>
-				<div id="toast" v-show="editIsSucc">
+				<div id="toast" v-show="editIsSucc" v-cloak>
 				    <div class="weui-mask_transparent"></div>
 				    <div class="weui-toast">
 				        <i class="weui-icon-success-no-circle weui-icon_toast"></i>
@@ -136,7 +136,7 @@
 		<script>
 			var getMultiline = function(f) {
 				return f.toString().replace(/^[^\/]+\/\*!?\s?/, '')
-							.replace(/\*\/[^\/]+$/, '');
+							.replace(/\*\/[^\/]+$/, '').trim();
 			};
 		</script>
         <script>

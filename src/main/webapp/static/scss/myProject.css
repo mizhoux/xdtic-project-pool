@@ -8,8 +8,12 @@
   color: #088fd9;
 }
 
-.weui-panel__bd .weui-media-box__title .tic-collect {
+.weui-panel__bd .weui-media-box__title .tic-collect, .weui-panel__bd .weui-media-box__title .tic-delete {
   float: right;
+}
+
+.weui-panel__bd .weui-media-box__title .tic-delete {
+  margin-right: .5em;
 }
 
 .weui-panel__bd .weui-media-box__desc {

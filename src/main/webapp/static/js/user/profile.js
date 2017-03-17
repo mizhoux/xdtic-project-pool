@@ -13,6 +13,33 @@ var tools = require('static/js/module/tools');
 
 var urlUpdateProfile = urlPrefix + '/fn/update/profile';
 
+var multilineContent = {
+	render: function render(createElement) {
+		var lines = this.content.split('\n');
+		var len = lines.length;
+		var linesNew = [];
+
+		while (len--) {
+			linesNew.unshift(lines[len], 'br');
+		}
+		linesNew.pop();
+
+		return createElement('p', linesNew.map(function (line) {
+			if (line === 'br') {
+				return createElement(line);
+			} else {
+				return createElement('span', line);
+			}
+		}));
+	},
+	props: {
+		content: {
+			require: true,
+			type: String
+		}
+	}
+};
+
 var appProfile = new Vue({
 	el: '#appProfile',
 	data: {
@@ -67,5 +94,9 @@ var appProfile = new Vue({
 		closeDialog: function closeDialog() {
 			this.editFail = false;
 		}
+	},
+
+	components: {
+		'multiline-content': multilineContent
 	}
 });

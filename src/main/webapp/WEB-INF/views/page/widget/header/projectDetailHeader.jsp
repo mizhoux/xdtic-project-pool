@@ -9,7 +9,7 @@
         <img src="/xdtic/static/images/arrow_prev.png" alt="后退">
     </a>
     <div class="tic-header-three-center">
-        <p class="tic-title-main" v-cloak>{{project.proname}}</p>
+        <p class="tic-title-main">{{project.proname}}</p>
         <p class="tic-title-secondary">
             标签：
             <c:forEach items="${project.tag}" var="item">

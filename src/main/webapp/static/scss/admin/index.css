@@ -1,3 +1,7 @@
 .card-wrap {
   padding: 4em 0 1em 1em;
 }
+
+#app .ui.menu:not(.vertical) .right.menu {
+  display: none;
+}

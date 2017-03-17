@@ -93,14 +93,18 @@
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">个人能力</span>
-							<span class="tic-td-content" v-show="!isEditing">{{user.profile}}</span>
+							<span class="tic-td-content" v-show="!isEditing">
+								<multiline-content :content="user.profile"></multiline-content>
+							</span>
 							<span class="tic-td-content" v-show="isEditing">
 								<textarea name="profile" v-model="user.profile"></textarea>
 							</span>
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">项目经历</span>
-							<span class="tic-td-content" v-show="!isEditing">{{user.pexperice}}</span>
+							<span class="tic-td-content" v-show="!isEditing">
+								<multiline-content :content="user.pexperice"></multiline-content>
+							</span>
 							<span class="tic-td-content" v-show="isEditing">
 								<textarea name="pexperice" v-model="user.pexperice"></textarea>
 							</span>
@@ -139,7 +143,7 @@
 		<script>
 			var getMultiline = function(f) {
 				return f.toString().replace(/^[^\/]+\/\*!?\s?/, '')
-							.replace(/\*\/[^\/]+$/, '');
+							.replace(/\*\/[^\/]+$/, '').trim();
 			};
 		</script>
         <script>
@@ -151,7 +155,10 @@
 				profe: "<c:out value="${user.profe}" />",
 				phone: "<c:out value="${user.phone}" />",
 				stunum: "<c:out value="${user.stunum}" />",
-				profile: "<c:out value="${user.profile}" />",
+				profile: getMultiline(function() {/*
+					<c:out value="${user.profile}" />
+				*/
+				}),
 				pexperice: getMultiline(function() {/*
 					<c:out value="${user.pexperice}" />
 				*/

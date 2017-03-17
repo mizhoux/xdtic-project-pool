@@ -8,12 +8,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         <title>腾讯俱乐部项目池</title>
         <!-- <link rel="shortcut icon" type="image/x-icon" href="/static/favicon.ico" /> -->
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
 
         <fis:block name="style">
             <fis:require id="static/scss/admin/semantic.css" />
@@ -34,58 +28,59 @@
     </fis:head>
 
     <fis:body class="body">
-        <!--这个的app对应的Vue组件须在各页面自行构造，处理得不是很好-->
-        <div id="app" class="pushable tic-app">
-            <div class="ui vertical inverted sidebar menu left"
-             :class="{visible: sidePush, uncover: sidePush}">
-                <div class="item">
-                    <a href="<c:url value='/admin' />">西电TIC项目池</a>
+        <fis:block name="app">
+            <div id="app" class="pushable tic-app">
+                <div class="ui vertical inverted sidebar menu left"
+                 :class="{visible: sidePush, uncover: sidePush}">
+                    <div class="item">
+                        <a href="<c:url value='/admin' />">西电TIC项目池</a>
+                    </div>
+                    <div class="item">
+                        <div class="header">
+                            项目管理
+                        </div>
+                        <div class="menu">
+                            <a href="<c:url value='/admin/project/check' />" class="item">待审核项目</a>
+                            <a href="<c:url value='/admin/project/look' />" class="item">已通过项目</a>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="header">
+                            用户管理
+                        </div>
+                        <div class="menu">
+                            <a href="<c:url value='/admin/user/look' />" class="item">用户浏览</a>
+                        </div>
+                    </div>
                 </div>
-                <div class="item">
-                    <div class="header">
-                        项目管理
-                    </div>
-                    <div class="menu">
-                        <a href="<c:url value='/admin/project/check' />" class="item">待审核项目</a>
-                        <a href="<c:url value='/admin/project/look' />" class="item">已通过项目</a>
-                    </div>
-                </div>
-                <div class="item">
-                    <div class="header">
-                        用户管理
-                    </div>
-                    <div class="menu">
-                        <a href="<c:url value='/admin/user/look' />" class="item">用户浏览</a>
-                    </div>
-                </div>
-            </div>
-            <div class="tic-menu-top ui fixed inverted menu">
-                <div class="ui container">
-                    <a class="launch icon item" v-tap.prevent='{methods: push}'>
-                        <i class="content icon"></i>
-                    </a>
-                    <div class="item tic-logo">TIC</div>
-                    <div class="right menu">
-                        <form @submit.prevent="search">
-                            <div class="item">
-                                <div class="ui icon input">
-                                    <input type="text" :placeholder="placeholder" v-model="keyWords">
-                                    <i class="search link icon"></i>
+                <div class="tic-menu-top ui fixed inverted menu">
+                    <div class="ui container">
+                        <a class="launch icon item" v-tap.prevent='{methods: push}'>
+                            <i class="content icon"></i>
+                        </a>
+                        <div class="item tic-logo">TIC</div>
+                        <div class="right menu">
+                            <form @submit.prevent="search">
+                                <div class="item">
+                                    <div class="ui icon input">
+                                        <input type="text" :placeholder="placeholder" v-model="keyWords">
+                                        <i class="search link icon"></i>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="pusher"
-             :class="{dimmed: sidePush}">
-                <fis:block name="article"></fis:block>
-            </div>
+                <div class="pusher"
+                 :class="{dimmed: sidePush}">
+                    <fis:block name="article"></fis:block>
+                </div>
 
-            <fis:block name="footer">
-            </fis:block>
-        </div>
-        
+                <fis:block name="footer">
+                </fis:block>
+            </div>
+            
+        </fis:block>
     </fis:body>
 
  
