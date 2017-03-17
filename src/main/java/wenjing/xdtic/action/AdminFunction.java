@@ -2,8 +2,8 @@ package wenjing.xdtic.action;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wenjing.xdtic.cache.IpAddressCache;
+import wenjing.xdtic.core.RemoteAddressCache;
 import wenjing.xdtic.model.Admin;
 import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.Project;
@@ -42,22 +42,24 @@ public class AdminFunction {
     private ProjectService proService;
 
     @Autowired
-    private IpAddressCache ipCache;
+    private RemoteAddressCache addrCache;
 
     @PostMapping(value = "login", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public String login(HttpServletRequest request, HttpSession session,
+    public String login(HttpServletRequest request,
             @RequestParam String username, @RequestParam String password) {
 
-        Admin admin = adminService.getAdmin(username, password);
+        Optional<Admin> admin = adminService.getAdmin(username, password);
 
-        if (admin == null) {
+        admin.ifPresent(a -> {
+            addrCache.put("A".concat(request.getRemoteAddr()), a);
+            request.getSession().setAttribute("admin", a);
+        });
+
+        if (!admin.isPresent()) {
             request.setAttribute("loginFail", Boolean.TRUE);
-            return "admin/login";
         }
 
-        ipCache.put(request.getRemoteAddr(), admin);
-        session.setAttribute("admin", admin);
-        return "redirect:/admin";
+        return admin.map(a -> "redirect:/admin").orElse("admin/login");
     }
 
     @ResponseBody
@@ -87,7 +89,7 @@ public class AdminFunction {
             @RequestParam("keyWords") String keyword,
             @RequestParam int pageNum, @RequestParam int size) {
 
-        return proService.getPagingAcceptedProjects(keyword, pageNum, size);
+        return proService.getPagingAcceptedProjects(keyword, pageNum, size, null);
     }
 
     @ResponseBody

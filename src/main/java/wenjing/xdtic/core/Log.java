@@ -1,4 +1,4 @@
-package wenjing.xdtic.aop;
+package wenjing.xdtic.core;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

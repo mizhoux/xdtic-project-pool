@@ -2,6 +2,7 @@ package wenjing.xdtic.action;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wenjing.xdtic.cache.IpAddressCache;
+import wenjing.xdtic.core.RemoteAddressCache;
 import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.RespCode;
@@ -39,7 +40,7 @@ public class UserFunction {
     private MessageService msgService;
 
     @Autowired
-    private IpAddressCache ipCache;
+    private RemoteAddressCache addrCache;
 
     /**
      * 根据用户名和密码进行注册（以 Form 提交）
@@ -75,20 +76,16 @@ public class UserFunction {
     public String userLogin(HttpServletRequest request,
             @RequestParam String username, @RequestParam String password) {
 
-        User user = userService.getUser(username, password);
+        Optional<User> user = userService.getUser(username, password);
 
-        if (user != null) {
-            user.setHasMsg(msgService.countUnreadMessages(user.getId()) > 0);
-            HttpSession session = request.getSession();
-            session.setAttribute("user", user);
+        user.ifPresent(u -> {
+            u.setHasMsg(msgService.countUnreadMessages(u.getId()) > 0);
 
-            String remoteAddr = request.getRemoteAddr();
-            ipCache.put(remoteAddr, user);
+            request.getSession().setAttribute("user", u);
+            addrCache.put("U".concat(request.getRemoteAddr()), u);
+        });
 
-            return "redirect:/user/loginBySession";
-        }
-
-        return "user/register";
+        return user.map(u -> "redirect:/user/loginBySession").orElse("user/register");
     }
 
     /**
@@ -123,7 +120,7 @@ public class UserFunction {
     @ResponseBody
     @PostMapping(value = "update/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode updateUserProfile(HttpSession session, User user) {
-
+        userService.syncDataForBack(user);
         boolean success = userService.updateUser(user);
         if (success) {
             session.setAttribute("user", user);
@@ -158,8 +155,8 @@ public class UserFunction {
         String username = params.get("username");
         String password = params.get("password");
 
-        User user = userService.getUser(username, password);
-        return user == null ? RespCode.ERROR : RespCode.OK;
+        return userService.getUser(username, password)
+                .map(u -> RespCode.OK).orElse(RespCode.ERROR);
     }
 
     /**
@@ -174,8 +171,8 @@ public class UserFunction {
     public RespCode validUser(
             @RequestParam String username, @RequestParam String password) {
 
-        User user = userService.getUser(username, password);
-        return user == null ? RespCode.ERROR : RespCode.OK;
+        return userService.getUser(username, password)
+                .map(u -> RespCode.OK).orElse(RespCode.ERROR);
     }
 
     /**

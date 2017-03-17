@@ -4,13 +4,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wenjing.xdtic.dao.MessageDao;
 import wenjing.xdtic.dao.ProjectDao;
 import wenjing.xdtic.dao.SignInfoDao;
 import wenjing.xdtic.model.Message;
-import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.SignInfo;
 
 /**
@@ -21,31 +21,28 @@ import wenjing.xdtic.model.SignInfo;
 public class SignInfoService {
 
     @Autowired
-    private SignInfoDao signInfoDao;
-
-    @Autowired
     private ProjectDao projectDao;
 
     @Autowired
     private MessageDao messageDao;
 
-    public boolean addSignInfo(SignInfo signInfo) {
-        syncDataForBack(signInfo);
-        boolean success = signInfoDao.addSignInfo(signInfo);
+    @Autowired
+    private SignInfoDao signInfoDao;
+
+    public boolean addSignInfo(SignInfo si) {
+
+        boolean success = signInfoDao.addSignInfo(si);
         if (success) {
-            Project project = projectDao.getProject(signInfo.getProId());
-            Message message = Message.of(project, Message.Type.JOIN);
-            messageDao.addMessage(message);
+            projectDao.getProject(si.getProId())
+                    .map(pro -> Message.of(pro, Message.Type.JOIN))
+                    .ifPresent(msg -> messageDao.addMessage(msg));
         }
 
         return success;
     }
 
-    public SignInfo getSignInfo(Integer id) {
-        SignInfo signInfo = signInfoDao.getSignInfo(id);
-        syncDataForFront(signInfo);
-
-        return signInfo;
+    public Optional<SignInfo> getSignInfo(Integer id) {
+        return signInfoDao.getSignInfo(id).map(this::syncDataForFront);
     }
 
     public List<SignInfo> getSignInfos(Integer proId) {
@@ -55,23 +52,21 @@ public class SignInfoService {
         return signInfos;
     }
 
-    public void syncDataForBack(SignInfo signInfo) {
-        if (signInfo == null) {
-            return;
-        }
+    public SignInfo syncDataForBack(SignInfo signInfo) {
+
         signInfo.setId(signInfo.getSid());
         signInfo.setUserId(signInfo.getUid());
         signInfo.setSkill(signInfo.getProfile());
         signInfo.setExperience(signInfo.getPexperice());
+
+        return signInfo;
     }
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
-    public void syncDataForFront(SignInfo signInfo) {
-        if (signInfo == null) {
-            return;
-        }
+    public SignInfo syncDataForFront(SignInfo signInfo) {
+
         signInfo.setSid(signInfo.getId());
         signInfo.setUid(signInfo.getUserId());
         signInfo.setProfile(signInfo.getSkill());
@@ -80,5 +75,7 @@ public class SignInfoService {
                 signInfo.getSignTime().toInstant(), ZoneId.systemDefault());
         signInfo.setDate(DATE_FORMATTER.format(dateTime));
         signInfo.setTime(TIME_FORMATTER.format(dateTime));
+
+        return signInfo;
     }
 }

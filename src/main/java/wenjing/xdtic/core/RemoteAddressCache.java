@@ -1,9 +1,9 @@
-package wenjing.xdtic.cache;
+package wenjing.xdtic.core;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -14,9 +14,9 @@ import org.springframework.stereotype.Component;
  * @author Michael Chow <mizhoux@gmail.com>
  */
 @Component
-public class IpAddressCache {
+public class RemoteAddressCache {
 
-    @Bean("cacheForIpAddress")
+    @Bean("guavaCacheForRemoteAddress")
     public Cache<Object, Object> getCache() {
         Cache<Object, Object> guavaCache = CacheBuilder.newBuilder()
                 .expireAfterWrite(30, TimeUnit.MINUTES)
@@ -26,7 +26,7 @@ public class IpAddressCache {
     }
 
     @Autowired
-    @Qualifier("cacheForIpAddress")
+    @Qualifier("guavaCacheForRemoteAddress")
     private Cache<Object, Object> cache;
 
     public Object get(Object key) {
@@ -45,12 +45,8 @@ public class IpAddressCache {
         cache.invalidate(key);
     }
 
-    @Override
-    public String toString() {
-        return cache.asMap()
-                .entrySet().stream()
-                .map(e -> e.getKey() + " -> " + e.getValue())
-                .collect(Collectors.joining("\n"));
+    public Map<Object, Object> toMap() {
+        return cache.asMap();
     }
 
 }

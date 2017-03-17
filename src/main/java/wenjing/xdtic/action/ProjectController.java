@@ -1,12 +1,12 @@
 package wenjing.xdtic.action;
 
 import java.util.List;
-import javax.servlet.http.HttpSession;
+import java.util.Optional;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.SignInfo;
 import wenjing.xdtic.model.User;
@@ -41,90 +41,96 @@ public class ProjectController {
     }
 
     @GetMapping({"project", "myProject/myCollect/detail"})
-    public ModelAndView getProjectDetailPage(
-            HttpSession session, @RequestParam Integer proId) {
+    public String getProjectDetailPage(
+            HttpServletRequest request, @RequestParam Integer proId) {
 
-        ModelAndView mav = new ModelAndView("myProject/myCollect/detail");
+        Optional<Project> project = proService.getProject(proId);
+        project.ifPresent(pro -> {
+            User user = (User) request.getSession().getAttribute("user");
+            pro.setIsCollected(proService.containsCollection(user.getId(), proId));
 
-        User user = (User) session.getAttribute("user");
-        Project project = proService.getProject(proId);
-        project.setIsCollected(proService.containsCollection(user.getId(), proId));
+            request.setAttribute("project", pro);
 
-        mav.addObject("project", project);
+            userService.getUser(pro.getUserId())
+                    .ifPresent(creator -> request.setAttribute("projectCreator", creator));
 
-        User projectCreator = userService.getUser(project.getUserId());
-        mav.addObject("projectCreator", projectCreator);
+            boolean userIsJoined = proService.containsSignInfo(user.getId(), pro.getId());
+            request.setAttribute("userIsJoined", userIsJoined);
+        });
 
-        boolean userIsJoined = proService.containsSignInfo(user.getId(), project.getId());
-        mav.addObject("userIsJoined", userIsJoined);
-
-        return mav;
+        return project.map(p -> "myProject/myCollect/detail").orElse("error");
     }
 
     @GetMapping("myProject/myPost/detail")
-    public ModelAndView getPostProjectDetailPage(
-            HttpSession session, @RequestParam Integer proId) {
+    public String getPostProjectDetailPage(
+            HttpServletRequest request, @RequestParam Integer proId) {
 
-        Project project = proService.getProject(proId);
-        User user = (User) session.getAttribute("user");
-        project.setIsCollected(proService.containsCollection(user.getId(), proId));
+        Optional<Project> project = proService.getProject(proId);
+        project.ifPresent(pro -> {
+            User user = (User) request.getSession().getAttribute("user");
+            pro.setIsCollected(proService.containsCollection(user.getId(), proId));
 
-        return new ModelAndView("myProject/myPost/detail", "project", project);
+            request.setAttribute("project", pro);
+        });
+
+        return project.map(p -> "myProject/myPost/detail").orElse("error");
     }
 
     @GetMapping("myProject/myPost/editDetail")
-    public ModelAndView getProjectEditDetailPage(
-            HttpSession session, @RequestParam Integer proId) {
+    public String getProjectEditDetailPage(
+            HttpServletRequest request, @RequestParam Integer proId) {
 
-        Project project = proService.getProject(proId);
-        User user = (User) session.getAttribute("user");
-        project.setIsCollected(proService.containsCollection(user.getId(), proId));
+        Optional<Project> project = proService.getProject(proId);
+        project.ifPresent(pro -> {
+            User user = (User) request.getSession().getAttribute("user");
+            pro.setIsCollected(proService.containsCollection(user.getId(), proId));
 
-        return new ModelAndView("myProject/myPost/editDetail", "project", project);
+            request.setAttribute("project", pro);
+        });
+
+        return project.map(p -> "myProject/myPost/editDetail").orElse("error");
     }
 
     @GetMapping("myProject/myPost/signInfo")
-    public ModelAndView getSignInfosPage(@RequestParam Integer proId) {
-        Project project = proService.getProject(proId);
-        List<SignInfo> signInfos = siService.getSignInfos(proId);
+    public String getSignInfosPage(
+            HttpServletRequest request, @RequestParam Integer proId) {
 
-        ModelAndView mav = new ModelAndView("myProject/myPost/signInfo");
-        mav.addObject("project", project);
-        mav.addObject("signInfos", signInfos);
+        Optional<Project> project = proService.getProject(proId);
+        project.ifPresent(pro -> {
+            List<SignInfo> signInfos = siService.getSignInfos(proId);
+            request.setAttribute("project", pro);
+            request.setAttribute("signInfos", signInfos);
+        });
 
-        return mav;
+        return project.map(p -> "myProject/myPost/signInfo").orElse("error");
     }
 
     @GetMapping("signInfo")
-    public ModelAndView getSignInfoDetail(
-            HttpSession session, @RequestParam Integer signId) {
-        ModelAndView mav = new ModelAndView("myProject/myPost/signDetail");
+    public String getSignInfoDetail(
+            HttpServletRequest request, @RequestParam Integer signId) {
 
-        SignInfo signInfo = siService.getSignInfo(signId);
-        User signUser = userService.getUser(signInfo.getUid());
+        Optional<SignInfo> signInfo = siService.getSignInfo(signId);
+        signInfo.ifPresent(si -> request.setAttribute("signInfo", si));
 
-        mav.addObject("signUser", signUser);
-        mav.addObject("signInfo", signInfo);
+        signInfo.map(si -> si.getUserId())
+                .map(uid -> userService.getUser(uid))
+                .ifPresent(u -> request.setAttribute("signUser", u));
 
-        return mav;
+        return signInfo.map(si -> "myProject/myPost/signDetail").orElse("error");
     }
 
     @GetMapping("project/toJoin")
-    public ModelAndView getToJoinPage(HttpSession session,
+    public String getToJoinPage(HttpServletRequest request,
             @RequestParam Integer proId,
             @RequestParam("uid") Integer userId) {
 
-        ModelAndView mav = new ModelAndView("myProject/myCollect/toJoin");
+        Optional<Project> project = proService.getProject(proId);
+        project.ifPresent(pro -> {
+            pro.setIsCollected(proService.containsCollection(userId, proId));
+            request.setAttribute("project", pro);
+        });
 
-        Project project = proService.getProject(proId);
-        project.setIsCollected(proService.containsCollection(userId, proId));
-
-        User user = (User) session.getAttribute("user");
-
-        mav.addObject("project", project);
-        mav.addObject("user", user);
-
-        return mav;
+        return project.map(p -> "myProject/myCollect/toJoin").orElse("error");
     }
 
 }

@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Optional;
+import java.util.StringJoiner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -22,15 +24,16 @@ public class ProjectDao {
     @Autowired
     private JdbcTemplate jdbcTmpl;
 
-    public boolean addProject(Project project) {
-        String SQL = "INSERT INTO project "
-                + "(user_id, name, content, recruit, tag, contact, username, date) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
+    private static final String SQL_ADD_PROJECT
+            = "INSERT INTO project "
+            + "(user_id, name, content, recruit, tag, contact, username, date) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
 
+    public boolean addProject(Project project) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         int result = jdbcTmpl.update(conn -> {
 
-            PreparedStatement pstmt = conn.prepareStatement(SQL, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement pstmt = conn.prepareStatement(SQL_ADD_PROJECT, Statement.RETURN_GENERATED_KEYS);
 
             pstmt.setInt(1, project.getUserId());
             pstmt.setString(2, project.getName());
@@ -52,27 +55,27 @@ public class ProjectDao {
         return false;
     }
 
-    public boolean updateProject(Project project) {
-        String SQL
-                = "UPDATE project SET content = ?, recruit = ?, contact = ? "
-                + "WHERE user_id = ? AND id = ?";
+    private static final String SQL_UPDATE_PROJECT
+            = "UPDATE project SET content = ?, recruit = ?, contact = ? "
+            + "WHERE user_id = ? AND id = ?";
 
-        return jdbcTmpl.update(SQL, project.getContent(), project.getRecruit(),
-                project.getContact(), project.getUserId(), project.getId()) == 1;
+    public boolean updateProject(Project project) {
+        return jdbcTmpl.update(SQL_UPDATE_PROJECT, project.getContent(),
+                project.getRecruit(), project.getContact(), project.getUserId(), project.getId()) == 1;
     }
 
-    public boolean updateProjectWithStatus(Project project) {
-        String SQL
-                = "UPDATE project SET content = ?, recruit = ?, contact = ?, status = ?, date = NOW()"
-                + "WHERE user_id = ? AND id = ?";
+    private static final String SQL_UPDATE_PROJECT_WITH_STATUS
+            = "UPDATE project SET content = ?, recruit = ?, contact = ?, status = ?, date = NOW()"
+            + "WHERE user_id = ? AND id = ?";
 
-        return jdbcTmpl.update(SQL, project.getContent(), project.getRecruit(),
+    public boolean updateProjectWithStatus(Project project) {
+        return jdbcTmpl.update(SQL_UPDATE_PROJECT_WITH_STATUS, project.getContent(), project.getRecruit(),
                 project.getContact(), project.getStatus(), project.getUserId(), project.getId()) == 1;
     }
 
-    public Project getProject(Integer id) {
-        String SQL = "SELECT * FROM project WHERE id = ?";
-        return jdbcTmpl.query(SQL, this::extractProject, id);
+    public Optional<Project> getProject(Integer id) {
+        String sql = "SELECT * FROM project WHERE id = ?";
+        return jdbcTmpl.query(sql, this::extractProject, id);
     }
 
     /**
@@ -86,10 +89,10 @@ public class ProjectDao {
     public List<Project> getAcceptedProjects(String keyword, int offset, int size) {
         String SQL
                 = "SELECT p.* FROM project AS p "
-                + "WHERE p.status = 'pass' AND  " + getSearchCondition(keyword)
+                + "WHERE p.status = 'pass' AND " + getSearchCondition(keyword)
                 + "ORDER BY date DESC LIMIT ?, ?";
 
-        return jdbcTmpl.query(SQL, this::parseProject, offset, size);
+        return jdbcTmpl.query(SQL, this::mapProject, offset, size);
     }
 
     public long countAcceptedProjects(String keyword) {
@@ -110,11 +113,11 @@ public class ProjectDao {
      */
     public List<Project> getHotProjects(String keyword, int hotSize, Integer userId) {
 
-        String SQL = "SELECT p.* FROM project AS p, "
-                + "(SELECT pc.pro_id, COUNT(*) AS num FROM pro_collection pc GROUP BY pc.pro_id ORDER BY num DESC LIMIT ?) AS t "
+        String sql = "SELECT p.* FROM project AS p, "
+                + "(SELECT ps.pro_id, COUNT(*) AS num FROM pro_stars ps GROUP BY ps.pro_id ORDER BY num DESC LIMIT ?) AS t "
                 + "WHERE p.status = 'pass' AND p.id = t.pro_id AND " + getSearchCondition(keyword);
 
-        return jdbcTmpl.query(SQL, this::parseProject, hotSize);
+        return jdbcTmpl.query(sql, this::mapProject, hotSize);
     }
 
     /**
@@ -126,19 +129,19 @@ public class ProjectDao {
      * @return
      */
     public List<Project> getUncheckedProjects(String keyword, int offset, int size) {
-        String SQL
+        String sql
                 = "SELECT p.* FROM project AS p "
                 + "WHERE p.status = 'check' AND " + getSearchCondition(keyword)
                 + "ORDER BY date DESC LIMIT ?, ?";
 
-        return jdbcTmpl.query(SQL, this::parseProject, offset, size);
+        return jdbcTmpl.query(sql, this::mapProject, offset, size);
     }
 
     public long countUncheckedProjects(String keyword) {
-        String SQL = "SELECT COUNT(*) FROM project p "
+        String sql = "SELECT COUNT(*) FROM project p "
                 + "WHERE p.status = 'check' AND " + getSearchCondition(keyword);
 
-        return jdbcTmpl.queryForObject(SQL, Long.class);
+        return jdbcTmpl.queryForObject(sql, Long.class);
     }
 
     /**
@@ -150,8 +153,8 @@ public class ProjectDao {
      * @return
      */
     public List<Project> getPostedProjects(Integer userId, int offset, int size) {
-        String SQL = "SELECT p.* FROM project p WHERE p.user_id = ? ORDER BY date DESC LIMIT ?, ?";
-        return jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
+        String sql = "SELECT p.* FROM project p WHERE p.user_id = ? ORDER BY date DESC LIMIT ?, ?";
+        return jdbcTmpl.query(sql, this::mapProject, userId, offset, size);
     }
 
     /**
@@ -161,9 +164,14 @@ public class ProjectDao {
      * @return 用户发布的项目数量
      */
     public long countPostedProjects(Integer userId) {
-        String SQL = "SELECT COUNT(*) FROM project WHERE user_id = ?";
-        return jdbcTmpl.queryForObject(SQL, Long.class, userId);
+        String sql = "SELECT COUNT(*) FROM project WHERE user_id = ?";
+        return jdbcTmpl.queryForObject(sql, Long.class, userId);
     }
+
+    private static final String SQL_GET_COLLECTED_PROJECTS
+            = "SELECT p.* FROM project p "
+            + "WHERE p.id IN (SELECT ps.pro_id FROM pro_stars ps WHERE ps.user_id = ?)"
+            + "LIMIT ?, ?";
 
     /**
      * 获得用户收藏的项目
@@ -174,13 +182,12 @@ public class ProjectDao {
      * @return
      */
     public List<Project> getCollectedProjects(Integer userId, int offset, int size) {
-        String SQL
-                = "SELECT p.* FROM project p "
-                + "WHERE p.id IN (SELECT pc.pro_id FROM pro_collection pc WHERE pc.user_id = ?)"
-                + "LIMIT ?, ?";
-
-        return jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
+        return jdbcTmpl.query(SQL_GET_COLLECTED_PROJECTS, this::mapProject, userId, offset, size);
     }
+
+    private static final String SQL_COUNT_COLLECTED_PROJECTS
+            = "SELECT COUNT(*) FROM project p WHERE p.id IN "
+            + "(SELECT ps.pro_id FROM pro_stars ps WHERE ps.user_id = ?)";
 
     /**
      * 获得用户收藏的项目数量
@@ -189,12 +196,13 @@ public class ProjectDao {
      * @return 用户收藏的项目数量
      */
     public long countCollectedProjects(Integer userId) {
-        String SQL
-                = "SELECT COUNT(*) FROM project p WHERE p.id IN "
-                + "(SELECT pc.pro_id FROM pro_collection pc WHERE pc.user_id = ?)";
-
-        return jdbcTmpl.queryForObject(SQL, Long.class, userId);
+        return jdbcTmpl.queryForObject(SQL_COUNT_COLLECTED_PROJECTS, Long.class, userId);
     }
+
+    private static final String SQL_GET_JOINED_PROJECTS
+            = "SELECT p.* FROM project p "
+            + "WHERE p.id IN (SELECT s.pro_id FROM sign_info s WHERE s.user_id = ?) "
+            + "ORDER BY date DESC LIMIT ?, ?";
 
     /**
      * 获得用户参与的项目
@@ -205,13 +213,12 @@ public class ProjectDao {
      * @return
      */
     public List<Project> getJoinedProjects(Integer userId, int offset, int size) {
-        String SQL
-                = "SELECT p.* FROM project p "
-                + "WHERE p.id IN (SELECT s.pro_id FROM sign_info s WHERE s.user_id = ?) "
-                + "ORDER BY date DESC LIMIT ?, ?";
-
-        return jdbcTmpl.query(SQL, this::parseProject, userId, offset, size);
+        return jdbcTmpl.query(SQL_GET_JOINED_PROJECTS, this::mapProject, userId, offset, size);
     }
+
+    private static final String SQL_COUNT_JOINED_PROJECTS
+            = "SELECT COUNT(*) FROM project p WHERE p.id IN "
+            + "(SELECT s.pro_id FROM sign_info s WHERE s.user_id = ?)";
 
     /**
      * 获得用户参加的项目数量
@@ -220,11 +227,7 @@ public class ProjectDao {
      * @return 用户参加的项目数量
      */
     public long countJoinedProjects(Integer userId) {
-        String SQL
-                = "SELECT COUNT(*) FROM project p WHERE p.id IN "
-                + "(SELECT s.pro_id FROM sign_info s WHERE s.user_id = ?)";
-
-        return jdbcTmpl.queryForObject(SQL, Long.class, userId);
+        return jdbcTmpl.queryForObject(SQL_COUNT_JOINED_PROJECTS, Long.class, userId);
     }
 
     /**
@@ -235,8 +238,8 @@ public class ProjectDao {
      * @return
      */
     public boolean addCollection(Integer userId, Integer proId) {
-        String SQL = "INSERT INTO pro_collection SET user_id = ?, pro_id = ?";
-        return jdbcTmpl.update(SQL, userId, proId) == 1;
+        String sql = "INSERT INTO pro_stars SET user_id = ?, pro_id = ?";
+        return jdbcTmpl.update(sql, userId, proId) == 1;
     }
 
     /**
@@ -247,8 +250,8 @@ public class ProjectDao {
      * @return
      */
     public boolean deleteCollection(Integer userId, Integer proId) {
-        String SQL = "DELETE FROM pro_collection WHERE user_id = ? AND pro_id = ?";
-        return jdbcTmpl.update(SQL, userId, proId) == 1;
+        String sql = "DELETE FROM pro_stars WHERE user_id = ? AND pro_id = ?";
+        return jdbcTmpl.update(sql, userId, proId) == 1;
     }
 
     /**
@@ -259,8 +262,8 @@ public class ProjectDao {
      * @return
      */
     public boolean containsCollection(Integer userId, Integer proId) {
-        String SQL = "SELECT COUNT(*) FROM pro_collection WHERE user_id = ? AND pro_id = ?";
-        return jdbcTmpl.queryForObject(SQL, Long.class, userId, proId) == 1;
+        String sql = "SELECT COUNT(*) FROM pro_stars WHERE user_id = ? AND pro_id = ?";
+        return jdbcTmpl.queryForObject(sql, Long.class, userId, proId) == 1;
     }
 
     /**
@@ -271,46 +274,47 @@ public class ProjectDao {
      * @return
      */
     public boolean containsSignInfo(Integer userId, Integer proId) {
-        String SQL = "SELECT COUNT(*) FROM sign_info WHERE user_id = ? AND pro_id = ?";
-        long result = jdbcTmpl.queryForObject(SQL, Long.class, userId, proId);
-        return result == 1;
+        String sql = "SELECT COUNT(*) FROM sign_info WHERE user_id = ? AND pro_id = ?";
+        return jdbcTmpl.queryForObject(sql, Long.class, userId, proId) == 1;
     }
 
     public boolean updateProjectStatus(Integer proId, String status) {
-        String SQL = "UPDATE project SET status = ? WHERE id = ?";
-        return jdbcTmpl.update(SQL, status, proId) == 1;
+        String sql = "UPDATE project SET status = ? WHERE id = ?";
+        return jdbcTmpl.update(sql, status, proId) == 1;
     }
 
     public boolean deleteProject(Integer proId) {
-        String SQL = "DELETE FROM project WHERE id = ?";
-        return jdbcTmpl.update(SQL, proId) == 1;
+        String sql = "DELETE FROM project WHERE id = ?";
+        return jdbcTmpl.update(sql, proId) == 1;
     }
 
     public List<Integer> getCollectedProjectIds(Integer userId) {
-        String SQL = "SELECT pc.pro_id FROM pro_collection pc WHERE pc.user_id = ?";
-        return jdbcTmpl.queryForList(SQL, Integer.class, userId);
+        String sql = "SELECT ps.pro_id FROM pro_stars ps WHERE ps.user_id = ?";
+        return jdbcTmpl.queryForList(sql, Integer.class, userId);
     }
 
     /**
-     * 将 ResultSet 中的数据转化为 Project （用于 ResultSetExtractor）
+     * 从 ResultSet 提取数据，将其映射为 Project，目标函数为 ResultSetExtractor.extractData
      *
      * @param rs
      * @return
      * @throws SQLException
+     * @see org.springframework.jdbc.core.ResultSetExtractor
      */
-    private Project extractProject(ResultSet rs) throws SQLException {
-        return rs.next() ? parseProject(rs, 1) : null;
+    private Optional<Project> extractProject(ResultSet rs) throws SQLException {
+        return rs.next() ? Optional.of(mapProject(rs, 1)) : Optional.empty();
     }
 
     /**
-     * 将 ResultSet 中的数据转化为 Project （用于 RowMapper）
+     * 将 ResultSet 中的数据其映射为 Project，目标函数为 RowMapper.mapRow
      *
-     * @param rs ResultSet
-     * @param rowNum 数据的行号
+     * @param rs
+     * @param rowNum
      * @return
      * @throws SQLException
+     * @see org.springframework.jdbc.core.RowMapper
      */
-    private Project parseProject(ResultSet rs, int rowNum) throws SQLException {
+    private Project mapProject(ResultSet rs, int rowNum) throws SQLException {
         Project project = new Project();
 
         project.setId(rs.getInt("id"));
@@ -327,15 +331,38 @@ public class ProjectDao {
         return project;
     }
 
-    private String getSearchCondition(String keyword) {
+    private String getSearchCondition(String keywords) {
+        StringJoiner columnJoiner = new StringJoiner(",',',", "CONCAT(", ")");
+        columnJoiner.add("p.tag").add("p.name").add("p.content").add("p.username");
+        String columns = columnJoiner.toString();
 
+        String[] keys = keywords.split("\\s+");
         StringBuilder condition = new StringBuilder(80);
-
-        condition.append("(p.tag LIKE '%").append(keyword).append("%'")
-                .append(" OR p.name LIKE '%").append(keyword).append("%'")
-                .append(" OR p.content LIKE '%").append(keyword).append("%')");
+        for (String keyword : keys) {
+            keyword = getSearchKeyword(keyword);
+            condition.append(columns).append(" LIKE '%")
+                    .append(keyword).append("%' AND ");
+        }
+        condition.delete(condition.length() - 4, condition.length());
 
         return condition.toString();
+    }
+
+    private String getSearchKeyword(String keyword) {
+        if (keyword.isEmpty()) {
+            return keyword;
+        }
+
+        keyword = keyword.toLowerCase();
+        if (keyword.equals("android")) {
+            return "安卓";
+        }
+
+        if (keyword.equals("网站") || keyword.equals("前端") || keyword.equals("后端")) {
+            return "web";
+        }
+
+        return keyword;
     }
 
 }

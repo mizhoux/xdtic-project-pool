@@ -3,6 +3,7 @@ package wenjing.xdtic.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -19,22 +20,23 @@ public class MessageDao {
     @Autowired
     private JdbcTemplate jdbcTmpl;
 
-    public boolean addMessage(Message msg) {
-        String SQL
-                = "INSERT INTO message (user_id, pro_id, content, type, date) "
-                + "VALUES (?, ?, ?, ?, NOW())";
+    private static final String SQL_ADD_MESSAGE
+            = "INSERT INTO message (user_id, pro_id, content, type, date) "
+            + "VALUES (?, ?, ?, ?, NOW())";
 
-        return jdbcTmpl.update(SQL, msg.getUserId(), msg.getProId(), msg.getContent(), msg.getType()) == 1;
+    public boolean addMessage(Message msg) {
+        return jdbcTmpl.update(SQL_ADD_MESSAGE,
+                msg.getUserId(), msg.getProId(), msg.getContent(), msg.getType()) == 1;
     }
 
-    public Message getMessage(Integer id) {
-        String SQL = "SELECT * FROM message WHERE id = ?";
-        return jdbcTmpl.query(SQL, rs -> rs.next() ? parseMessage(rs, 1) : null, id);
+    public Optional<Message> getMessage(Integer id) {
+        String sql = "SELECT * FROM message WHERE id = ?";
+        return jdbcTmpl.query(sql, this::extractMessage, id);
     }
 
     public List<Message> getMessages(Integer userId, int offset, int size) {
-        String SQL = "SELECT * FROM message WHERE user_id = ? ORDER BY date DESC LIMIT ?, ?";
-        return jdbcTmpl.query(SQL, this::parseMessage, userId, offset, size);
+        String sql = "SELECT * FROM message WHERE user_id = ? ORDER BY date DESC LIMIT ?, ?";
+        return jdbcTmpl.query(sql, this::mapMessage, userId, offset, size);
     }
 
     /**
@@ -44,8 +46,8 @@ public class MessageDao {
      * @return 数据库中对应用户消息的数量
      */
     public long countMessages(Integer userId) {
-        String SQL = "SELECT COUNT(*) FROM message WHERE user_id = ?";
-        return jdbcTmpl.queryForObject(SQL, Long.class, userId);
+        String sql = "SELECT COUNT(*) FROM message WHERE user_id = ?";
+        return jdbcTmpl.queryForObject(sql, Long.class, userId);
     }
 
     /**
@@ -55,8 +57,8 @@ public class MessageDao {
      * @return
      */
     public boolean setMessageRead(Integer id) {
-        String SQL = "UPDATE message m SET m.read = TRUE WHERE m.id = ?";
-        return jdbcTmpl.update(SQL, id) == 1;
+        String sql = "UPDATE message m SET m.read = TRUE WHERE m.id = ?";
+        return jdbcTmpl.update(sql, id) == 1;
     }
 
     public boolean setMessagesRead(List<Integer> ids) {
@@ -72,11 +74,32 @@ public class MessageDao {
      * @return 数据库中对应用户消息的数量
      */
     public long countUnreadMessages(Integer userId) {
-        String SQL = "SELECT COUNT(*) FROM message m WHERE m.user_id = ? AND m.read = FALSE";
-        return jdbcTmpl.queryForObject(SQL, Long.class, userId);
+        String sql = "SELECT COUNT(*) FROM message m WHERE m.user_id = ? AND m.read = FALSE";
+        return jdbcTmpl.queryForObject(sql, Long.class, userId);
     }
 
-    private Message parseMessage(ResultSet rs, int rowNum) throws SQLException {
+    /**
+     * 从 ResultSet 提取数据，将其映射为 Message，目标函数为 ResultSetExtractor.extractData
+     *
+     * @param rs
+     * @return
+     * @throws SQLException
+     * @see org.springframework.jdbc.core.ResultSetExtractor
+     */
+    private Optional<Message> extractMessage(ResultSet rs) throws SQLException {
+        return rs.next() ? Optional.of(mapMessage(rs, 1)) : Optional.empty();
+    }
+
+    /**
+     * 将 ResultSet 中的数据其映射为 Message，目标函数为 RowMapper.mapRow
+     *
+     * @param rs
+     * @param rowNum
+     * @return
+     * @throws SQLException
+     * @see org.springframework.jdbc.core.RowMapper
+     */
+    private Message mapMessage(ResultSet rs, int rowNum) throws SQLException {
         Message message = new Message();
 
         message.setId(rs.getInt("id"));

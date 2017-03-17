@@ -1,6 +1,7 @@
 package wenjing.xdtic.service;
 
 import java.util.List;
+import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wenjing.xdtic.dao.MessageDao;
@@ -31,16 +32,11 @@ public class MessageService {
     }
 
     public PagingModel<Message> getPagingMessages(Integer userId, int pageNum, int pageSize) {
-        List<Message> msgs = getMessages(userId, pageNum, pageSize);
 
-        PagingModel<Message> pagingMsgs = new PagingModel<>(msgs, pageNum, msgs.size());
+        Supplier<List<Message>> msgs = () -> getMessages(userId, pageNum, pageSize);
+        Supplier<Long> totalNumOfMsgs = () -> countMessages(userId);
 
-        long count = countMessages(userId);
-        pagingMsgs.setHasMore((pageNum + 1) * pageSize < count);
-
-        pagingMsgs.setEntitiesName("msgs");
-
-        return pagingMsgs;
+        return PagingModel.of("msgs", msgs, totalNumOfMsgs, pageNum, pageSize);
     }
 
     public long countMessages(Integer userId) {
@@ -48,32 +44,27 @@ public class MessageService {
     }
 
     public boolean setMessagesRead(List<Integer> ids) {
-        if (ids.isEmpty()) {
-            return true;
-        }
-        return messageDao.setMessagesRead(ids);
+        return ids.isEmpty() ? true : messageDao.setMessagesRead(ids);
     }
 
     public long countUnreadMessages(Integer userId) {
         return messageDao.countUnreadMessages(userId);
     }
 
-    public void syncDataForBack(Message message) {
-        if (message == null) {
-            return;
-        }
+    public Message syncDataForBack(Message message) {
         message.setId(message.getMid());
         message.setUserId(message.getUid());
         message.setContent(message.getMassage());
+
+        return message;
     }
 
-    public void syncDataForFront(Message message) {
-        if (message == null) {
-            return;
-        }
+    public Message syncDataForFront(Message message) {
         message.setMid(message.getId());
         message.setUid(message.getUserId());
         message.setMassage(message.getContent());
+
+        return message;
     }
 
 }

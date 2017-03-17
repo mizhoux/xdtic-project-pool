@@ -37,6 +37,7 @@ public class ProjectFunction {
 
         project.setUserid(uid); // 兼容前端
         project.setProname(title); // 兼容前端
+        proService.syncDataForBack(project);
 
         boolean success = proService.addProject(project);
         return success ? RespCode.OK : RespCode.ERROR;
@@ -48,6 +49,7 @@ public class ProjectFunction {
             @RequestParam boolean reject, Project project) {
 
         project.setUserid(userId); // 兼容前端
+        proService.syncDataForBack(project);
 
         boolean success = proService.updateProject(project, reject);
         return success ? RespCode.OK : RespCode.ERROR;
@@ -111,6 +113,7 @@ public class ProjectFunction {
 
     @PostMapping("project/toJoin")
     public RespCode toJoinProject(SignInfo signInfo) {
+        siService.syncDataForBack(signInfo);
         boolean success = siService.addSignInfo(signInfo);
         return success ? RespCode.OK : RespCode.ERROR;
     }

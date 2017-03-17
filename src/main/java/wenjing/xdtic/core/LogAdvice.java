@@ -1,4 +1,4 @@
-package wenjing.xdtic.aop;
+package wenjing.xdtic.core;
 
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class LogAdvice {
 
     // 被 Log 标记的类或者方法会被该切面拦截
-    @Pointcut("@within(wenjing.xdtic.aop.Log) || @annotation(wenjing.xdtic.aop.Log)")
+    @Pointcut("@within(wenjing.xdtic.core.Log) || @annotation(wenjing.xdtic.core.Log)")
     public void advice() {
 
     }
