@@ -3,6 +3,8 @@
 var Promise = require('node_modules/es6-promise/dist/es6-promise').Promise;
 require('node_modules/whatwg-fetch/fetch');
 
+var MD5 = require('node_modules/crypto-js/md5');
+
 var formSerialize = require('static/js/module/formSerialize');
 var tools = require('static/js/module/tools');
 
@@ -15,6 +17,13 @@ var formLogin = new Vue({
         username: '',
         password: ''
     },
+
+    computed: {
+        md5Pass: function md5Pass() {
+            return MD5(this.password);
+        }
+    },
+
     methods: {
         validUser: function validUser(params) {
             fetch(urlValidUser, {
@@ -23,11 +32,15 @@ var formLogin = new Vue({
                     'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
                 },
                 credentials: 'same-origin',
-                body: formSerialize(formLogin.$el)
+                body: tools.obj2form({
+                    username: this.username,
+                    password: this.md5Pass
+                })
             }).then(function (response) {
                 return response.json();
             }).then(function (data) {
                 if (data.code === 'ok') {
+                    this.password = MD5(this.password);
                     formLogin.$el.submit();
                 } else {
                     formLogin.hasError = true;

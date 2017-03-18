@@ -107,11 +107,24 @@ define('static/js/module/tools', function(require, exports, module) {
       }
   }
   
+  function obj2form(obj) {
+      var form = [];
+  
+      for (var key in obj) {
+          if (obj.hasOwnProperty(key)) {
+              form.push(encodeURIComponent(key) + "=" + encodeURIComponent(obj[key]));
+          }
+      }
+  
+      return form.join('&');
+  }
+  
   module.exports = {
       formSerialize: serialize,
       SaferHTML: SaferHTML,
       getParams: getParams,
-      avoidBack: avoidBack
+      avoidBack: avoidBack,
+      obj2form: obj2form
   };
 
 });

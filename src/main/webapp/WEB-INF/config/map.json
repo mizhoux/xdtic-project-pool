@@ -333,6 +333,7 @@
             "deps": [
                 "node_modules/es6-promise/dist/es6-promise.js",
                 "node_modules/whatwg-fetch/fetch.js",
+                "node_modules/crypto-js/md5.js",
                 "static/js/module/formSerialize.js",
                 "static/js/module/tools.js"
             ]
@@ -499,11 +500,28 @@
                 "moduleId": "node_modules/vue-infinite-scroll/vue-infinite-scroll"
             }
         },
+        "node_modules/crypto-js/md5.js": {
+            "uri": "/xdtic/static/node_modules/crypto-js/md5.js",
+            "type": "js",
+            "extras": {
+                "moduleId": "node_modules/crypto-js/md5"
+            },
+            "deps": [
+                "node_modules/crypto-js/core.js"
+            ]
+        },
         "node_modules/process/browser.js": {
             "uri": "/xdtic/static/node_modules/process/browser.js",
             "type": "js",
             "extras": {
                 "moduleId": "node_modules/process/browser"
+            }
+        },
+        "node_modules/crypto-js/core.js": {
+            "uri": "/xdtic/static/node_modules/crypto-js/core.js",
+            "type": "js",
+            "extras": {
+                "moduleId": "node_modules/crypto-js/core"
             }
         }
     },

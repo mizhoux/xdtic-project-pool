@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/garfileds/tic-wechat#readme",
   "dependencies": {
+    "crypto-js": "^3.1.9-1",
     "es6-promise": "^4.0.5",
     "fis-parser-babel-5.x": "^1.4.0",
     "fis-parser-marked": "0.0.6",
