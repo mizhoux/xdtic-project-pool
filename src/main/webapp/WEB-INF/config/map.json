@@ -369,7 +369,8 @@
             "type": "js",
             "deps": [
                 "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js"
+                "node_modules/whatwg-fetch/fetch.js",
+                "node_modules/crypto-js/md5.js"
             ]
         },
         "static/libs/admin/common.js": {

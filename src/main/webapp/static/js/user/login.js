@@ -43,7 +43,7 @@ var formLogin = new Vue({
             }).then(function (data) {
                 if (data.code === 'ok') {
                     self.password = MD5(self.password).toString();
-                    self.$nextTick(function() {
+                    self.$nextTick(function () {
                         formLogin.$el.submit();
                     });
                 } else {

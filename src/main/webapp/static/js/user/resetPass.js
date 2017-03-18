@@ -3,7 +3,9 @@
 var Promise = require('node_modules/es6-promise/dist/es6-promise').Promise;
 require('node_modules/whatwg-fetch/fetch');
 
-var urlValidUserName = urlPrefix + '/fn/valid/user';
+var MD5 = require('node_modules/crypto-js/md5');
+
+var urlValidUser = urlPrefix + '/fn/valid/user';
 
 var formResetPass = new Vue({
     el: '#formResetPass',
@@ -43,7 +45,7 @@ var formResetPass = new Vue({
 
     methods: {
         validUser: function validUser(event) {
-            fetch(urlValidUserName, {
+            fetch(urlValidUser, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -51,7 +53,7 @@ var formResetPass = new Vue({
                 },
                 body: JSON.stringify({
                     "username": formResetPass.username,
-                    "password": formResetPass.passOld
+                    "password": MD5(formResetPass.passOld).toString()
                 })
             }).then(function (response) {
                 return response.json();
@@ -81,14 +83,15 @@ var formResetPass = new Vue({
                 return;
             }
 
-            fetch(urlValidUserName, {
+            fetch(urlValidUser, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
                 },
                 body: JSON.stringify({
                     "username": formResetPass.username,
-                    "password": formResetPass.passOld
+                    "password": MD5(formResetPass.passOld).toString()
                 })
             }).then(function (response) {
                 return response.json();
@@ -102,7 +105,10 @@ var formResetPass = new Vue({
                 }
 
                 if (!formResetPass.hasError) {
-                    formResetPass.$el.submit();
+                    formResetPass.passOld = MD5(formResetPass.passOld).toString();
+                    formResetPass.$nextTick(function () {
+                        formResetPass.$el.submit();
+                    });
                 }
             })['catch'](function (error) {
                 console.log('request failed', error);
