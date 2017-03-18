@@ -44,4 +44,9 @@ public class RespCode {
         return comment;
     }
 
+    @Override
+    public String toString() {
+        return "RespCode{" + "code=" + code + ", comment=" + comment + '}';
+    }
+
 }

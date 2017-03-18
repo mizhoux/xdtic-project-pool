@@ -177,6 +177,7 @@ public class ProjectService {
         return projectDao.containsSignInfo(userId, proId);
     }
 
+    @CacheEvict(value = CACHE_NAME, key = "#proId")
     public boolean deleteProject(Integer proId) {
         return projectDao.deleteProject(proId);
     }

@@ -21,6 +21,7 @@ import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.RespCode;
 import wenjing.xdtic.model.User;
 import wenjing.xdtic.service.MessageService;
+import wenjing.xdtic.service.ProjectService;
 import wenjing.xdtic.service.UserService;
 
 /**
@@ -38,6 +39,9 @@ public class UserFunction {
 
     @Autowired
     private MessageService msgService;
+
+    @Autowired
+    private ProjectService proService;
 
     @Autowired
     private RemoteAddressCache addrCache;
@@ -144,7 +148,7 @@ public class UserFunction {
     }
 
     /**
-     * 根据用户名和密码验证用户是否可注册（以 JSON 提交）
+     * 根据用户名和密码验证用户是否存在（以 JSON 提交）
      *
      * @param params
      * @return
@@ -160,7 +164,7 @@ public class UserFunction {
     }
 
     /**
-     * 根据用户名和密码验证用户是否可注册（以 Form 提交）
+     * 根据用户名和密码验证用户是否存在（以 Form 提交）
      *
      * @param username 用户名
      * @param password 密码
@@ -187,7 +191,7 @@ public class UserFunction {
     @GetMapping("get/msg")
     public PagingModel<Message> getMessages(
             @RequestParam("uid") Integer userId,
-            @RequestParam Integer pageNum, @RequestParam Integer size) {
+            @RequestParam int pageNum, @RequestParam int size) {
 
         return msgService.getPagingMessages(userId, pageNum, size);
     }
@@ -201,6 +205,22 @@ public class UserFunction {
         boolean success = msgService.setMessagesRead(msgIds);
 
         return success ? RespCode.OK : RespCode.ERROR;
+    }
+
+    @ResponseBody
+    @PostMapping("user/project/operate")
+    public RespCode deleteProject(@RequestBody Map<String, String> params) {
+        String operation = params.get("operation");
+        if ("delete".equals(operation)) {
+            Integer proId = Integer.valueOf(params.get("proId"));
+            boolean success = proService.deleteProject(proId);
+
+            if (success) {
+                return RespCode.OK;
+            }
+        }
+
+        return RespCode.ERROR;
     }
 
 }
