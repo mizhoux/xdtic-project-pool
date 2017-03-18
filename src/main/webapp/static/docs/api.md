@@ -87,6 +87,23 @@
     }
    ```
 
+- api: /xdtic/fn/user/project/operate
+
+    - 说明：项目发起者对项目的操作
+    - request `[POST]` `[JSON]`
+    ```
+    {
+        operation: 'delete',
+        proId: 'p001'
+    }
+    ```
+    - response `[JSON]`
+    ```
+    {
+        code: 'ok'/'error'
+    }
+    ```
+
 #### 我的发布-项目详情页
 - url: /xdtic/myProject/myPost/detail?proId=p001
 - jsp: /page/myProject/myPost/detail
