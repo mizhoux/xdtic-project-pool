@@ -39,8 +39,8 @@ public class ProjectFunction {
         project.setProname(title); // 兼容前端
         proService.syncDataForBack(project);
 
-        boolean success = proService.addProject(project);
-        return success ? RespCode.OK : RespCode.ERROR;
+        return proService.addProject(project)
+                .map(p -> RespCode.OK).orElse(RespCode.ERROR);
     }
 
     @PostMapping(value = "project/update", consumes = APPLICATION_FORM_URLENCODED_VALUE)

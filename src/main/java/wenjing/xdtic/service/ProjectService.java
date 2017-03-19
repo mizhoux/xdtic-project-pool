@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import wenjing.xdtic.dao.MessageDao;
@@ -37,17 +38,15 @@ public class ProjectService {
     @Autowired
     private MessageDao messageDao;
 
-    public boolean addProject(Project project) {
+    @CachePut(value = CACHE_NAME, key = "#result.id", unless = "#result == null")
+    public Optional<Project> addProject(Project p) {
 
-        project.setUsername(userDao.getUsername(project.getUserId()));
+        p.setUsername(userDao.getUsername(p.getUserId()));
 
-        boolean success = projectDao.addProject(project);
-        if (success) {
-            Message message = Message.of(project, Message.Type.POST);
-            messageDao.addMessage(message);
-        }
+        Optional<Project> project = projectDao.addProject(p);
+        project.ifPresent(pro -> messageDao.addMessage(Message.of(pro, Message.Type.POST)));
 
-        return success;
+        return project;
     }
 
     @Cacheable(value = CACHE_NAME, key = "#id", unless = "#result == null")
@@ -178,6 +177,7 @@ public class ProjectService {
         return projectDao.containsSignInfo(userId, proId);
     }
 
+    @CacheEvict(value = CACHE_NAME, key = "#proId")
     public boolean deleteProject(Integer proId) {
         return projectDao.deleteProject(proId);
     }

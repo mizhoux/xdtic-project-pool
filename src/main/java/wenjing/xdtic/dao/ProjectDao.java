@@ -29,11 +29,13 @@ public class ProjectDao {
             + "(user_id, name, content, recruit, tag, contact, username, date) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
 
-    public boolean addProject(Project project) {
+    public Optional<Project> addProject(Project project) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
+
         int result = jdbcTmpl.update(conn -> {
 
-            PreparedStatement pstmt = conn.prepareStatement(SQL_ADD_PROJECT, Statement.RETURN_GENERATED_KEYS);
+            PreparedStatement pstmt = conn.prepareStatement(
+                    SQL_ADD_PROJECT, Statement.RETURN_GENERATED_KEYS);
 
             pstmt.setInt(1, project.getUserId());
             pstmt.setString(2, project.getName());
@@ -49,10 +51,10 @@ public class ProjectDao {
 
         if (result == 1) { // 添加项目成功
             project.setId(keyHolder.getKey().intValue());
-            return true;
+            return Optional.of(project);
         }
 
-        return false;
+        return Optional.empty();
     }
 
     private static final String SQL_UPDATE_PROJECT

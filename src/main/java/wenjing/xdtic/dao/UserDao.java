@@ -32,7 +32,7 @@ public class UserDao {
      * @return 是否添加成功
      */
     public boolean addUser(String username, String password) {
-        String sql = "INSERT INTO user SET username = ?, password = ?";
+        String sql = "INSERT INTO user SET username = ?, password = MD5(?)";
         return jdbcTmpl.update(sql, username, password) == 1;
     }
 
@@ -105,7 +105,7 @@ public class UserDao {
      * @return 是否更新成功
      */
     public boolean updatePassword(String username, String oldPassword, String newPassword) {
-        String sql = "UPDATE user SET password = ? WHERE username = ? AND password = ?";
+        String sql = "UPDATE user SET password = MD5(?) WHERE username = ? AND password = ?";
         return jdbcTmpl.update(sql, newPassword, username, oldPassword) == 1;
     }
 
