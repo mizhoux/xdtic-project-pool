@@ -108,7 +108,7 @@
 			                	</span>
 								<span class="tic-delete"
 		 						 v-if="projecttype === 'post'"
-								 v-tap="{methods: deletePost}">删</span>
+								 v-tap.prevent="{methods: deletePost}">删</span>
 							</h4>
 				            <p class="tic-media-box__label">
 				            	<span
