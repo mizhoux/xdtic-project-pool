@@ -32,7 +32,7 @@
 			<div class="tic-table">
 				<form class="tic-form">
 					<div class="tic-tr-two">
-						<span class="tic-td-label">昵称</span>
+						<span class="tic-td-label">用户名</span>
 						<span class="tic-td-content"><c:out value='${signUser.username}' /></span>
 					</div>
 					<div class="tic-tr-two">

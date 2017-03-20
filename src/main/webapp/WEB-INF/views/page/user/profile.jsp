@@ -25,7 +25,7 @@
 					<form method="POST" class="tic-form" id="formProfile">
 						<p class="tic-error-tip" v-show="hasError">{{errorMsg}}</p>
 						<div class="tic-tr-two">
-							<span class="tic-td-label">昵称</span>
+							<span class="tic-td-label">用户名</span>
 							<span class="tic-td-content" v-show="!isEditing">{{user.username}}</span>
 							<span class="tic-td-content" v-show="isEditing">
 								<input type="text" name="username" v-model="user.username" />
