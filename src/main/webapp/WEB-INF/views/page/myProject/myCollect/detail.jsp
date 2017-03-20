@@ -17,6 +17,7 @@
 				<footer class="tic-detail-footer">
 					<a href="javascript:;" v-tap>
 						<img src="/xdtic/static/images/myProject/checking.png" alt="等待审核">
+						<span>发布者审核中</span>
 					</a>
 				</footer>
 			</c:when>
