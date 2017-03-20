@@ -97,10 +97,12 @@ Vue.component('tic-project', {
 			});
 		},
 
-		deletePost: function deletePost() {
+		deletePost: function deletePost(params) {
 			if (confirm('你确定要终止该项目吗？')) {
 				this.$emit('deletepost', this.index);
 			}
+
+			params.event.stopPropagation();
 		}
 	},
 

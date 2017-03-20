@@ -85,6 +85,12 @@
   box-sizing: border-box;
 }
 
+.tic-table .tic-error-tip {
+  color: #f05979;
+  text-align: left;
+  margin: 0 0 .6rem 1.5rem;
+}
+
 .tic-table-head {
   padding: .8rem .5rem;
 }

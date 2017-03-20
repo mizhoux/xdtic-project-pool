@@ -679,10 +679,10 @@
     }
    ```
    - api: /xdtic/fn/update/profile `[POST]`
-   - 说明：用户修改个人信息
-   - request `[FORM]`
-   ```
-   {
+     - 说明：用户修改个人信息
+     - request `[FORM]`
+     ```
+     {
       "user": {
       	"id": "u001",
       	"username": "adoug",
@@ -694,16 +694,42 @@
   			"stunum": "1603121451",
   			"profile": "ps,c++,ui设计",
   			"pexperice": "人脸识别系统"
-    	}
-   }
-   ```
+      }
+     }
+     ```
    
-   - response `[JSON]`
-   ```
-   {
-        code: "ok"/"error"
-   }
-   ```
+     - response `[JSON]`
+     ```
+     {
+          code: "ok"/"error"
+     }
+     ```
+     
+   - api: /xdtic/fn/valid/profile
+   - 说明：验证用户资料（username、phone、email是否唯一，可为空）
+     - request `[FORM]`
+     ```
+     {
+        "id": "u001",
+        "username": "adoug",
+       	"email": "942434869@qq.com",
+       	"name": "张骥",
+ 		    "sex": "boy"/"girl",
+ 		    "profe": "软件工程",
+          			"phone": "15029679086",
+          			"stunum": "1603121451",
+          			"profile": "ps,c++,ui设计",
+          			"pexperice": "人脸识别系统"
+     }
+     ```
+     
+     - response `[JSON]`
+     ```
+     {
+        code: 'ok/error',
+        comment: '用户名被占用' //各种错误提示
+     }
+     ```
    
 #### 系统消息页面
 

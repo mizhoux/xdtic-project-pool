@@ -47,16 +47,19 @@
 				        <div>
 				        	<a href="<c:url value='/hall' />">
 				                <img src="/xdtic/static/images/hall.png" alt="项目大厅">
+								<p>项目大厅</p>
 				        	</a>
 				        </div>
 				        <div>
 				        	<a href="<c:url value='/myProject' />?type=join&userid=<c:out value="${user.id}" />">
 				                <img src="/xdtic/static/images/my-project.png" alt="我的项目">
+								<p>我的项目</p
 				        	</a>
 				        </div>
 				        <div>
-				        	<a href="<c:url value='/user' />?userid=<c:out value="${user.id}" />">
+				        	<a class="selected" href="<c:url value='/user' />?userid=<c:out value="${user.id}" />">
 				                <img src="/xdtic/static/images/center-selected.png" alt="个人中心">
+								<p>个人中心</p>
 				        	</a>
 				        </div>
 				    </div>

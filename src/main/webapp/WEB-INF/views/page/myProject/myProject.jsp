@@ -98,6 +98,9 @@
 				            	<span :class="{'tic-hot': !!project.isHot}">
 				            		{{project.proname}}
 				            	</span>
+								<img class="tic-delete" src="<c:url value='/static/images/myProject/delete.png' />"
+								 v-if="projecttype === 'post'"
+								 v-tap.prevent="{methods: deletePost}">
 				            	<span class="tic-collect">
 				                	<img src="<c:url value='/static/images/hall/uncollect.png' />" alt="收藏"
 				                	 v-tap="{methods: collect, projectIndex: index, userid: userid}"
@@ -106,9 +109,6 @@
 				                	 v-tap="{methods: uncollect, projectIndex: index, userid: userid}"
 				                	 v-show="project.isCollected" />
 			                	</span>
-								<span class="tic-delete"
-		 						 v-if="projecttype === 'post'"
-								 v-tap.prevent="{methods: deletePost}">删</span>
 							</h4>
 				            <p class="tic-media-box__label">
 				            	<span

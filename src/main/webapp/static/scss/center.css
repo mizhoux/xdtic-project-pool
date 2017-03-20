@@ -82,6 +82,23 @@
   padding: 0.5rem 0 0;
 }
 
+.tic-nav > div > a {
+  text-align: center;
+}
+
+.tic-nav > div > a > img {
+  display: inline-block;
+}
+
+.tic-nav > div > a > p {
+  font-size: .3em;
+  margin-top: -.5em;
+}
+
+.tic-nav > div > a.selected > p {
+  color: #117ee8;
+}
+
 body {
   padding-bottom: 70px;
 }
