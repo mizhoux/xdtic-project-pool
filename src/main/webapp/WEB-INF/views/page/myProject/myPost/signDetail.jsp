@@ -67,7 +67,7 @@
 					<hr>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">项目经历</span>
-						<span class="tic-td-content"><c:out value='${signUser.pexperience}' /></span>
+						<span class="tic-td-content"><c:out value='${signUser.experience}' /></span>
 					</div>
 				</form>
 			</div>

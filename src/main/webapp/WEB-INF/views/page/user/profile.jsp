@@ -104,10 +104,10 @@
 						<div class="tic-tr-two">
 							<span class="tic-td-label">项目经历</span>
 							<span class="tic-td-content" v-show="!isEditing">
-								<multiline-content :content="user.pexperience"></multiline-content>
+								<multiline-content :content="user.experience"></multiline-content>
 							</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<textarea name="pexperience" v-model="user.pexperience"></textarea>
+								<textarea name="experience" v-model="user.experience"></textarea>
 							</span>
 						</div>
 						<input type="hidden" name="id" value="<c:out value="${user.id}" />">
@@ -160,8 +160,8 @@
 					<c:out value="${user.skill}" />
 				*/
 				}),
-				pexperience: getMultiline(function() {/*
-					<c:out value="${user.pexperience}" />
+				experience: getMultiline(function() {/*
+					<c:out value="${user.experience}" />
 				*/
 				})
 			};
