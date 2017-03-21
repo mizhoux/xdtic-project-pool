@@ -133,7 +133,7 @@
 				            <p class="weui-media-box__desc">{{project.content}}</p>
 				            <p class="tic-media-box__footer">
 					        	<span class="tic-strong">{{project.username}}</span>
-					        	<span class="tic-secondary">{{project.creation_date}}</span>
+					        	<span class="tic-secondary">{{project.creationDate}}</span>
 					        </p>
 				        </div>
 				    </a>

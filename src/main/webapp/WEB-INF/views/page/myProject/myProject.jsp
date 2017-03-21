@@ -120,7 +120,7 @@
 				            		{{projectStatu}}
 				            	</span>
 					        	<span class="tic-strong">{{project.username}}</span>
-					        	<span class="tic-secondary">{{project.creation_date}}</span>
+					        	<span class="tic-secondary">{{project.creationDate}}</span>
 					        </p>
 				        </div>
 				    </a>
