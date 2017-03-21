@@ -28,26 +28,6 @@
 						<div class="tic-tr-two">
 							<span class="tic-td-label">性别</span>
 							<span class="tic-td-content">
-								<!-- <div class="weui-cells weui-cells_checkbox tic-cells-nomargin">
-								    <label class="weui-cell weui-check__label" for="radioBoy">
-								        <div class="weui-cell__hd">
-								            <input type="radio" value="boy" class="weui-check" id="radioBoy" name="sex" v-model="user.sex">
-								            <i class="weui-icon-checked"></i>
-								        </div>
-								        <div class="weui-cell__bd">
-								            <p>男</p>
-								        </div>
-								    </label>
-								    <label class="weui-cell weui-check__label" for="radioGirl">
-								        <div class="weui-cell__hd">
-								            <input type="radio" value="girl" name="sex" id="radioGirl" class="weui-check" v-model="user.sex">
-								            <i class="weui-icon-checked"></i>
-								        </div>
-								        <div class="weui-cell__bd">
-								            <p>女</p>
-								        </div>
-								    </label>
-								</div> -->
 								{{user.gender === 'M' ? '男' : '女'}}
 							</span>
 						</div>
@@ -60,9 +40,6 @@
 						<div class="tic-tr-two">
 							<span class="tic-td-label">手机</span>
 							<span class="tic-td-content">
-								<!-- <input type="text" name="phone" v-model="user.phone"
-								 
-								 :class="{'tic-error-input': inputError['phone']}" /> -->
 								 {{user.phone}}
 							</span>
 						</div>
