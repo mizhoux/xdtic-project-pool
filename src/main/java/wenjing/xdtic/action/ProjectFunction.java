@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
-import wenjing.xdtic.core.Log;
 import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.RespCode;
@@ -21,7 +20,6 @@ import wenjing.xdtic.service.SignInfoService;
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
-@Log
 @RestController
 @RequestMapping("fn")
 public class ProjectFunction {

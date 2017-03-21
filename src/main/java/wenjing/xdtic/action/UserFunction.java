@@ -5,10 +5,12 @@ import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -31,6 +33,7 @@ import wenjing.xdtic.service.UserService;
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
+@Log
 @Controller
 @RequestMapping("fn")
 public class UserFunction {
@@ -60,7 +63,9 @@ public class UserFunction {
             @RequestParam("pass") String password,
             @RequestParam("passConfirm") String passwordConfirm) {
 
-        if (password.equals(passwordConfirm)) {
+        if (username.length() >= 2 && username.length() <= 20
+                && password.length() >= 6 && password.length() <= 30
+                && password.equals(passwordConfirm)) {
             if (userService.addUser(username, password)) {
                 return "user/login";
             }
@@ -107,11 +112,12 @@ public class UserFunction {
             @RequestParam String username, @RequestParam String passOld,
             @RequestParam String passNew, @RequestParam String passNewConfirm) {
 
-        if (passNew.equals(passNewConfirm)) {
+        if (passNew.length() >= 6 && passNew.equals(passNewConfirm)) {
             if (userService.updatePassword(username, passOld, passNew)) {
                 return "user/login";
             }
         }
+
         return "user/resetPass"; // 更新密码不成功
     }
 
@@ -119,13 +125,17 @@ public class UserFunction {
      * 修改用户个人信息
      *
      * @param user 提交的个人信息（以 Form 提交）
+     * @param br
      * @param session
      * @return
      */
-    @Log
     @ResponseBody
     @PostMapping(value = "update/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode updateUserProfile(HttpSession session, User user) {
+    public RespCode updateUserProfile(@Valid User user, BindingResult br, HttpSession session) {
+        if (br.hasErrors()) {
+            return RespCode.errorOf(br.getFieldError().getDefaultMessage());
+        }
+
         boolean success = userService.updateUser(user);
         if (success) {
             session.setAttribute("user", user);
@@ -134,11 +144,12 @@ public class UserFunction {
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
-    @Log
     @ResponseBody
     @PostMapping(value = "valid/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode validUserProfile(User user) {
-        return userService.validUser(user);
+    public RespCode validUserProfile(@Valid User user, BindingResult br) {
+        return br.hasErrors()
+                ? RespCode.errorOf(br.getFieldError().getDefaultMessage())
+                : userService.validUser(user);
     }
 
     /**

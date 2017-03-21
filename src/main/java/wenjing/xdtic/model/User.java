@@ -1,6 +1,9 @@
 package wenjing.xdtic.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.Email;
 
 /**
  *
@@ -9,24 +12,40 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class User {
 
     private Integer id;
+
+    @NotNull
+    @Size(min = 2, max = 20, message = "用户名长度需要在 2~20 之间")
     private String username;
+
+    @Size(min = 6, max = 30, message = "密码长度需要在 6~30 之间")
     private String password;
 
-    private String gender;
+    @Email(message = "邮箱格式不正确")
     private String email;
+
+    @Size(min = 11, max = 11, message = "电话号码必须为 11 位")
     private String phone;
 
-    private String realname;
-    private String nickname;
+    @Pattern(regexp = "[M|F]{1}", message = "男为 M，女为 F")
+    private String gender;
 
+    @Size(min = 2, max = 30, message = "真实名字长度需要在 2~30 之间")
+    private String realname;
+
+    private String nickname; // 暂未使用
+
+    @Size(min = 4, max = 20, message = "专业长度需要在 4~30 之间")
     private String major;
 
-    @JsonProperty("stu_num")
+    @Size(min = 6, max = 20, message = "学号长度需要在 6~20 之间")
     private String stuNum;
 
-    private String skill;
-    private String experience;
+    private String skill = "无";
+    private String experience = "无";
 
+    /**
+     * 前端所需字段，判断当前用户是否有未读消息
+     */
     private boolean hasMsg;
 
     public Integer getId() {
