@@ -19,9 +19,9 @@ window.addEventListener('load', function () {
 	var inputError = {
 		'name': false,
 		'apply': false,
-		'profe': false,
+		'major': false,
 		'phone': false,
-		'stunum': false
+		'stu_num': false
 	};
 
 	var appToJoin = new Vue({
@@ -93,7 +93,7 @@ window.addEventListener('load', function () {
 				    name = target.name,
 				    value = target.value;
 
-				if (name === 'name' || name === 'apply' || name === 'profe' || name === 'phone' || name === 'stunum') {
+				if (name === 'name' || name === 'apply' || name === 'major' || name === 'phone' || name === 'stu_num') {
 					if (value === '') {
 						this.inputError[name] = true;
 					} else {

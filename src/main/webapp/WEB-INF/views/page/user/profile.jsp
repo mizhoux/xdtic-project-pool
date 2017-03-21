@@ -52,7 +52,7 @@
 								<div class="weui-cells weui-cells_checkbox">
 								    <label class="weui-cell weui-check__label" for="radioBoy">
 								        <div class="weui-cell__hd">
-								            <input type="radio" value="boy" class="weui-check" id="radioBoy" name="sex" v-model="user.sex">
+								            <input type="radio" value="M" class="weui-check" id="radioBoy" name="gender" v-model="user.gender">
 								            <i class="weui-icon-checked"></i>
 								        </div>
 								        <div class="weui-cell__bd">
@@ -61,7 +61,7 @@
 								    </label>
 								    <label class="weui-cell weui-check__label" for="radioGirl">
 								        <div class="weui-cell__hd">
-								            <input type="radio" value="girl" name="sex" id="radioGirl" class="weui-check" v-model="user.sex">
+								            <input type="radio" value="F" name="gender" id="radioGirl" class="weui-check" v-model="user.gender">
 								            <i class="weui-icon-checked"></i>
 								        </div>
 								        <div class="weui-cell__bd">
@@ -73,9 +73,9 @@
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">专业</span>
-							<span class="tic-td-content" v-show="!isEditing">{{user.profe}}</span>
+							<span class="tic-td-content" v-show="!isEditing">{{user.major}}</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<input type="text" name="profe" v-model="user.profe" />
+								<input type="text" name="major" v-model="user.major" />
 							</span>
 						</div>
 						<div class="tic-tr-two">
@@ -87,27 +87,27 @@
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">学号</span>
-							<span class="tic-td-content" v-show="!isEditing">{{user.stunum}}</span>
+							<span class="tic-td-content" v-show="!isEditing">{{user.stu_num}}</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<input type="text" name="stunum" v-model="user.stunum" />
+								<input type="text" name="stu_num" v-model="user.stu_num" />
 							</span>
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">个人能力</span>
 							<span class="tic-td-content" v-show="!isEditing">
-								<multiline-content :content="user.profile"></multiline-content>
+								<multiline-content :content="user.skill"></multiline-content>
 							</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<textarea name="profile" v-model="user.profile"></textarea>
+								<textarea name="skill" v-model="user.skill"></textarea>
 							</span>
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">项目经历</span>
 							<span class="tic-td-content" v-show="!isEditing">
-								<multiline-content :content="user.pexperice"></multiline-content>
+								<multiline-content :content="user.pexperience"></multiline-content>
 							</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<textarea name="pexperice" v-model="user.pexperice"></textarea>
+								<textarea name="pexperience" v-model="user.pexperience"></textarea>
 							</span>
 						</div>
 						<input type="hidden" name="id" value="<c:out value="${user.id}" />">
@@ -152,16 +152,16 @@
 				username: "<c:out value="${user.username}" />",
 				email: "<c:out value="${user.email}" />",
 				name: "<c:out value="${user.name}" />",
-				sex: "<c:out value="${user.sex}" />",
-				profe: "<c:out value="${user.profe}" />",
+				gender: "<c:out value="${user.gender}" />",
+				skill: "<c:out value="${user.skill}" />",
 				phone: "<c:out value="${user.phone}" />",
-				stunum: "<c:out value="${user.stunum}" />",
-				profile: getMultiline(function() {/*
-					<c:out value="${user.profile}" />
+				stu_num: "<c:out value="${user.stu_num}" />",
+				major: getMultiline(function() {/*
+					<c:out value="${user.major}" />
 				*/
 				}),
-				pexperice: getMultiline(function() {/*
-					<c:out value="${user.pexperice}" />
+				pexperience: getMultiline(function() {/*
+					<c:out value="${user.pexperience}" />
 				*/
 				})
 			};

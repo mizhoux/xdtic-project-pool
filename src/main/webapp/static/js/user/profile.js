@@ -56,7 +56,7 @@ var appProfile = new Vue({
   },
   computed: {
     userSex: function userSex() {
-      return this.user.sex === 'boy' ? '男' : '女';
+      return this.user.gender === 'M' ? '男' : '女';
     },
 
     hasError: function hasError() {
