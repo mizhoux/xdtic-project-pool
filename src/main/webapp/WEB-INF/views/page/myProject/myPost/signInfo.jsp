@@ -12,7 +12,7 @@
 		<main>
 			<div class="tic-sign-info-box" id="appSignInfo">
 				<c:forEach items="${signInfos}" var="signInfo">
-					<a href="<c:url value='/signInfo' />?signId=<c:out value='${signInfo.sid}' />" class="tic-sign-info-link">
+					<a href="<c:url value='/signInfo' />?signId=<c:out value='${signInfo.id}' />" class="tic-sign-info-link">
 						<div class="tic-sign-info-wrap">
 							<div class="tic-left">
 								<img src="/xdtic/static/images/avatar.png" alt="<c:out value='${signInfo.username}' />">
