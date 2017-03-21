@@ -1,1 +1,1 @@
-var urlPrefix = '/dtic';
+var urlPrefix = '/xdtic';
