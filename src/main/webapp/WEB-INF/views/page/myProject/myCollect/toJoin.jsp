@@ -137,10 +137,13 @@
 				email: "<c:out value="${user.email}" />",
 				name: "<c:out value="${user.name}" />",
 				gender: "<c:out value="${user.gender}" />",
-				skill: "<c:out value="${user.skill}" />",
 				phone: "<c:out value="${user.phone}" />",
 				stuNum: "<c:out value="${user.stuNum}" />",
-				profile: "<c:out value="${user.profile}" />",
+				major: "<c:out value="${user.major}" />",
+				skill: getMultiline(function() {/*
+					<c:out value="${user.skill}" />
+				*/
+				}),
 				experience: getMultiline(function() {/*
 					<c:out value="${user.experience}" />
 				*/
