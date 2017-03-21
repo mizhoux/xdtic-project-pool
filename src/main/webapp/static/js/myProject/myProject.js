@@ -108,8 +108,8 @@ Vue.component('tic-project', {
 
 	computed: {
 		projectStatu: function projectStatu() {
-			if (this.project.statu) {
-				return this.project.statu === 1 ? '审核已通过~' : this.project.statu === 2 ? '审核被拒' : '审核中...';
+			if (this.project.status) {
+				return this.project.status == 1 ? '审核已通过~' : this.project.status == 2 ? '审核被拒' : '审核中...';
 			}
 			return '';
 		},

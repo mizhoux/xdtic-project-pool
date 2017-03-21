@@ -15,12 +15,12 @@
             <p class="tic-title-secondary"><c:out value="${project.creationDate}" /></p>
         </div>
 
-        <c:if test="${project.statu != null}">
+        <c:if test="${project.status != null}">
             <c:choose>
-                <c:when test="${project.statu == 1}">
+                <c:when test="${project.status == 1}">
                     <c:set var="projectStatu" value="" />
                 </c:when>
-                <c:when test="${project.statu == 2}">
+                <c:when test="${project.status == 2}">
                     <c:set var="projectStatu" value="状态：审核被拒" />
                 </c:when>
                 <c:otherwise>
