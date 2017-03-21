@@ -135,7 +135,7 @@
 				id: "<c:out value="${user.id}" />",
 				username: "<c:out value="${user.username}" />",
 				email: "<c:out value="${user.email}" />",
-				name: "<c:out value="${user.name}" />",
+				realname: "<c:out value="${user.realname}" />",
 				gender: "<c:out value="${user.gender}" />",
 				phone: "<c:out value="${user.phone}" />",
 				stuNum: "<c:out value="${user.stuNum}" />",
