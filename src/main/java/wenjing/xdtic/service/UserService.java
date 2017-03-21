@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.PagingModel;
+import wenjing.xdtic.model.RespCode;
 import wenjing.xdtic.model.User;
 
 /**
@@ -74,6 +75,25 @@ public class UserService {
         }
 
         return userDao.deleteUsers(ids);
+    }
+
+    public RespCode validUser(User user) {
+        Integer userId = userDao.getUserIdByUsername(user.getUsername());
+        if (userId != 0 && !userId.equals(user.getId())) {
+            return RespCode.errorOf("用户名已被使用");
+        }
+
+        userId = userDao.getUserIdByEmail(user.getEmail());
+        if (userId != 0 && !userId.equals(user.getId())) {
+            return RespCode.errorOf("邮箱已被使用");
+        }
+
+        userId = userDao.getUserIdByPhone(user.getPhone());
+        if (userId != 0 && !userId.equals(user.getId())) {
+            return RespCode.errorOf("电话号码已被使用");
+        }
+
+        return RespCode.OK;
     }
 
     /**

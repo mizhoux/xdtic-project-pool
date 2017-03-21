@@ -187,4 +187,19 @@ public class UserDao {
         return condition.toString();
     }
 
+    public Integer getUserIdByUsername(String username) {
+        String sql = "SELECT id FROM user WHERE username = ?";
+        return jdbcTmpl.query(sql, rs -> rs.next() ? rs.getInt(1) : 0, username);
+    }
+
+    public Integer getUserIdByEmail(String email) {
+        String sql = "SELECT id FROM user WHERE email = ?";
+        return jdbcTmpl.query(sql, rs -> rs.next() ? rs.getInt(1) : 0, email);
+    }
+
+    public Integer getUserIdByPhone(String phone) {
+        String sql = "SELECT id FROM user WHERE phone = ?";
+        return jdbcTmpl.query(sql, rs -> rs.next() ? rs.getInt(1) : 0, phone);
+    }
+
 }

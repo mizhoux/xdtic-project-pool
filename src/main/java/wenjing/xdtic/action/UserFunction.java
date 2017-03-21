@@ -133,6 +133,13 @@ public class UserFunction {
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
+    @ResponseBody
+    @PostMapping(value = "valid/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    public RespCode validUserProfile(User user) {
+        userService.syncDataForBack(user);
+        return userService.validUser(user);
+    }
+
     /**
      * 验证用户名是否可用（以 JSON 提交）
      *
