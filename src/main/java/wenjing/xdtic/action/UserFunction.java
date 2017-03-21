@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import wenjing.xdtic.core.Log;
 import wenjing.xdtic.core.RemoteAddressCache;
 import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.PagingModel;
@@ -121,10 +122,10 @@ public class UserFunction {
      * @param session
      * @return
      */
+    @Log
     @ResponseBody
     @PostMapping(value = "update/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode updateUserProfile(HttpSession session, User user) {
-        userService.syncDataForBack(user);
         boolean success = userService.updateUser(user);
         if (success) {
             session.setAttribute("user", user);
@@ -133,10 +134,10 @@ public class UserFunction {
         return success ? RespCode.OK : RespCode.ERROR;
     }
 
+    @Log
     @ResponseBody
     @PostMapping(value = "valid/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode validUserProfile(User user) {
-        userService.syncDataForBack(user);
         return userService.validUser(user);
     }
 

@@ -25,20 +25,17 @@ public class UserService {
     }
 
     public Optional<User> getUser(Integer id) {
-        return userDao.getUser(id).map(this::syncDataForFront);
+        return userDao.getUser(id);
     }
 
     public Optional<User> getUser(String username, String password) {
-        return userDao.getUser(username, password).map(this::syncDataForFront);
+        return userDao.getUser(username, password);
     }
 
     public List<User> getUsers(String keyword, int pageNum, int pageSize) {
 
         int offset = pageNum * pageSize;
-        List<User> users = userDao.getUsers(keyword, offset, pageSize);
-        users.forEach(this::syncDataForFront);
-
-        return users;
+        return userDao.getUsers(keyword, offset, pageSize);
     }
 
     public PagingModel<User> getPagingUsers(String keyword, int pageNum, int pageSize) {
@@ -94,41 +91,6 @@ public class UserService {
         }
 
         return RespCode.OK;
-    }
-
-    /**
-     * 为后端需求的字段同步 User
-     *
-     * @param user
-     * @return
-     */
-    public User syncDataForBack(User user) {
-        user.setRealname(user.getName());
-        user.setGender(user.getSex());
-        user.setMajor(user.getProfe());
-        user.setStuNum(user.getStunum());
-        user.setSkill(user.getProfile());
-        user.setExperience(user.getPexperice());
-
-        return user;
-    }
-
-    /**
-     * 为前端需求的字段同步 User
-     *
-     * @param user
-     * @return
-     */
-    public User syncDataForFront(User user) {
-        user.setName(user.getRealname());
-        user.setSex(user.getGender());
-        user.setProfe(user.getMajor());
-        user.setStunum(user.getStuNum());
-        user.setProfile(user.getSkill());
-        user.setPexperice(user.getExperience());
-        user.setPassword("");
-
-        return user;
     }
 
 }

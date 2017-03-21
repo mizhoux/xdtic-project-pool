@@ -1,7 +1,6 @@
 package wenjing.xdtic.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +8,6 @@ import java.util.List;
  *
  * @author wenjing
  */
-@JsonIgnoreProperties({"id", "userId", "name", "content", "recruit", "contact", "status"})
 public class Project {
 
     private Integer id;
@@ -23,25 +21,17 @@ public class Project {
 
     private String recruit;
     private String contact;
-
-    private String status;
+    /**
+     * 0：待审核；1：审核通过；2：被拒绝
+     */
+    private byte status;
 
     @JsonFormat(pattern = "yyyy.MM.dd")
-    private Date date;
+    private Date creationDate;
 
     // 非数据库中字段，前端需要
     private boolean isCollected;
     private List<String> tags;
-
-    // 兼容前端
-    private Integer proId;  // id
-    private Integer userid; // userId
-    private String proname; // name
-    private String desc; // content
-    private String promassage; // content
-    private String prowant; // recruit
-    private String concat;  // contact
-    private String statu;   // status
 
     public Integer getId() {
         return id;
@@ -51,11 +41,11 @@ public class Project {
         this.id = id;
     }
 
-    public String getStatus() {
+    public byte getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(byte status) {
         this.status = status;
     }
 
@@ -109,60 +99,12 @@ public class Project {
         this.recruit = recruit;
     }
 
-    public String getConcat() {
-        return concat;
-    }
-
-    public void setConcat(String concat) {
-        this.concat = concat;
-    }
-
-    public String getStatu() {
-        return statu;
-    }
-
-    public void setStatu(String statu) {
-        this.statu = statu;
-    }
-
     public List<String> getTags() {
         return tags;
     }
 
     public void setTags(List<String> tags) {
         this.tags = tags;
-    }
-
-    public Integer getUserid() {
-        return userid;
-    }
-
-    public void setUserid(Integer userid) {
-        this.userid = userid;
-    }
-
-    public Integer getProId() {
-        return proId;
-    }
-
-    public void setProId(Integer proId) {
-        this.proId = proId;
-    }
-
-    public String getProname() {
-        return proname;
-    }
-
-    public void setProname(String proname) {
-        this.proname = proname;
-    }
-
-    public String getProwant() {
-        return prowant;
-    }
-
-    public void setProwant(String prowant) {
-        this.prowant = prowant;
     }
 
     public String getTag() {
@@ -173,12 +115,12 @@ public class Project {
         this.tag = tag;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public boolean isIsCollected() {
@@ -195,22 +137,6 @@ public class Project {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public String getPromassage() {
-        return promassage;
-    }
-
-    public void setPromassage(String promassage) {
-        this.promassage = promassage;
     }
 
     @Override

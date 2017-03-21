@@ -21,7 +21,7 @@ public class SignInfoDao {
 
     private static final String SQL_ADD_SIGN_INFO
             = "INSERT INTO sign_info "
-            + "(pro_id, user_id, apply, skill, experience, sign_time) "
+            + "(pro_id, user_id, apply, skill, experience, sign_date) "
             + "VALUES (?, ?, ?, ?, ?, NOW())";
 
     public boolean addSignInfo(SignInfo signInfo) {
@@ -62,7 +62,7 @@ public class SignInfoDao {
         signInfo.setApply(rs.getString("apply"));
         signInfo.setExperience(rs.getString("experience"));
         signInfo.setSkill(rs.getString("skill"));
-        signInfo.setSignTime(rs.getTimestamp("sign_time"));
+        signInfo.setSignDate(rs.getTimestamp("sign_date"));
         signInfo.setUsername(rs.getString("username"));
 
         return signInfo;

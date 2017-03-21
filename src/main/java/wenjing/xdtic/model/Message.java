@@ -1,14 +1,12 @@
 package wenjing.xdtic.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 
 /**
  *
  * @author wenjing
  */
-@JsonIgnoreProperties({"id", "userId", "content"})
 public class Message {
 
     public static enum Type {
@@ -20,16 +18,10 @@ public class Message {
     private Integer proId;
     private Integer userId;
     private String content;
-    private String type;
     private boolean read;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date date;
-
-    // 兼容前端
-    private Integer mid; // id
-    private Integer uid; // userId
-    private String massage; // content
+    private Date creationDate;
 
     public static Message of(Project project, Message.Type type) {
         return of(project, type, null);
@@ -41,7 +33,6 @@ public class Message {
         message.setUserId(project.getUserId());
         message.setProId(project.getId());
         message.setContent(getMessageContent(project.getName(), type, comment));
-        message.setType(type.name().toLowerCase());
 
         return message;
     }
@@ -79,44 +70,12 @@ public class Message {
         this.id = id;
     }
 
-    public Integer getUid() {
-        return uid;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setUid(Integer uid) {
-        this.uid = uid;
-    }
-
-    public Integer getMid() {
-        return mid;
-    }
-
-    public void setMid(Integer mid) {
-        this.mid = mid;
-    }
-
-    public String getMassage() {
-        return massage;
-    }
-
-    public void setMassage(String massage) {
-        this.massage = massage;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public boolean isRead() {

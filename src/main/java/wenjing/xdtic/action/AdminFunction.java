@@ -75,7 +75,7 @@ public class AdminFunction {
     @PostMapping(value = "project/operate", consumes = MediaType.APPLICATION_JSON_VALUE)
     public RespCode operateProject(@RequestBody Map<String, String> params) {
 
-        Integer proId = Integer.parseInt(params.get("proId"));
+        Integer proId = Integer.parseInt(params.get("id"));
         String operation = params.get("operation");
         String comment = params.get("rejectReason");
 

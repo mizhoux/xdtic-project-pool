@@ -1,8 +1,5 @@
 package wenjing.xdtic.service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,40 +39,11 @@ public class SignInfoService {
     }
 
     public Optional<SignInfo> getSignInfo(Integer id) {
-        return signInfoDao.getSignInfo(id).map(this::syncDataForFront);
+        return signInfoDao.getSignInfo(id);
     }
 
     public List<SignInfo> getSignInfos(Integer proId) {
-        List<SignInfo> signInfos = signInfoDao.getSignInfos(proId);
-        signInfos.forEach(this::syncDataForFront);
-
-        return signInfos;
+        return signInfoDao.getSignInfos(proId);
     }
 
-    public SignInfo syncDataForBack(SignInfo signInfo) {
-
-        signInfo.setId(signInfo.getSid());
-        signInfo.setUserId(signInfo.getUid());
-        signInfo.setSkill(signInfo.getProfile());
-        signInfo.setExperience(signInfo.getPexperice());
-
-        return signInfo;
-    }
-
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
-
-    public SignInfo syncDataForFront(SignInfo signInfo) {
-
-        signInfo.setSid(signInfo.getId());
-        signInfo.setUid(signInfo.getUserId());
-        signInfo.setProfile(signInfo.getSkill());
-        signInfo.setPexperice(signInfo.getExperience());
-        LocalDateTime dateTime = LocalDateTime.ofInstant(
-                signInfo.getSignTime().toInstant(), ZoneId.systemDefault());
-        signInfo.setDate(DATE_FORMATTER.format(dateTime));
-        signInfo.setTime(TIME_FORMATTER.format(dateTime));
-
-        return signInfo;
-    }
 }

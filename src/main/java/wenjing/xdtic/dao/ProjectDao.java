@@ -26,7 +26,7 @@ public class ProjectDao {
 
     private static final String SQL_ADD_PROJECT
             = "INSERT INTO project "
-            + "(user_id, name, content, recruit, tag, contact, username, date) "
+            + "(user_id, name, content, recruit, tag, contact, username, creation_date) "
             + "VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
 
     public Optional<Project> addProject(Project project) {
@@ -91,8 +91,8 @@ public class ProjectDao {
     public List<Project> getAcceptedProjects(String keyword, int offset, int size) {
         String SQL
                 = "SELECT p.* FROM project AS p "
-                + "WHERE p.status = 'pass' AND " + getSearchCondition(keyword)
-                + "ORDER BY date DESC LIMIT ?, ?";
+                + "WHERE p.status = 1 AND " + getSearchCondition(keyword)
+                + "ORDER BY creation_date DESC LIMIT ?, ?";
 
         return jdbcTmpl.query(SQL, this::mapProject, offset, size);
     }
@@ -100,7 +100,7 @@ public class ProjectDao {
     public long countAcceptedProjects(String keyword) {
         String SQL
                 = "SELECT COUNT(*) FROM project p "
-                + "WHERE p.status = 'pass' AND " + getSearchCondition(keyword);
+                + "WHERE p.status = 1 AND " + getSearchCondition(keyword);
 
         return jdbcTmpl.queryForObject(SQL, Long.class);
     }
@@ -117,7 +117,7 @@ public class ProjectDao {
 
         String sql = "SELECT p.* FROM project AS p, "
                 + "(SELECT ps.pro_id, COUNT(*) AS num FROM pro_stars ps GROUP BY ps.pro_id ORDER BY num DESC LIMIT ?) AS t "
-                + "WHERE p.status = 'pass' AND p.id = t.pro_id AND " + getSearchCondition(keyword);
+                + "WHERE p.status = 1 AND p.id = t.pro_id AND " + getSearchCondition(keyword);
 
         return jdbcTmpl.query(sql, this::mapProject, hotSize);
     }
@@ -133,15 +133,15 @@ public class ProjectDao {
     public List<Project> getUncheckedProjects(String keyword, int offset, int size) {
         String sql
                 = "SELECT p.* FROM project AS p "
-                + "WHERE p.status = 'check' AND " + getSearchCondition(keyword)
-                + "ORDER BY date DESC LIMIT ?, ?";
+                + "WHERE p.status = 0 AND " + getSearchCondition(keyword)
+                + "ORDER BY creation_date DESC LIMIT ?, ?";
 
         return jdbcTmpl.query(sql, this::mapProject, offset, size);
     }
 
     public long countUncheckedProjects(String keyword) {
         String sql = "SELECT COUNT(*) FROM project p "
-                + "WHERE p.status = 'check' AND " + getSearchCondition(keyword);
+                + "WHERE p.status = 0 AND " + getSearchCondition(keyword);
 
         return jdbcTmpl.queryForObject(sql, Long.class);
     }
@@ -155,7 +155,7 @@ public class ProjectDao {
      * @return
      */
     public List<Project> getPostedProjects(Integer userId, int offset, int size) {
-        String sql = "SELECT p.* FROM project p WHERE p.user_id = ? ORDER BY date DESC LIMIT ?, ?";
+        String sql = "SELECT p.* FROM project p WHERE p.user_id = ? ORDER BY creation_date DESC LIMIT ?, ?";
         return jdbcTmpl.query(sql, this::mapProject, userId, offset, size);
     }
 
@@ -204,7 +204,7 @@ public class ProjectDao {
     private static final String SQL_GET_JOINED_PROJECTS
             = "SELECT p.* FROM project p "
             + "WHERE p.id IN (SELECT s.pro_id FROM sign_info s WHERE s.user_id = ?) "
-            + "ORDER BY date DESC LIMIT ?, ?";
+            + "ORDER BY creation_date DESC LIMIT ?, ?";
 
     /**
      * 获得用户参与的项目
@@ -280,7 +280,7 @@ public class ProjectDao {
         return jdbcTmpl.queryForObject(sql, Long.class, userId, proId) == 1;
     }
 
-    public boolean updateProjectStatus(Integer proId, String status) {
+    public boolean updateProjectStatus(Integer proId, int status) {
         String sql = "UPDATE project SET status = ? WHERE id = ?";
         return jdbcTmpl.update(sql, status, proId) == 1;
     }
@@ -326,8 +326,8 @@ public class ProjectDao {
         project.setContent(rs.getString("content"));
         project.setRecruit(rs.getString("recruit"));
         project.setContact(rs.getString("contact"));
-        project.setStatus(rs.getString("status"));
-        project.setDate(rs.getTimestamp("date"));
+        project.setStatus(rs.getByte("status"));
+        project.setCreationDate(rs.getTimestamp("creation_date"));
         project.setTag(rs.getString("tag"));
 
         return project;

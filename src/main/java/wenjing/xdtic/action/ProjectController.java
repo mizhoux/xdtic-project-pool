@@ -113,7 +113,7 @@ public class ProjectController {
         signInfo.ifPresent(si -> request.setAttribute("signInfo", si));
 
         signInfo.map(si -> si.getUserId())
-                .map(uid -> userService.getUser(uid))
+                .flatMap(uid -> userService.getUser(uid))
                 .ifPresent(u -> request.setAttribute("signUser", u));
 
         return signInfo.map(si -> "myProject/myPost/signDetail").orElse("error");

@@ -76,6 +76,21 @@ public class UserDao {
         return jdbcTmpl.queryForObject(sql, String.class, id);
     }
 
+    public Integer getUserIdByUsername(String username) {
+        String sql = "SELECT id FROM user WHERE username = ?";
+        return jdbcTmpl.query(sql, rs -> rs.next() ? rs.getInt(1) : 0, username);
+    }
+
+    public Integer getUserIdByEmail(String email) {
+        String sql = "SELECT id FROM user WHERE email = ?";
+        return jdbcTmpl.query(sql, rs -> rs.next() ? rs.getInt(1) : 0, email);
+    }
+
+    public Integer getUserIdByPhone(String phone) {
+        String sql = "SELECT id FROM user WHERE phone = ?";
+        return jdbcTmpl.query(sql, rs -> rs.next() ? rs.getInt(1) : 0, phone);
+    }
+
     private static final String SQL_UPDATE_USER
             = "UPDATE user SET username = ?, realname = ?, nickname= ?, email = ?, gender = ?, "
             + "major = ?, phone = ?, stu_num = ?, skill = ?, experience = ? WHERE id = ?";
@@ -162,7 +177,7 @@ public class UserDao {
 
         user.setId(rs.getInt("id"));
         user.setUsername(rs.getString("username"));
-        user.setPassword(rs.getString("password"));
+        //user.setPassword(rs.getString("password"));
         user.setEmail(rs.getString("email"));
         user.setPhone(rs.getString("phone"));
         user.setNickname(rs.getString("nickname"));
@@ -185,21 +200,6 @@ public class UserDao {
         condition.append(columns).append(" LIKE '%").append(keyword).append("%'");
 
         return condition.toString();
-    }
-
-    public Integer getUserIdByUsername(String username) {
-        String sql = "SELECT id FROM user WHERE username = ?";
-        return jdbcTmpl.query(sql, rs -> rs.next() ? rs.getInt(1) : 0, username);
-    }
-
-    public Integer getUserIdByEmail(String email) {
-        String sql = "SELECT id FROM user WHERE email = ?";
-        return jdbcTmpl.query(sql, rs -> rs.next() ? rs.getInt(1) : 0, email);
-    }
-
-    public Integer getUserIdByPhone(String phone) {
-        String sql = "SELECT id FROM user WHERE phone = ?";
-        return jdbcTmpl.query(sql, rs -> rs.next() ? rs.getInt(1) : 0, phone);
     }
 
 }

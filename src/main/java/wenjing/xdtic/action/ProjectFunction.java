@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import wenjing.xdtic.core.Log;
 import wenjing.xdtic.model.PagingModel;
 import wenjing.xdtic.model.Project;
 import wenjing.xdtic.model.RespCode;
@@ -20,6 +21,7 @@ import wenjing.xdtic.service.SignInfoService;
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
+@Log
 @RestController
 @RequestMapping("fn")
 public class ProjectFunction {
@@ -31,14 +33,7 @@ public class ProjectFunction {
     private SignInfoService siService;
 
     @PostMapping(value = "project/post", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode postProject(
-            @RequestParam Integer uid,
-            @RequestParam String title, Project project) {
-
-        project.setUserid(uid); // 兼容前端
-        project.setProname(title); // 兼容前端
-        proService.syncDataForBack(project);
-
+    public RespCode postProject(Project project) {
         return proService.addProject(project)
                 .map(p -> RespCode.OK).orElse(RespCode.ERROR);
     }
@@ -48,9 +43,7 @@ public class ProjectFunction {
             @RequestParam("uid") Integer userId,
             @RequestParam boolean reject, Project project) {
 
-        project.setUserid(userId); // 兼容前端
-        proService.syncDataForBack(project);
-
+        project.setUserId(userId);
         boolean success = proService.updateProject(project, reject);
         return success ? RespCode.OK : RespCode.ERROR;
     }
@@ -113,7 +106,6 @@ public class ProjectFunction {
 
     @PostMapping("project/toJoin")
     public RespCode toJoinProject(SignInfo signInfo) {
-        siService.syncDataForBack(signInfo);
         boolean success = siService.addSignInfo(signInfo);
         return success ? RespCode.OK : RespCode.ERROR;
     }

@@ -1,40 +1,33 @@
 package wenjing.xdtic.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  *
  * @author wenjing
  */
-@JsonIgnoreProperties({"realname", "gender", "specialty", "stuNum", "skill", "experience"})
 public class User {
 
     private Integer id;
     private String username;
     private String password;
 
+    private String gender;
     private String email;
     private String phone;
 
     private String realname;
     private String nickname;
 
-    private String gender;
-
     private String major;
+
+    @JsonProperty("stu_num")
     private String stuNum;
+
     private String skill;
     private String experience;
 
     private boolean hasMsg;
-
-    // 兼容前端
-    private String name;  // realname
-    private String sex;   // gender
-    private String profe; // specialty
-    private String stunum;// stuNum
-    private String profile;   // skill
-    private String pexperice; // experience
 
     public Integer getId() {
         return id;
@@ -140,57 +133,9 @@ public class User {
         this.experience = experience;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSex() {
-        return sex;
-    }
-
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
-
-    public String getProfe() {
-        return profe;
-    }
-
-    public void setProfe(String profe) {
-        this.profe = profe;
-    }
-
-    public String getStunum() {
-        return stunum;
-    }
-
-    public void setStunum(String stunum) {
-        this.stunum = stunum;
-    }
-
-    public String getProfile() {
-        return profile;
-    }
-
-    public void setProfile(String profile) {
-        this.profile = profile;
-    }
-
-    public String getPexperice() {
-        return pexperice;
-    }
-
-    public void setPexperice(String pexperice) {
-        this.pexperice = pexperice;
-    }
-
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", username=" + username + ", realname=" + realname + ", email=" + email + ", phone=" + phone + '}';
+        return "User{" + "id=" + id + ", username=" + username + ", password=" + password + ", gender=" + gender + ", email=" + email + ", phone=" + phone + ", realname=" + realname + ", nickname=" + nickname + ", major=" + major + ", stuNum=" + stuNum + '}';
     }
 
 }
