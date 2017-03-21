@@ -95,7 +95,7 @@
 				 v-show="showTag"
 				 v-tap="{methods: tagTap}">
 					<span class="tic-tag"
-					 v-for="(tag, index) in tag"								
+					 v-for="(tag, index) in tags"								
 					 :data-tag="tag"
 					 :class="{'tic-tag-selected': isSelected(tag)}">{{tag}}</span>
 					 <span class="tic-tag"
