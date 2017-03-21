@@ -26,7 +26,7 @@
 							<div class="weui-cell">
 							    <div class="weui-cell__bd">
 							        <input class="weui-input" type="text" name="name" placeholder="标题（至少2个字）"
-									 v-model="title" />
+									 v-model="name" />
 							    </div>
 							</div>
 							<div class="weui-cell">
@@ -55,7 +55,7 @@
 						        </div>
 							   </div>
 						</div>
-						<input type="hidden" name="uid" value="<c:out value='${user.id}' />">
+						<input type="hidden" name="userId" value="<c:out value='${user.id}' />">
 						<button class="weui-btn weui-btn_primary" id="btnConfirm" v-tap.prevent="{methods: validForm}">发布</button>
 					</form>
 				</div>
