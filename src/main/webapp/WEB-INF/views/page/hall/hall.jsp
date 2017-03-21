@@ -115,7 +115,7 @@
 				        <div class="weui-media-box__bd">
 					        <h4 class="weui-media-box__title">
 				            	<span :class="{'tic-hot': !!project.isHot}">
-				            		{{project.proname}}
+				            		{{project.name}}
 				            	</span>
 				            	<span class="tic-collect">
 				                	<img src="<c:url value='/static/images/hall/uncollect.png' />" alt="收藏"
@@ -128,12 +128,12 @@
 				            </h4>
 				            <p class="tic-media-box__label">
 				            	<span
-				            	 v-for="tag in project.tags">{{tag}}</span>
+				            	 v-for="tag in project.tag">{{tag}}</span>
 				            </p>
-				            <p class="weui-media-box__desc">{{project.desc}}</p>
+				            <p class="weui-media-box__desc">{{project.content}}</p>
 				            <p class="tic-media-box__footer">
 					        	<span class="tic-strong">{{project.username}}</span>
-					        	<span class="tic-secondary">{{project.date}}</span>
+					        	<span class="tic-secondary">{{project.creation_date}}</span>
 					        </p>
 				        </div>
 				    </a>

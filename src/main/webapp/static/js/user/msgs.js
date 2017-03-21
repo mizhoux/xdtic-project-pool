@@ -35,9 +35,9 @@ Vue.component('tic-msg', {
 			var jumpUrl;
 
 			if (this.msg.type === '') {
-				jumpUrl = urlProjectSign + '?uid=' + this.msg.uid + '&proId=' + this.msg.proId;
+				jumpUrl = urlProjectSign + '?uid=' + this.msg.uid + '&proId=' + this.msg.id;
 			} else {
-				jumpUrl = urlProjectPost + '?uid=' + this.msg.uid + '&proId=' + this.msg.proId;
+				jumpUrl = urlProjectPost + '?uid=' + this.msg.uid + '&proId=' + this.msg.id;
 			}
 
 			if (this.msg.read) {

@@ -74,11 +74,11 @@
         <script type="text/x-template" id="tic-project-check">
             <tr :class="{'project-slide': project.isProcessed}" v-show="!project.animationEnd" class="project-item">
                 <td>
-                    <a class="tic-project-wrap" :href="'<c:url value='/admin/project?proId=' />' + project.proId">
+                    <a class="tic-project-wrap" :href="'<c:url value='/admin/project?proId=' />' + project.id">
                         <h4 class="ui image header">
                             <img src="<c:url value='/static/images/admin/avatar-lena.png' />" alt="lena" class="ui mini rounded image">
                             <div class="content">
-                                {{project.proname}}
+                                {{project.name}}
                                 <div class="sub header">{{project.username}}</div>
                             </div>
                         </h4>

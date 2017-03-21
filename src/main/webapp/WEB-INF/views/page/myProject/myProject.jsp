@@ -89,14 +89,14 @@
 		<script type="text/x-template" id="tic-project">
 			<div class="weui-panel weui-panel_access">
 				<div class="weui-panel__bd">
-				    <a :href="projectDetailLink +'?proId=' + project.proId + '&uid=' + userid" class="weui-media-box weui-media-box_appmsg">
+				    <a :href="projectDetailLink +'?proId=' + project.id + '&uid=' + userid" class="weui-media-box weui-media-box_appmsg">
 			         <div class="weui-media-box__hd">
 			             <img class="weui-media-box__thumb" src="<c:url value='/static/images/avatar.png' />" alt="">
 				        </div>
 				        <div class="weui-media-box__bd">
 					        <h4 class="weui-media-box__title">
 				            	<span :class="{'tic-hot': !!project.isHot}">
-				            		{{project.proname}}
+				            		{{project.name}}
 				            	</span>
 								<img class="tic-delete" src="<c:url value='/static/images/myProject/delete.png' />"
 								 v-if="projecttype === 'post'"
@@ -112,7 +112,7 @@
 							</h4>
 				            <p class="tic-media-box__label">
 				            	<span
-				            	 v-for="tag in project.tags">{{tag}}</span>
+				            	 v-for="tag in project.tag">{{tag}}</span>
 				            </p>
 				            <p class="weui-media-box__desc">{{project.desc}}</p>
 				            <p class="tic-media-box__footer">
@@ -120,7 +120,7 @@
 				            		{{projectStatu}}
 				            	</span>
 					        	<span class="tic-strong">{{project.username}}</span>
-					        	<span class="tic-secondary">{{project.date}}</span>
+					        	<span class="tic-secondary">{{project.creation_date}}</span>
 					        </p>
 				        </div>
 				    </a>

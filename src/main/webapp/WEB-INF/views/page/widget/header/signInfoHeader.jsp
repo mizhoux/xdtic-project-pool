@@ -9,7 +9,7 @@
         <img src="/xdtic/static/images/arrow_prev.png" alt="后退">
     </a>
     <div class="tic-header-three-center">
-        <p class="tic-title-main"><c:out value='${project.proname}' /></p>
+        <p class="tic-title-main"><c:out value='${project.name}' /></p>
         <p class="tic-title-secondary">
             报名信息
         </p>

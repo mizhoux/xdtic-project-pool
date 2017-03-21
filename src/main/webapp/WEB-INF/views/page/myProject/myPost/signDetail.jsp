@@ -57,7 +57,7 @@
 					</div>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">学号</span>
-						<span class="tic-td-content"><c:out value='${signUser.stu_num}' /></span>
+						<span class="tic-td-content"><c:out value='${signUser.stuNum}' /></span>
 					</div>
 					<hr>
 					<div class="tic-tr-two">

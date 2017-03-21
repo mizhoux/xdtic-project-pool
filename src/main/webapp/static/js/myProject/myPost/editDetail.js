@@ -23,19 +23,19 @@ window.addEventListener('load', function () {
             user: userInfo,
             project: projectInfo,
 
-            promassage: projectInfo.promassage,
-            prowant: projectInfo.prowant,
-            concat: projectInfo.concat,
+            content: projectInfo.content,
+            recruit: projectInfo.recruit,
+            contact: projectInfo.contact,
             validRule: {
-                promassage: [{
+                content: [{
                     pattern: /^(.|\n|\t){10,}$/m,
                     errorMsg: '项目详情至少10个字'
                 }],
-                prowant: [{
+                recruit: [{
                     pattern: /^(.|\n|\t){6,}$/m,
                     errorMsg: '招聘详情至少6个字'
                 }],
-                concat: [{
+                contact: [{
                     pattern: 'required',
                     errorMsg: '联系方式没有填'
                 }]
@@ -122,7 +122,7 @@ window.addEventListener('load', function () {
                     if (data.code === 'ok') {
                         self.editIsSucc = true;
                         setTimeout(function () {
-                            window.location.href = urlPrefix + '/myProject/myPost/detail?proId=' + self.project.proId + '&uid=' + self.user.id;
+                            window.location.href = urlPrefix + '/myProject/myPost/detail?proId=' + self.project.id + '&uid=' + self.user.id;
                         }, 500);
                     } else {
                         self.editIsFail = true;

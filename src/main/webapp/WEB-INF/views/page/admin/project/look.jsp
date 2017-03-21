@@ -51,18 +51,18 @@
             <transition name="slide">
                 <tr v-if="!project.isDeleted" class="project-item">
                     <td>
-                        <a class="tic-project-wrap" :href="'<c:url value='/admin/project?proId=' />' + project.proId">
+                        <a class="tic-project-wrap" :href="'<c:url value='/admin/project?proId=' />' + project.id">
                             <h4 class="ui image header">
                                 <img src="<c:url value='/static/images/admin/avatar-lena.png' />" alt="lena" class="ui mini rounded image">
                                 <div class="content">
-                                    {{project.proname}}
+                                    {{project.name}}
                                     <div class="sub header">{{project.username}}</div>
                                 </div>
                             </h4>
                         </a>
                     </td>
                     <td>
-                        <a v-tap class="ui yello basic button" :href="'<c:url value='/admin/project?proId=' />' + project.proId">查看</a>
+                        <a v-tap class="ui yello basic button" :href="'<c:url value='/admin/project?proId=' />' + project.id">查看</a>
                     </td>
                     <td>
                         <button class="ui red basic button" v-tap="{methods: deleteProject, proIndex: index}">删除</button>
