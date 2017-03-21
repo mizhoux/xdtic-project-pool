@@ -7,7 +7,7 @@
 		<header>
 			<div class="tic-header-three">
 				<span></span>
-				<h2><c:out value="${user.name}" /></h2>
+				<h2><c:out value="${user.username}" /></h2>
 				<a href="<c:url value='/myProject/postProject'/>" v-tap>
 					<img src="/xdtic/static/images/myProject/post-project.png" alt="发布新项目">
 				</a>

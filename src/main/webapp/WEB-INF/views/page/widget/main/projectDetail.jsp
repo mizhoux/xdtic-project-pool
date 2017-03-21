@@ -17,10 +17,10 @@
 
         <c:if test="${project.statu != null}">
             <c:choose>
-                <c:when test="${project.statu == 'pass'}">
+                <c:when test="${project.statu == 1}">
                     <c:set var="projectStatu" value="" />
                 </c:when>
-                <c:when test="${project.statu == 'reject'}">
+                <c:when test="${project.statu == 2}">
                     <c:set var="projectStatu" value="状态：审核被拒" />
                 </c:when>
                 <c:otherwise>

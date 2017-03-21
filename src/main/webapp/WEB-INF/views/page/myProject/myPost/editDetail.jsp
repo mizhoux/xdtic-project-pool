@@ -50,7 +50,7 @@
 							   </div>
 						</div>
 						<c:set var="projectReject" value="false" />
-						<c:if test="${project.statu == 'reject'}">
+						<c:if test="${project.statu == 2}">
 							<c:set var="projectReject" value="true" />
 						</c:if>
 						<input type="hidden" name="reject" value="<c:out value='${projectReject}' />">
