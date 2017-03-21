@@ -13,7 +13,7 @@
 		</main>
 
 		<c:choose>
-			<c:when test="${project.statu != 'reject'}">
+			<c:when test="${project.statu != 2}">
 				<footer class="tic-detail-footer">
 					<a href="<c:url value='/myProject/myPost/editDetail' />?proId=<c:out value='${project.id}' />" v-tap>
 						<img src="/xdtic/static/images/myProject/edit-info.png" alt="编辑信息">
