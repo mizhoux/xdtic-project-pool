@@ -51,16 +51,13 @@
 								        </div>
 								    </label>
 								</div> -->
-								{{user.sex === 'boy' ? '男' : '女'}}
+								{{user.gender === 'M' ? '男' : '女'}}
 							</span>
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">专业</span>
 							<span class="tic-td-content">
-								<!-- <input type="text" name="profe" v-model="user.profe"
-								 
-								 :class="{'tic-error-input': inputError['profe']}" /> -->
-								 {{user.profe}}
+								 {{user.major}}
 							</span>
 						</div>
 						<div class="tic-tr-two">
@@ -75,10 +72,7 @@
 						<div class="tic-tr-two">
 							<span class="tic-td-label">学号</span>
 							<span class="tic-td-content">
-								<!-- <input type="text" name="stunum" v-model="user.stunum"
-								  
-								 :class="{'tic-error-input': inputError['stunum']}" /> -->
-								 {{user.stunum}}
+								 {{user.stu_num}}
 							</span>
 						</div>
 						<div class="tic-tr-two">
@@ -92,13 +86,13 @@
 						<div class="tic-tr-two">
 							<span class="tic-td-label">个人能力(选填)</span>
 							<span class="tic-td-content">
-								<textarea name="profile" v-model="user.profile"></textarea>
+								<textarea name="skill" v-model="user.skill"></textarea>
 							</span>
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">项目经历(选填)</span>
 							<span class="tic-td-content">
-								<textarea name="pexperice" v-model="user.pexperice"></textarea>
+								<textarea name="pexperience" v-model="user.pexperience"></textarea>
 							</span>
 						</div>
 						<input type="hidden" name="proId" value="<c:out value='${project.proId}' />">
@@ -145,13 +139,13 @@
 				username: "<c:out value="${user.username}" />",
 				email: "<c:out value="${user.email}" />",
 				name: "<c:out value="${user.name}" />",
-				sex: "<c:out value="${user.sex}" />",
-				profe: "<c:out value="${user.profe}" />",
+				gender: "<c:out value="${user.gender}" />",
+				skill: "<c:out value="${user.skill}" />",
 				phone: "<c:out value="${user.phone}" />",
-				stunum: "<c:out value="${user.stunum}" />",
+				stu_num: "<c:out value="${user.stu_num}" />",
 				profile: "<c:out value="${user.profile}" />",
-				pexperice: getMultiline(function() {/*
-					<c:out value="${user.pexperice}" />
+				pexperience: getMultiline(function() {/*
+					<c:out value="${user.pexperience}" />
 				*/
 				})
 			};

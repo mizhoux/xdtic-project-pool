@@ -32,7 +32,7 @@
 			<div class="tic-table">
 				<form class="tic-form">
 					<div class="tic-tr-two">
-						<span class="tic-td-label">昵称</span>
+						<span class="tic-td-label">用户名</span>
 						<span class="tic-td-content"><c:out value='${signUser.username}' /></span>
 					</div>
 					<div class="tic-tr-two">
@@ -42,14 +42,14 @@
 					<div class="tic-tr-two">
 						<span class="tic-td-label">性别</span>
 						<c:set var="userSex" value="男" />
-						<c:if test="${signUser.sex == 'girl'}">
+						<c:if test="${signUser.gender == 'F'}">
 							<c:set var="userSex" value="女" />
 						</c:if>
 						<span class="tic-td-content"><c:out value='${userSex}' /></span>
 					</div>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">专业</span>
-						<span class="tic-td-content"><c:out value='${signUser.profe}' /></span>
+						<span class="tic-td-content"><c:out value='${signUser.major}' /></span>
 					</div>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">手机</span>
@@ -57,17 +57,17 @@
 					</div>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">学号</span>
-						<span class="tic-td-content"><c:out value='${signUser.stunum}' /></span>
+						<span class="tic-td-content"><c:out value='${signUser.stu_num}' /></span>
 					</div>
 					<hr>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">个人能力</span>
-						<span class="tic-td-content"><c:out value='${signUser.profile}' /></span>
+						<span class="tic-td-content"><c:out value='${signUser.skill}' /></span>
 					</div>
 					<hr>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">项目经历</span>
-						<span class="tic-td-content"><c:out value='${signUser.pexperice}' /></span>
+						<span class="tic-td-content"><c:out value='${signUser.pexperience}' /></span>
 					</div>
 				</form>
 			</div>

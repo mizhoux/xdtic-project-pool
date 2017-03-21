@@ -16,8 +16,16 @@
   border-right: solid 1px #ccc4c4;
 }
 
+.tic-detail-footer > a > span, .tic-detail-footer2 > a > span {
+  color: #1e90ff;
+  font-size: 1.8em;
+  vertical-align: middle;
+  margin-left: .5em;
+}
+
 .tic-detail-footer > a > img, .tic-detail-footer2 > a > img {
   max-width: 100%;
+  vertical-align: middle;
 }
 
 .tic-detail-footer > a:last-child, .tic-detail-footer2 > a:last-child {
