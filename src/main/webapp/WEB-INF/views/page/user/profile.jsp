@@ -151,13 +151,13 @@
 			var userInfo = {
 				username: "<c:out value="${user.username}" />",
 				email: "<c:out value="${user.email}" />",
-				name: "<c:out value="${user.name}" />",
+				realname: "<c:out value="${user.realname}" />",
 				gender: "<c:out value="${user.gender}" />",
-				skill: "<c:out value="${user.skill}" />",
+				marjor: "<c:out value="${user.skill}" />",
 				phone: "<c:out value="${user.phone}" />",
 				stuNum: "<c:out value="${user.stuNum}" />",
-				major: getMultiline(function() {/*
-					<c:out value="${user.major}" />
+				skill: getMultiline(function() {/*
+					<c:out value="${user.skill}" />
 				*/
 				}),
 				pexperience: getMultiline(function() {/*
