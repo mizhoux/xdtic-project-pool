@@ -89,7 +89,7 @@
 						<div class="tic-tr-two">
 							<span class="tic-td-label">项目经历(选填)</span>
 							<span class="tic-td-content">
-								<textarea name="pexperience" v-model="user.pexperience"></textarea>
+								<textarea name="experience" v-model="user.experience"></textarea>
 							</span>
 						</div>
 						<input type="hidden" name="id" value="<c:out value='${project.id}' />">
@@ -141,8 +141,8 @@
 				phone: "<c:out value="${user.phone}" />",
 				stuNum: "<c:out value="${user.stuNum}" />",
 				profile: "<c:out value="${user.profile}" />",
-				pexperience: getMultiline(function() {/*
-					<c:out value="${user.pexperience}" />
+				experience: getMultiline(function() {/*
+					<c:out value="${user.experience}" />
 				*/
 				})
 			};
