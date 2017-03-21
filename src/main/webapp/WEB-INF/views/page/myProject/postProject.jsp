@@ -25,14 +25,14 @@
 						<div class="weui-cells weui-cells_form">
 							<div class="weui-cell">
 							    <div class="weui-cell__bd">
-							        <input class="weui-input" type="text" name="title" placeholder="标题（至少2个字）"
+							        <input class="weui-input" type="text" name="name" placeholder="标题（至少2个字）"
 									 v-model="title" />
 							    </div>
 							</div>
 							<div class="weui-cell">
 							    <div class="weui-cell__bd">
-							        <textarea class="weui-textarea" name="promassage" placeholder="项目详情介绍（至少10个字）" rows="5"
-									 v-model="promassage"></textarea>
+							        <textarea class="weui-textarea" name="content" placeholder="项目详情介绍（至少10个字）" rows="5"
+									 v-model="content"></textarea>
 							    </div>
 							</div>
 						</div>
@@ -41,8 +41,8 @@
 						<div class="weui-cells weui-cells_form">
 						    <div class="weui-cell">
 						        <div class="weui-cell__bd">
-						            <textarea class="weui-textarea" name="prowant" placeholder="招聘信息（至少6个字）" rows="3"
-									 v-model="prowant"></textarea>
+						            <textarea class="weui-textarea" name="recruit" placeholder="招聘信息（至少6个字）" rows="3"
+									 v-model="recruit"></textarea>
 						        </div>
 							   </div>
 						</div>
@@ -50,8 +50,8 @@
 						<div class="weui-cells weui-cells_form">
 						    <div class="weui-cell">
 						        <div class="weui-cell__bd">
-						            <textarea class="weui-textarea" name="concat" placeholder="请注明电话或邮箱或其他联系方式" rows="3"
-									 v-model="concat"></textarea>
+						            <textarea class="weui-textarea" name="contact" placeholder="请注明电话或邮箱或其他联系方式" rows="3"
+									 v-model="contact"></textarea>
 						        </div>
 							   </div>
 						</div>
@@ -95,7 +95,7 @@
 				 v-show="showTag"
 				 v-tap="{methods: tagTap}">
 					<span class="tic-tag"
-					 v-for="(tag, index) in tags"								
+					 v-for="(tag, index) in tag"								
 					 :data-tag="tag"
 					 :class="{'tic-tag-selected': isSelected(tag)}">{{tag}}</span>
 					 <span class="tic-tag"

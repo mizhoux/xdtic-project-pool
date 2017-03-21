@@ -59,7 +59,7 @@ Vue.component('tic-project', {
 			this.$emit('collect', params.projectIndex);
 			var self = this;
 
-			var url = urlCollect + '?userid=' + params.userid + '&proId=' + this.project.proId;
+			var url = urlCollect + '?userid=' + params.userid + '&proId=' + this.project.id;
 			fetch(url, {
 				method: 'GET',
 				headers: {
@@ -81,7 +81,7 @@ Vue.component('tic-project', {
 
 			var self = this;
 
-			var url = urlUnCollect + '?userid=' + params.userid + '&proId=' + this.project.proId;
+			var url = urlUnCollect + '?userid=' + params.userid + '&proId=' + this.project.id;
 			fetch(url, {
 				method: 'GET',
 				headers: {
@@ -188,7 +188,7 @@ var projectBox = new Vue({
 				},
 				body: JSON.stringify({
 					"operation": 'delete',
-					"proId": project.proId
+					"id": project.id
 				}),
 				credentials: 'same-origin'
 			}).then(function (response) {

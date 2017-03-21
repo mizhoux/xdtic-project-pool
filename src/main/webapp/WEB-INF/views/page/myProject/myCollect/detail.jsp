@@ -23,7 +23,7 @@
 			</c:when>
 			<c:otherwise>
 				<footer class="tic-detail-footer">
-					<a href="<c:url value='/project/toJoin' />?proId=<c:out value='${project.proId}' />&uid=<c:out value='${user.id}' />" v-tap>
+					<a href="<c:url value='/project/toJoin' />?proId=<c:out value='${project.id}' />&uid=<c:out value='${user.id}' />" v-tap>
 						<img src="/xdtic/static/images/myProject/tojoin.png" alt="我要加入">
 					</a>
 				</footer>
@@ -45,19 +45,19 @@
 		</script>
 		<script type="text/javascript">
 		    var projectInfo = {
-		        "proId": '<c:out value="${project.proId}" />',
-		        "proname": '<c:out value="${project.proname}" />',
+		        "id": '<c:out value="${project.id}" />',
+		        "name": '<c:out value="${project.name}" />',
 		        "isCollected": <c:out value="${project.isCollected}" />,
-				"promassage": getMultiline(function() {/*
-					<c:out value="${project.promassage}" />
+				"content": getMultiline(function() {/*
+					<c:out value="${project.content}" />
 				*/
 				}),
-				"prowant": getMultiline(function() {/*
-					<c:out value="${project.prowant}" />
+				"recruit": getMultiline(function() {/*
+					<c:out value="${project.recruit}" />
 				*/
 				}),
-				"concat": getMultiline(function() {/*
-					<c:out value="${project.concat}" />
+				"contact": getMultiline(function() {/*
+					<c:out value="${project.contact}" />
 				*/
 				})
 		    };

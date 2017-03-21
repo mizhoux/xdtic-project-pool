@@ -22,10 +22,7 @@
 						<div class="tic-tr-two">
 							<span class="tic-td-label">姓名</span>
 							<span class="tic-td-content">
-								<!-- <input type="text" name="name" v-model="user.name"
-								 
-								 :class="{'tic-error-input': inputError['name']}" /> -->
-								{{user.name}}
+								{{user.realname}}
 							</span>
 						</div>
 						<div class="tic-tr-two">
@@ -72,7 +69,7 @@
 						<div class="tic-tr-two">
 							<span class="tic-td-label">学号</span>
 							<span class="tic-td-content">
-								 {{user.stu_num}}
+								 {{user.stuNum}}
 							</span>
 						</div>
 						<div class="tic-tr-two">
@@ -95,7 +92,7 @@
 								<textarea name="pexperience" v-model="user.pexperience"></textarea>
 							</span>
 						</div>
-						<input type="hidden" name="proId" value="<c:out value='${project.proId}' />">
+						<input type="hidden" name="id" value="<c:out value='${project.id}' />">
 						<input type="hidden" name="uid" :value="user.id">
 						<button class="weui-btn weui-btn_primary" id="btnConfirm" v-tap.prevent="{methods: joinProject}">确认加入</button>
 					</form>
@@ -142,7 +139,7 @@
 				gender: "<c:out value="${user.gender}" />",
 				skill: "<c:out value="${user.skill}" />",
 				phone: "<c:out value="${user.phone}" />",
-				stu_num: "<c:out value="${user.stu_num}" />",
+				stuNum: "<c:out value="${user.stuNum}" />",
 				profile: "<c:out value="${user.profile}" />",
 				pexperience: getMultiline(function() {/*
 					<c:out value="${user.pexperience}" />
@@ -150,8 +147,8 @@
 				})
 			};
 			var projectInfo = {
-		        "proId": '<c:out value="${project.proId}" />',
-		        "proname": '<c:out value="${project.proname}" />',
+		        "id": '<c:out value="${project.id}" />',
+		        "name": '<c:out value="${project.name}" />',
 		        "isCollected": <c:out value="${project.isCollected}" />
 		    };
 		</script>

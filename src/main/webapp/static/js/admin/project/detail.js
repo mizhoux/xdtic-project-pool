@@ -70,7 +70,7 @@ function requestProcessProject(vProject, operation, rejectReason) {
 		credentials: 'same-origin',
 		body: JSON.stringify({
 			"operation": operation,
-			"proId": vProject.project.proId,
+			"id": vProject.project.id,
 			"rejectReason": rejectReason
 		})
 	}).then(function (response) {

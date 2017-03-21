@@ -87,7 +87,7 @@
                     </td>
                     <td>{{user.id}}</td>
                     <td>{{user.username}}</td>
-                    <td>{{user.name}}</td>
+                    <td>{{user.real}}</td>
                     <td>{{user.email}}</td>
                 </tr>
             </transition>

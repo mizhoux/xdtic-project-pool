@@ -139,7 +139,7 @@ function requestProcessProject(vProject, operation, proIndex) {
 		credentials: 'same-origin',
 		body: JSON.stringify({
 			operation: operation,
-			proId: vProject.project.proId
+			id: vProject.project.id
 		})
 	}).then(function (response) {
 		return response.json();

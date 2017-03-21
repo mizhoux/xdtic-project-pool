@@ -197,7 +197,7 @@ function requestProcessProject(vProject, operation, proIndex, rejectReason) {
 		credentials: 'same-origin',
 		body: JSON.stringify({
 			"operation": operation,
-			"proId": vProject.project.proId,
+			"id": vProject.project.id,
 			"rejectReason": vProject.project.rejectReason
 		})
 	}).then(function (response) {

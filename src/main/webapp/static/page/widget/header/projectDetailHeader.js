@@ -25,7 +25,7 @@ window.addEventListener('load', function () {
 				this.project.isCollected = true;
 				var self = this;
 
-				var url = urlCollect + '?userid=' + this.user.id + '&proId=' + this.project.proId;
+				var url = urlCollect + '?userid=' + this.user.id + '&proId=' + this.project.id;
 				fetch(url, {
 					method: 'GET',
 					headers: {
@@ -47,7 +47,7 @@ window.addEventListener('load', function () {
 
 				var self = this;
 
-				var url = urlUnCollect + '?userid=' + this.user.id + '&proId=' + this.project.proId;
+				var url = urlUnCollect + '?userid=' + this.user.id + '&proId=' + this.project.id;
 				fetch(url, {
 					method: 'GET',
 					headers: {

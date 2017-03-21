@@ -33,9 +33,9 @@
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">姓名</span>
-							<span class="tic-td-content" v-show="!isEditing">{{user.name}}</span>
+							<span class="tic-td-content" v-show="!isEditing">{{user.realname}}</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<input type="text" name="name" v-model="user.name" />
+								<input type="text" name="realname" v-model="user.realname" />
 							</span>
 						</div>
 						<div class="tic-tr-two">
@@ -87,9 +87,9 @@
 						</div>
 						<div class="tic-tr-two">
 							<span class="tic-td-label">学号</span>
-							<span class="tic-td-content" v-show="!isEditing">{{user.stu_num}}</span>
+							<span class="tic-td-content" v-show="!isEditing">{{user.stuNum}}</span>
 							<span class="tic-td-content" v-show="isEditing">
-								<input type="text" name="stu_num" v-model="user.stu_num" />
+								<input type="text" name="stuNum" v-model="user.stuNum" />
 							</span>
 						</div>
 						<div class="tic-tr-two">
@@ -155,7 +155,7 @@
 				gender: "<c:out value="${user.gender}" />",
 				skill: "<c:out value="${user.skill}" />",
 				phone: "<c:out value="${user.phone}" />",
-				stu_num: "<c:out value="${user.stu_num}" />",
+				stuNum: "<c:out value="${user.stuNum}" />",
 				major: getMultiline(function() {/*
 					<c:out value="${user.major}" />
 				*/
