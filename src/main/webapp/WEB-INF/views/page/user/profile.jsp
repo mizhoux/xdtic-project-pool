@@ -153,7 +153,7 @@
 				email: "<c:out value="${user.email}" />",
 				realname: "<c:out value="${user.realname}" />",
 				gender: "<c:out value="${user.gender}" />",
-				marjor: "<c:out value="${user.major}" />",
+				major: "<c:out value="${user.major}" />",
 				phone: "<c:out value="${user.phone}" />",
 				stuNum: "<c:out value="${user.stuNum}" />",
 				skill: getMultiline(function() {/*

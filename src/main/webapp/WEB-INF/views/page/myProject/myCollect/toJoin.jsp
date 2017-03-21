@@ -69,8 +69,8 @@
 								<textarea name="experience" v-model="user.experience"></textarea>
 							</span>
 						</div>
-						<input type="hidden" name="id" value="<c:out value='${project.id}' />">
-						<input type="hidden" name="uid" :value="user.id">
+						<input type="hidden" name="proId" value="<c:out value='${project.id}' />">
+						<input type="hidden" name="userId" :value="user.id">
 						<button class="weui-btn weui-btn_primary" id="btnConfirm" v-tap.prevent="{methods: joinProject}">确认加入</button>
 					</form>
 				</div>
