@@ -22,6 +22,7 @@
         <servlet.version>3.1.0</servlet.version>
         <aspectj.version>1.8.9</aspectj.version>
         <guava.version>21.0</guava.version>
+        <hibernate-validator>5.4.1.Final</hibernate-validator>
     </properties>
     
     <dependencies>
@@ -187,6 +188,11 @@
             <version>${guava.version}</version>
         </dependency>
         
+        <dependency>  
+            <groupId>org.hibernate</groupId>  
+            <artifactId>hibernate-validator</artifactId>  
+            <version>${hibernate-validator}</version>
+        </dependency> 
     </dependencies>
 
     <build>
