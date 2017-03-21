@@ -35,9 +35,9 @@ Vue.component('tic-msg', {
 			var jumpUrl;
 
 			if (this.msg.type === '') {
-				jumpUrl = urlProjectSign + '?uid=' + this.msg.uid + '&proId=' + this.msg.id;
+				jumpUrl = urlProjectSign + '?uid=' + this.msg.userId + '&proId=' + this.msg.id;
 			} else {
-				jumpUrl = urlProjectPost + '?uid=' + this.msg.uid + '&proId=' + this.msg.id;
+				jumpUrl = urlProjectPost + '?uid=' + this.msg.userId + '&proId=' + this.msg.id;
 			}
 
 			if (this.msg.read) {
@@ -57,7 +57,7 @@ Vue.component('tic-msg', {
 				},
 				credentials: 'same-origin',
 				body: JSON.stringify({
-					mid: [self.msg.mid]
+					mid: [self.msg.id]
 				})
 			}).then(function (response) {
 				return response.json();
@@ -183,7 +183,7 @@ function loadMore() {
 			return !msg.read;
 		});
 		newUnreadMsg = newUnreadMsg.map(function (msg) {
-			return msg.mid;
+			return msg.id;
 		});
 
 		self.msgsUnread = self.msgsUnread.concat(newUnreadMsg);

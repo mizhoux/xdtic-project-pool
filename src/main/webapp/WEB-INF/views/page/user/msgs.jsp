@@ -61,7 +61,7 @@
 					<div class="tic-msg-right">
 						<a href="" class="tic-msg-link" v-tap.prevent='{methods: readMsg, msgIndex: index}'>
 							<p>
-								{{msg.massage}}
+								{{msg.content}}
 							</p>
 						</a>
 					</div>
@@ -69,7 +69,7 @@
 				<div class="tic-msg-two">
 					<div class="tic-msg-left"></div>
 					<div class="tic-msg-right tic-msg-date">
-						<p>{{msg.existDate}}</p>
+						<p>{{msg.creationDate}}</p>
 					</div>
 				</div>
 			</div>
