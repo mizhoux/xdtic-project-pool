@@ -18,7 +18,7 @@
 					        </div>
 					        <div class="tic-article-header-center">
 					            <p class="tic-title-strong"><c:out value='${user.username}' /></p>
-					            <p class="tic-title-secondary"><c:out value='${project.creation_date}' /></p>
+					            <p class="tic-title-secondary"><c:out value='${project.creationDate}' /></p>
 					        </div>
 					    </div>
 						<p class="tic-error-tip" v-show="hasError">{{errorMsg}}</p>
