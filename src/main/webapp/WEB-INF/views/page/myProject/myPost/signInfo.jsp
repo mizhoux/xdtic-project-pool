@@ -23,9 +23,9 @@
 									<span class="tic-font-strong"><c:out value="${signInfo.apply}" /></span>
 								</p>
 								<p class="tic-font-secondary">
-									<c:out value="${signInfo.date}" />
+									<c:out value="${fn:split(signInfo.signDate, ' ')[0]}" />
 									&nbsp;
-									<c:out value="${signInfo.time}" />
+									<c:out value="${fn:split(signInfo.signDate, ' ')[1]}" />
 								</p>
 							</div>
 							<div class="tic-right">
