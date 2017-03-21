@@ -35,9 +35,9 @@ Vue.component('tic-msg', {
 			var jumpUrl;
 
 			if (this.msg.type === '') {
-				jumpUrl = urlProjectSign + '?uid=' + this.msg.userId + '&proId=' + this.msg.id;
+				jumpUrl = urlProjectSign + '?uid=' + this.msg.userId + '&proId=' + this.msg.proId;
 			} else {
-				jumpUrl = urlProjectPost + '?uid=' + this.msg.userId + '&proId=' + this.msg.id;
+				jumpUrl = urlProjectPost + '?uid=' + this.msg.userId + '&proId=' + this.msg.proId;
 			}
 
 			if (this.msg.read) {
@@ -162,7 +162,7 @@ function loadMore() {
 
 	this.busy = true;
 	this.isLoading = true;
-	self = this;
+	var self = this;
 
 	fetch(url, {
 		method: 'GET',
