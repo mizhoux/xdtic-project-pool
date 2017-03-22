@@ -71,9 +71,9 @@ public class UserDao {
      * @param id 用户 ID
      * @return 用户名
      */
-    public String getUsername(Integer id) {
+    public Optional<String> getUsername(Integer id) {
         String sql = "SELECT username FROM user WHERE id = ?";
-        return jdbcTmpl.queryForObject(sql, String.class, id);
+        return jdbcTmpl.query(sql, rs -> rs.next() ? Optional.of(rs.getString(1)) : Optional.empty(), id);
     }
 
     public Integer getUserIdByUsername(String username) {

@@ -3,6 +3,9 @@ package wenjing.xdtic.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 import java.util.List;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.Length;
 
 /**
  *
@@ -12,15 +15,30 @@ public class Project {
 
     private Integer id;
 
+    @NotNull(message = "用户 ID 不能为 null")
     private Integer userId;
     private String username;
 
+    @NotNull
+    @Length(min = 2, max = 30, message = "项目名称长度需要在 2~30 之间")
     private String name;
+
+    @NotNull
+    @Size(min = 10, message = "项目内容至少 10 个字")
     private String content;
+
+    @NotNull
+    @Size(min = 2, max = 30, message = "项目标签长度需要在 2~30 之间")
     private String tag;
 
+    @NotNull
+    @Size(min = 6, message = "招聘信息最少 6 个字")
     private String recruit;
+
+    @NotNull
+    @Size(min = 11, message = "联系方式最少 11 个字")
     private String contact;
+
     /**
      * 0：待审核；1：审核通过；2：被拒绝
      */
@@ -141,7 +159,7 @@ public class Project {
 
     @Override
     public String toString() {
-        return "Project{" + "id=" + id + ", username=" + username + ", name=" + name + ", content=" + content + ", tag=" + tag + '}';
+        return "Project{" + "id=" + id + ", userId=" + userId + ", username=" + username + ", name=" + name + ", content=" + content + ", tag=" + tag + ", recruit=" + recruit + ", contact=" + contact + '}';
     }
 
 }

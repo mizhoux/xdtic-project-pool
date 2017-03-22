@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import wenjing.xdtic.dao.MessageDao;
@@ -38,10 +37,15 @@ public class ProjectService {
     @Autowired
     private MessageDao messageDao;
 
-    @CachePut(value = CACHE_NAME, key = "#result.id", unless = "#result == null")
+    // #result.id -> Big bug ???
+    //@CachePut(value = CACHE_NAME, key = "#result.id", unless = "#result == null")
     public Optional<Project> addProject(Project p) {
 
-        p.setUsername(userDao.getUsername(p.getUserId()));
+        userDao.getUsername(p.getUserId()).ifPresent(p::setUsername);
+
+        if (p.getUsername() == null) {
+            return Optional.empty();
+        }
 
         Optional<Project> project = projectDao.addProject(p);
         project.ifPresent(pro -> messageDao.addMessage(Message.of(pro, Message.Type.POST)));

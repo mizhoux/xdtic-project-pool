@@ -6,18 +6,18 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import wenjing.xdtic.core.Log;
 import wenjing.xdtic.core.RemoteAddressCache;
 import wenjing.xdtic.model.Message;
 import wenjing.xdtic.model.PagingModel;
@@ -33,7 +33,7 @@ import wenjing.xdtic.service.UserService;
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
-@Log
+@Validated
 @Controller
 @RequestMapping("fn")
 public class UserFunction {
@@ -58,14 +58,16 @@ public class UserFunction {
      * @param passwordConfirm 确定密码时输入的密码
      * @return
      */
-    @PostMapping(value = "user/register", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public String register(@RequestParam String username,
+    @PostMapping(value = "user/register",
+            consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    public String register(
+            @Size(min = 2, max = 20, message = "用户名长度需要在 2~20 之间")
+            @RequestParam String username,
+            @Size(min = 6, max = 30, message = "密码长度需要在 6~30 之间")
             @RequestParam("pass") String password,
             @RequestParam("passConfirm") String passwordConfirm) {
 
-        if (username.length() >= 2 && username.length() <= 20
-                && password.length() >= 6 && password.length() <= 30
-                && password.equals(passwordConfirm)) {
+        if (password.equals(passwordConfirm)) {
             if (userService.addUser(username, password)) {
                 return "user/login";
             }
@@ -109,10 +111,13 @@ public class UserFunction {
      */
     @PostMapping(value = "user/resetPass", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public String updateUserPassword(
-            @RequestParam String username, @RequestParam String passOld,
-            @RequestParam String passNew, @RequestParam String passNewConfirm) {
+            @RequestParam String username,
+            @RequestParam String passOld,
+            @Size(min = 6, max = 30, message = "密码长度需要在 6~30 之间")
+            @RequestParam String passNew,
+            @RequestParam String passNewConfirm) {
 
-        if (passNew.length() >= 6 && passNew.equals(passNewConfirm)) {
+        if (passNew.equals(passNewConfirm)) {
             if (userService.updatePassword(username, passOld, passNew)) {
                 return "user/login";
             }
@@ -131,10 +136,7 @@ public class UserFunction {
      */
     @ResponseBody
     @PostMapping(value = "update/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode updateUserProfile(@Valid User user, BindingResult br, HttpSession session) {
-        if (br.hasErrors()) {
-            return RespCode.errorOf(br.getFieldError().getDefaultMessage());
-        }
+    public RespCode updateUserProfile(@Valid User user, HttpSession session) {
 
         boolean success = userService.updateUser(user);
         if (success) {
@@ -145,11 +147,10 @@ public class UserFunction {
     }
 
     @ResponseBody
-    @PostMapping(value = "valid/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode validUserProfile(@Valid User user, BindingResult br) {
-        return br.hasErrors()
-                ? RespCode.errorOf(br.getFieldError().getDefaultMessage())
-                : userService.validUser(user);
+    @PostMapping(value = "valid/profile",
+            consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    public RespCode validUserProfile(@Valid User user) {
+        return userService.validUser(user);
     }
 
     /**

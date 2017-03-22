@@ -1,8 +1,11 @@
 package wenjing.xdtic.action;
 
 import java.util.Map;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +23,7 @@ import wenjing.xdtic.service.SignInfoService;
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
+@Validated
 @RestController
 @RequestMapping("fn")
 public class ProjectFunction {
@@ -30,18 +34,34 @@ public class ProjectFunction {
     @Autowired
     private SignInfoService siService;
 
-    @PostMapping(value = "project/post", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode postProject(Project project) {
+    @PostMapping(value = "project/post",
+            consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    public RespCode postProject(@Valid Project project) {
         return proService.addProject(project)
                 .map(p -> RespCode.OK).orElse(RespCode.ERROR);
     }
 
-    @PostMapping(value = "project/update", consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "project/update",
+            consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode updateProject(
+            @RequestParam Integer id,
+            @Size(min = 10, message = "项目内容至少 10 个字")
+            @RequestParam String content,
+            @Size(min = 6, message = "招聘信息最少 6 个字")
+            @RequestParam String recruit,
+            @Size(min = 11, message = "联系方式最少 11 个字")
+            @RequestParam String contact,
             @RequestParam("uid") Integer userId,
-            @RequestParam boolean reject, Project project) {
+            @RequestParam boolean reject) {
 
+        Project project = new Project();
+
+        project.setId(id);
+        project.setContent(content);
+        project.setContact(contact);
+        project.setRecruit(recruit);
         project.setUserId(userId);
+
         boolean success = proService.updateProject(project, reject);
         return success ? RespCode.OK : RespCode.ERROR;
     }
