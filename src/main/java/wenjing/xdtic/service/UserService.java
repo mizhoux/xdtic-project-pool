@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import wenjing.xdtic.dao.UserDao;
 import wenjing.xdtic.model.PagingModel;
+import wenjing.xdtic.model.RespCode;
 import wenjing.xdtic.model.User;
 
 /**
@@ -24,20 +25,17 @@ public class UserService {
     }
 
     public Optional<User> getUser(Integer id) {
-        return userDao.getUser(id).map(this::syncDataForFront);
+        return userDao.getUser(id);
     }
 
     public Optional<User> getUser(String username, String password) {
-        return userDao.getUser(username, password).map(this::syncDataForFront);
+        return userDao.getUser(username, password);
     }
 
     public List<User> getUsers(String keyword, int pageNum, int pageSize) {
 
         int offset = pageNum * pageSize;
-        List<User> users = userDao.getUsers(keyword, offset, pageSize);
-        users.forEach(this::syncDataForFront);
-
-        return users;
+        return userDao.getUsers(keyword, offset, pageSize);
     }
 
     public PagingModel<User> getPagingUsers(String keyword, int pageNum, int pageSize) {
@@ -76,39 +74,23 @@ public class UserService {
         return userDao.deleteUsers(ids);
     }
 
-    /**
-     * 为后端需求的字段同步 User
-     *
-     * @param user
-     * @return
-     */
-    public User syncDataForBack(User user) {
-        user.setRealname(user.getName());
-        user.setGender(user.getSex());
-        user.setMajor(user.getProfe());
-        user.setStuNum(user.getStunum());
-        user.setSkill(user.getProfile());
-        user.setExperience(user.getPexperice());
+    public RespCode validUser(User user) {
+        Integer userId = userDao.getUserIdByUsername(user.getUsername());
+        if (userId != 0 && !userId.equals(user.getId())) {
+            return RespCode.errorOf("用户名已被使用");
+        }
 
-        return user;
-    }
+        userId = userDao.getUserIdByEmail(user.getEmail());
+        if (userId != 0 && !userId.equals(user.getId())) {
+            return RespCode.errorOf("邮箱已被使用");
+        }
 
-    /**
-     * 为前端需求的字段同步 User
-     *
-     * @param user
-     * @return
-     */
-    public User syncDataForFront(User user) {
-        user.setName(user.getRealname());
-        user.setSex(user.getGender());
-        user.setProfe(user.getMajor());
-        user.setStunum(user.getStuNum());
-        user.setProfile(user.getSkill());
-        user.setPexperice(user.getExperience());
-        user.setPassword("");
+        userId = userDao.getUserIdByPhone(user.getPhone());
+        if (userId != 0 && !userId.equals(user.getId())) {
+            return RespCode.errorOf("电话号码已被使用");
+        }
 
-        return user;
+        return RespCode.OK;
     }
 
 }

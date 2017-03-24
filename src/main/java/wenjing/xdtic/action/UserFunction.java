@@ -5,10 +5,13 @@ import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +33,7 @@ import wenjing.xdtic.service.UserService;
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
+@Validated
 @Controller
 @RequestMapping("fn")
 public class UserFunction {
@@ -54,8 +58,12 @@ public class UserFunction {
      * @param passwordConfirm 确定密码时输入的密码
      * @return
      */
-    @PostMapping(value = "user/register", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public String register(@RequestParam String username,
+    @PostMapping(value = "user/register",
+            consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    public String register(
+            @Size(min = 2, max = 20, message = "用户名长度需要在 2~20 之间")
+            @RequestParam String username,
+            @Size(min = 6, max = 30, message = "密码长度需要在 6~30 之间")
             @RequestParam("pass") String password,
             @RequestParam("passConfirm") String passwordConfirm) {
 
@@ -103,14 +111,18 @@ public class UserFunction {
      */
     @PostMapping(value = "user/resetPass", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public String updateUserPassword(
-            @RequestParam String username, @RequestParam String passOld,
-            @RequestParam String passNew, @RequestParam String passNewConfirm) {
+            @RequestParam String username,
+            @RequestParam String passOld,
+            @Size(min = 6, max = 30, message = "密码长度需要在 6~30 之间")
+            @RequestParam String passNew,
+            @RequestParam String passNewConfirm) {
 
         if (passNew.equals(passNewConfirm)) {
             if (userService.updatePassword(username, passOld, passNew)) {
                 return "user/login";
             }
         }
+
         return "user/resetPass"; // 更新密码不成功
     }
 
@@ -118,19 +130,27 @@ public class UserFunction {
      * 修改用户个人信息
      *
      * @param user 提交的个人信息（以 Form 提交）
+     * @param br
      * @param session
      * @return
      */
     @ResponseBody
     @PostMapping(value = "update/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode updateUserProfile(HttpSession session, User user) {
-        userService.syncDataForBack(user);
+    public RespCode updateUserProfile(@Valid User user, HttpSession session) {
+
         boolean success = userService.updateUser(user);
         if (success) {
             session.setAttribute("user", user);
         }
 
         return success ? RespCode.OK : RespCode.ERROR;
+    }
+
+    @ResponseBody
+    @PostMapping(value = "valid/profile",
+            consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    public RespCode validUserProfile(@Valid User user) {
+        return userService.validUser(user);
     }
 
     /**

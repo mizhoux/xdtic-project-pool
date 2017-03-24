@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import wenjing.xdtic.dao.MessageDao;
@@ -38,10 +37,15 @@ public class ProjectService {
     @Autowired
     private MessageDao messageDao;
 
-    @CachePut(value = CACHE_NAME, key = "#result.id", unless = "#result == null")
+    // #result.id -> Big bug ???
+    //@CachePut(value = CACHE_NAME, key = "#result.id", unless = "#result == null")
     public Optional<Project> addProject(Project p) {
 
-        p.setUsername(userDao.getUsername(p.getUserId()));
+        userDao.getUsername(p.getUserId()).ifPresent(p::setUsername);
+
+        if (p.getUsername() == null) {
+            return Optional.empty();
+        }
 
         Optional<Project> project = projectDao.addProject(p);
         project.ifPresent(pro -> messageDao.addMessage(Message.of(pro, Message.Type.POST)));
@@ -51,7 +55,7 @@ public class ProjectService {
 
     @Cacheable(value = CACHE_NAME, key = "#id", unless = "#result == null")
     public Optional<Project> getProject(Integer id) {
-        return projectDao.getProject(id).map(this::syncDataForFront);
+        return projectDao.getProject(id).map(this::makeTagsForFront);
     }
 
     /**
@@ -69,7 +73,7 @@ public class ProjectService {
         int offset = pageNum * pageSize;
 
         List<Project> projects = projectDao.getAcceptedProjects(keyword, offset, pageSize);
-        projects.forEach(this::syncDataForFront);
+        projects.forEach(this::makeTagsForFront);
 
         if (userId != null) {
             Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
@@ -90,7 +94,7 @@ public class ProjectService {
         Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
         projects.forEach(pro -> {
             pro.setIsCollected(collectedProIds.contains(pro.getId()));
-            syncDataForFront(pro);
+            makeTagsForFront(pro);
         });
 
         return ImmutableMap.of("hotSize", projects.size(), "projects", projects);
@@ -100,7 +104,7 @@ public class ProjectService {
 
         int offset = pageNum * pageSize;
         List<Project> projects = projectDao.getUncheckedProjects(keyword, offset, pageSize);
-        projects.forEach(this::syncDataForFront);
+        projects.forEach(this::makeTagsForFront);
 
         return projects;
     }
@@ -117,7 +121,7 @@ public class ProjectService {
         Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
         projects.forEach(pro -> {
             pro.setIsCollected(collectedProIds.contains(pro.getId()));
-            syncDataForFront(pro);
+            makeTagsForFront(pro);
         });
 
         return projects;
@@ -133,7 +137,7 @@ public class ProjectService {
         List<Project> projects = projectDao.getCollectedProjects(userId, offset, pageSize);
         projects.forEach(pro -> {
             pro.setIsCollected(true);
-            syncDataForFront(pro);
+            makeTagsForFront(pro);
         });
 
         return projects;
@@ -151,7 +155,7 @@ public class ProjectService {
         Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
         projects.forEach(pro -> {
             pro.setIsCollected(collectedProIds.contains(pro.getId()));
-            syncDataForFront(pro);
+            makeTagsForFront(pro);
         });
 
         return projects;
@@ -236,7 +240,7 @@ public class ProjectService {
     @CacheEvict(value = CACHE_NAME, key = "#project.id")
     public boolean updateProject(Project project, boolean reject) {
         if (reject) {
-            project.setStatus("check");
+            project.setStatus((byte) 0);
             return projectDao.updateProjectWithStatus(project);
         }
 
@@ -249,7 +253,7 @@ public class ProjectService {
 
         switch (operation) {
             case "reject":
-                success = projectDao.updateProjectStatus(proId, "reject");
+                success = projectDao.updateProjectStatus(proId, 2);
                 if (success) {
                     getProject(proId)
                             .map(p -> Message.of(p, Message.Type.REJECT, comment))
@@ -257,7 +261,7 @@ public class ProjectService {
                 }
                 break;
             case "accept":
-                success = projectDao.updateProjectStatus(proId, "pass");
+                success = projectDao.updateProjectStatus(proId, 1);
                 if (success) {
                     getProject(proId)
                             .map(p -> Message.of(p, Message.Type.PASS))
@@ -286,35 +290,14 @@ public class ProjectService {
         return collectedProjectIds;
     }
 
-    public Project syncDataForBack(Project project) {
-
-        project.setId(project.getProId());
-        project.setUserId(project.getUserid());
-        project.setName(project.getProname());
-        project.setContent(project.getPromassage());
-        project.setRecruit(project.getProwant());
-        project.setContact(project.getConcat());
-        project.setStatus(project.getStatu());
-
-        return project;
-    }
-
-    public Project syncDataForFront(Project project) {
-
-        project.setProId(project.getId());
-        project.setUserid(project.getUserId());
-        project.setProname(project.getName());
-        project.setDesc(project.getContent());
-        project.setPromassage(project.getContent());
-        project.setProwant(project.getRecruit());
-        project.setConcat(project.getContact());
-        project.setStatu(project.getStatus());
+    private Project makeTagsForFront(Project project) {
 
         if (project.getTag() != null) {
-            List<String> tags = Arrays.asList(project.getTag().split("&+"));
+            List<String> tags = Arrays.asList(project.getTag().split("&"));
             project.setTags(tags);
         }
 
         return project;
     }
+
 }

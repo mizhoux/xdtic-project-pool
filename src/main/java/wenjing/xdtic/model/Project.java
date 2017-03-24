@@ -1,47 +1,55 @@
 package wenjing.xdtic.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 import java.util.List;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.Length;
 
 /**
  *
  * @author wenjing
  */
-@JsonIgnoreProperties({"id", "userId", "name", "content", "recruit", "contact", "status"})
 public class Project {
 
     private Integer id;
 
+    @NotNull(message = "用户 ID 不能为 null")
     private Integer userId;
     private String username;
 
+    @NotNull
+    @Length(min = 2, max = 30, message = "项目名称长度需要在 2~30 之间")
     private String name;
+
+    @NotNull
+    @Size(min = 10, message = "项目内容至少 10 个字")
     private String content;
+
+    @NotNull
+    @Size(min = 2, max = 30, message = "项目标签长度需要在 2~30 之间")
     private String tag;
 
+    @NotNull
+    @Size(min = 6, message = "招聘信息最少 6 个字")
     private String recruit;
+
+    @NotNull
+    @Size(min = 11, message = "联系方式最少 11 个字")
     private String contact;
 
-    private String status;
+    /**
+     * 0：待审核；1：审核通过；2：被拒绝
+     */
+    private byte status;
 
     @JsonFormat(pattern = "yyyy.MM.dd")
-    private Date date;
+    private Date creationDate;
 
     // 非数据库中字段，前端需要
     private boolean isCollected;
     private List<String> tags;
-
-    // 兼容前端
-    private Integer proId;  // id
-    private Integer userid; // userId
-    private String proname; // name
-    private String desc; // content
-    private String promassage; // content
-    private String prowant; // recruit
-    private String concat;  // contact
-    private String statu;   // status
 
     public Integer getId() {
         return id;
@@ -51,11 +59,11 @@ public class Project {
         this.id = id;
     }
 
-    public String getStatus() {
+    public byte getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(byte status) {
         this.status = status;
     }
 
@@ -109,60 +117,12 @@ public class Project {
         this.recruit = recruit;
     }
 
-    public String getConcat() {
-        return concat;
-    }
-
-    public void setConcat(String concat) {
-        this.concat = concat;
-    }
-
-    public String getStatu() {
-        return statu;
-    }
-
-    public void setStatu(String statu) {
-        this.statu = statu;
-    }
-
     public List<String> getTags() {
         return tags;
     }
 
     public void setTags(List<String> tags) {
         this.tags = tags;
-    }
-
-    public Integer getUserid() {
-        return userid;
-    }
-
-    public void setUserid(Integer userid) {
-        this.userid = userid;
-    }
-
-    public Integer getProId() {
-        return proId;
-    }
-
-    public void setProId(Integer proId) {
-        this.proId = proId;
-    }
-
-    public String getProname() {
-        return proname;
-    }
-
-    public void setProname(String proname) {
-        this.proname = proname;
-    }
-
-    public String getProwant() {
-        return prowant;
-    }
-
-    public void setProwant(String prowant) {
-        this.prowant = prowant;
     }
 
     public String getTag() {
@@ -173,12 +133,12 @@ public class Project {
         this.tag = tag;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public boolean isIsCollected() {
@@ -197,25 +157,9 @@ public class Project {
         this.username = username;
     }
 
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
-
-    public String getPromassage() {
-        return promassage;
-    }
-
-    public void setPromassage(String promassage) {
-        this.promassage = promassage;
-    }
-
     @Override
     public String toString() {
-        return "Project{" + "id=" + id + ", username=" + username + ", name=" + name + ", content=" + content + ", tag=" + tag + '}';
+        return "Project{" + "id=" + id + ", userId=" + userId + ", username=" + username + ", name=" + name + ", content=" + content + ", tag=" + tag + ", recruit=" + recruit + ", contact=" + contact + '}';
     }
 
 }

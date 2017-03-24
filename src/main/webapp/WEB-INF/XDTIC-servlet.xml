@@ -30,11 +30,14 @@
           p:prefix="/WEB-INF/views/page/"
           p:suffix=".jsp" />
     
+    <bean id="methodValidationPostProcessor" 
+          class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor"/>
+    
     <!--初始 fis 配置-->
     <bean id="fisInit" class="com.baidu.fis.velocity.spring.FisBean" />
     
     <mvc:interceptors>
-         <mvc:interceptor>  
+        <mvc:interceptor>  
             <mvc:mapping path="/**"/>
             
             <mvc:exclude-mapping path="/debug/**"/>

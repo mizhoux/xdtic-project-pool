@@ -71,9 +71,24 @@ public class UserDao {
      * @param id 用户 ID
      * @return 用户名
      */
-    public String getUsername(Integer id) {
+    public Optional<String> getUsername(Integer id) {
         String sql = "SELECT username FROM user WHERE id = ?";
-        return jdbcTmpl.queryForObject(sql, String.class, id);
+        return jdbcTmpl.query(sql, rs -> rs.next() ? Optional.of(rs.getString(1)) : Optional.empty(), id);
+    }
+
+    public Integer getUserIdByUsername(String username) {
+        String sql = "SELECT id FROM user WHERE username = ?";
+        return jdbcTmpl.query(sql, rs -> rs.next() ? rs.getInt(1) : 0, username);
+    }
+
+    public Integer getUserIdByEmail(String email) {
+        String sql = "SELECT id FROM user WHERE email = ?";
+        return jdbcTmpl.query(sql, rs -> rs.next() ? rs.getInt(1) : 0, email);
+    }
+
+    public Integer getUserIdByPhone(String phone) {
+        String sql = "SELECT id FROM user WHERE phone = ?";
+        return jdbcTmpl.query(sql, rs -> rs.next() ? rs.getInt(1) : 0, phone);
     }
 
     private static final String SQL_UPDATE_USER
@@ -162,7 +177,7 @@ public class UserDao {
 
         user.setId(rs.getInt("id"));
         user.setUsername(rs.getString("username"));
-        user.setPassword(rs.getString("password"));
+        //user.setPassword(rs.getString("password"));
         user.setEmail(rs.getString("email"));
         user.setPhone(rs.getString("phone"));
         user.setNickname(rs.getString("nickname"));

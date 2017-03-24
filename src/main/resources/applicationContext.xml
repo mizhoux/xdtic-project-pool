@@ -64,7 +64,7 @@
         <property name="cacheBuilderSpec">
             <bean class="com.google.common.cache.CacheBuilderSpec" factory-method="parse">
                 <constructor-arg name="cacheBuilderSpecification" 
-                                 value="initialCapacity=10, maximumSize=60, expireAfterWrite=30m"/>
+                                 value="initialCapacity=10, maximumSize=100, expireAfterWrite=60m"/>
             </bean>
         </property>
     </bean>

@@ -24,11 +24,7 @@ public class MessageService {
 
     public List<Message> getMessages(Integer userId, int pageNum, int pageSize) {
         int offset = pageNum * pageSize;
-
-        List<Message> messages = messageDao.getMessages(userId, offset, pageSize);
-        messages.forEach(this::syncDataForFront);
-
-        return messages;
+        return messageDao.getMessages(userId, offset, pageSize);
     }
 
     public PagingModel<Message> getPagingMessages(Integer userId, int pageNum, int pageSize) {
@@ -49,22 +45,6 @@ public class MessageService {
 
     public long countUnreadMessages(Integer userId) {
         return messageDao.countUnreadMessages(userId);
-    }
-
-    public Message syncDataForBack(Message message) {
-        message.setId(message.getMid());
-        message.setUserId(message.getUid());
-        message.setContent(message.getMassage());
-
-        return message;
-    }
-
-    public Message syncDataForFront(Message message) {
-        message.setMid(message.getId());
-        message.setUid(message.getUserId());
-        message.setMassage(message.getContent());
-
-        return message;
     }
 
 }
