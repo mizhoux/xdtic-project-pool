@@ -32,7 +32,7 @@ Vue.component('tic-msg', {
 
 	methods: {
 		readMsg: function readMsg(params) {
-			var jumpUrl;
+			var jumpUrl, self;
 
 			if (this.msg.type === '') {
 				jumpUrl = urlProjectSign + '?uid=' + this.msg.userId + '&proId=' + this.msg.proId;
@@ -47,7 +47,7 @@ Vue.component('tic-msg', {
 			//先假装信息已读，若通信失败回滚
 			this.$emit('read', params.msgIndex);
 
-			var self = this;
+			self = this;
 
 			fetch(urlReadMsg, {
 				method: 'POST',
@@ -157,12 +157,12 @@ function loadMore() {
 	if (this.noMore) {
 		return;
 	}
+	var self = this;
 
 	var url = urlLoadMoreMsg + '?uid=' + this.user.id + '&pageNum=' + pageNum + '&size=' + pageSize;
 
 	this.busy = true;
 	this.isLoading = true;
-	var self = this;
 
 	fetch(url, {
 		method: 'GET',

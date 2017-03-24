@@ -5,11 +5,11 @@
 <fis:extends name="page/layout/frame.jsp">
     <fis:block name="body">
 		<header>
-			<fis:widget name="page/widget/header/projectDetailHeader.jsp" />	
+			<fis:widget name="page/widget/header/projectDetailHeader.jsp" />
 		</header>
 
 		<main>
-			<fis:widget name="page/widget/main/projectDetail.jsp" />	
+			<fis:widget name="page/widget/main/projectDetail.jsp" />
 		</main>
 
 		<c:choose>

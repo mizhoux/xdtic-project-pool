@@ -327,6 +327,14 @@
                 "static/js/module/tools.js"
             ]
         },
+        "static/js/user/center.js": {
+            "uri": "/xdtic/static/js/user/center.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
         "static/js/user/login.js": {
             "uri": "/xdtic/static/js/user/login.js",
             "type": "js",

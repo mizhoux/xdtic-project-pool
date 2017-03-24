@@ -20,11 +20,11 @@
    ```
    {
         tag: "安卓&硬件"
-        title: "我的天"
-        pdesc: 记录生活中的新鲜事
-        prowant: "前端 2名"
-        concat: "电话：15029679086",
-        uid: "u001"
+        name: "我的天"
+        content: 记录生活中的新鲜事
+        recruit: "前端 2名"
+        contact: "电话：15029679086",
+        userId: "u001"
    }
    ```
    - response  `[JSON]`
@@ -43,7 +43,7 @@
    {
         "user": {
             "id": "u001",
-            "name": "adoug"
+            "username": "adoug"
         }
    }
    ```
@@ -54,7 +54,7 @@
    - request
    ```
    {
-        uid: "u001",
+        userId: "u001",
         pageNum: 0,
         pageSize: 5
    }
@@ -66,23 +66,23 @@
     	"pageNum": 0,
     	"hasMore": false,
     	"projects": [{
-    	    "statu": "checking"/"pass"  /*两种*/
-    		"proId": "p001",
-    		"proname": "SSR召唤符画法项目",
+    	    "status": 0/1/2,  /*分别对应审核中/审核通过/审核被拒*/
+    		"id": "p001",
+    		"name": "SSR召唤符画法项目",
     		"isCollected": true,
     		"username": "adoug",
-    		"date": "2016.02.05",
-    		"tags": ["Web", "情感"],
-    		"desc": "一万次悲伤/依然会有意义/我一直在最温暖的地方等你/似乎只能这样/停留一个方向/已不能改变"
+    		"creationDate": "2016.02.05",
+    		"tag": ["Web", "情感"],
+    		"content": "一万次悲伤/依然会有意义/我一直在最温暖的地方等你/似乎只能这样/停留一个方向/已不能改变"
     	}, {
-    		"proId": "p002",
-    		"proname": "tic项目池",
+    		"id": "p002",
+    		"name": "tic项目池",
     		"isCollected": false,
     		"username": "adoug",
-    		"date": "2016.02.05",
-    		"tags": ["Web", "情感"],
-    		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你",
-    		"statu": "pass"
+    		"creationDate": "2016.02.05",
+    		"tag": ["Web", "情感"],
+    		"content": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你",
+    		"status": 1
     	}]
     }
    ```
@@ -112,16 +112,16 @@
    ```
    {
     	"project": {
-    		"proname": "时间典当铺",
+    		"name": "时间典当铺",
     		"tag": ["Web", "情感"],
     		"isCollected": true,
-    		"proId": "p001",
-    		"statu": "pass",
-    		"prowant": "产品经理：2名  UI设计：1名 前端：1名",
-    		"promassage": "这里就是项目的详情了，文字就不限量了，感觉应该加上可以添加图片的功能，这里的文字颜
+    		"id": "p001",
+    		"status": 1,
+    		"recruit": "产品经理：2名  UI设计：1名 前端：1名",
+    		"content": "这里就是项目的详情了，文字就不限量了，感觉应该加上可以添加图片的功能，这里的文字颜
             色是#222222，字号15。",
-            "concat": "邮箱：yuqingyaa@163.com 如有疑问，敬请用以上方式咨询~",
-            "date": "2016.01.28"
+            "contact": "邮箱：yuqingyaa@163.com 如有疑问，敬请用以上方式咨询~",
+            "creationDate": "2016.01.28"
     	},
     	
     	"projectCreator": {
@@ -143,14 +143,14 @@
    ```
    {
     	"project": {
-    		"proname": "时间典当铺",
+    		"name": "时间典当铺",
     		"tag": ["Web", "情感"],
-    		"proId": "p001",
-    		"prowant": "产品经理：2名  UI设计：1名  前端：1名",
-    		"promassage":"天空之城在哭泣。",
-            "concat":"邮箱：yuqingya@163.com 如有疑问，敬请用以上方式咨询~",
-            "date": "2016.01.28"
-        "statu": "check/pass/reject"
+    		"id": "p001",
+    		"recruit": "产品经理：2名  UI设计：1名  前端：1名",
+    		"content":"天空之城在哭泣。",
+            "contact":"邮箱：yuqingya@163.com 如有疑问，敬请用以上方式咨询~",
+            "creationDate": "2016.01.28"
+        "status": 0/1/2
     	},
     
     	"user": {
@@ -160,23 +160,23 @@
     }
    ```
 
-- api: /xdtic/fn/project/update
+- api: /xdtic/fn/project/upcreationDate
 - request `[POST]` `[Form]`
    ```
    {
-        promassage:	            
+        content:	            
         "港岛妹妹，我送给你的西班牙馅饼。"
     							        
-        prowant: 
+        recruit: 
         "产品经理：2名  UI设计：1名  前端：1名"
     						            
-        concat:	
+        contact:	
         "邮箱：yuqingyaa@163.com   如有疑问，敬请用以上方式咨询~"
 
         reject: "false/true" //是字符串格式
     						            
-        uid:u001
-        proId:p001
+        userId:u001
+        id:p001
    }
    ```
 
@@ -188,22 +188,20 @@
    ```
    {
         "signInfos": [{
-    		"sid": "s001",
+    		"id": "s001",
     		"username": "小草",
     		"apply": "UI设计师",
-    		"date": "2015.12.31",
-    		"time": "19:00"
+    		"signDate": "2015.12.31 19:00"
     	}, {
-    		"sid": "s002",
+    		"id": "s002",
     		"username": "脸狐",
     		"apply": "前端工程师",
-    		"date": "2015.12.31",
-    		"time": "21:00"
+    		"signDate": "2015.12.31 19:00"
     	}],
     
     	"project": {
-    		"proname": "时间典当铺",
-    		"proId": "p001"
+    		"name": "时间典当铺",
+    		"id": "p001"
     	}
    }
    ```
@@ -215,30 +213,29 @@
 - jsp页面所需变量
 ```
 {
-    "user": {
+    "signUser": {
 		"id": "u001",
 		"username": "adoug",
 		"email": "942434869@qq.com",
 		"name": "张骥",
-		"sex": "boy",
-		"profe": "软件工程",
+		"gender": "boy",
+		"major": "软件工程",
 		"phone": "15029679086",
-		"stunum": "1603121451",
-		"profile": "ps,c++,ui设计",
-		"pexperice": "人脸识别系统"
+		"stuNum": "1603121451",
+		"skill": "ps,c++,ui设计",
+		"experience": "人脸识别系统"
 	},
 
     "signInfo": {
-        "sid": "s001",
+        "id": "s001",
         "username": "小草",
         "apply": "UI设计师",
-        "date": "2015.12.31",
-        "time": "19:00"
+        "signDate": "2015.12.31 19:00"
     },
 
     "project": {
-        "proname": "时间典当铺",
-        "proId": "p001"
+        "name": "时间典当铺",
+        "id": "p001"
     }
 }
 ```
@@ -263,7 +260,7 @@
    - request
    ```
        {
-            uid: "u001",
+            userId: "u001",
             pageNum: 0,
             pageSize: 5
        }
@@ -275,28 +272,28 @@
         	"pageNum": 0,
         	"hasMore": false,
         	"projects": [{
-        		"proId": "p001",
-        		"proname": "SSR召唤符画法项目",
+        		"id": "p001",
+        		"name": "SSR召唤符画法项目",
         		"isCollected": true,
         		"username": "adoug",
-        		"date": "2016.02.05",
-        		"tags": ["Web", "情感"],
-        		"desc": "一万次悲伤/依然会有意义/我一直在最温暖的地方等你/似乎只能这样/停留一个方向/已不能改变"
+        		"creationDate": "2016.02.05",
+        		"tag": ["Web", "情感"],
+        		"content": "一万次悲伤/依然会有意义/我一直在最温暖的地方等你/似乎只能这样/停留一个方向/已不能改变"
         	}, {
-        		"proId": "p002",
-        		"proname": "tic项目池",
+        		"id": "p002",
+        		"name": "tic项目池",
         		"isCollected": false,
         		"username": "adoug",
-        		"date": "2016.02.05",
-        		"tags": ["Web", "情感"],
-        		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
+        		"creationDate": "2016.02.05",
+        		"tag": ["Web", "情感"],
+        		"content": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
         	}]
     }
    ```
 
 #### 项目详情页-我的收藏 & 项目详情页-我的参与 & 项目大厅点击进入的项目详情页
 
-- url：/xdtic/project?proId=p001&uid=u001
+- url：/xdtic/project?proId=p001&userId=u001
 
 - jsp：/page/myProject/myCollect/detail.jsp
 - jsp页面所需变量：
@@ -304,16 +301,16 @@
    {
         "userIsJoined": false,
     	"project": {
-    		"proname": "时间典当铺",
+    		"name": "时间典当铺",
     		"tag": ["Web", "情感"],
     		"isCollected": true,
-    		"proId": "p001",
-    		"concat":         
+    		"id": "p001",
+    		"contact":         
             "邮箱：yuqingyaa@163.com 如有疑问，敬请用以上方式咨询~",
-    		"prowant": "产品经理：2名 UI设计：1名 前端：1名",
-    		"promassage": 
+    		"recruit": "产品经理：2名 UI设计：1名 前端：1名",
+    		"content": 
     		"这里就是项目的详情了，文字就不限	量了，感觉应该加上可以添加图片的功能，这里的文字颜色是#222222，字号15。",
-            "date": "2016.01.28"
+            "creationDate": "2016.01.28"
     	},
     
     	"projectCreator": {
@@ -328,18 +325,18 @@
    ```
 
 #### 我要报名页面
-- url：/xdtic/project/toJoin?proId=p001&uid=u001
+- url：/xdtic/project/toJoin?proId=p001&userId=u001
 - jsp：/page/myProject/myCollect/toJoin.jsp
 
 - jsp页面所需变量
    ```
    {
     	"project": {
-    		"proname": "时间典当铺",
+    		"name": "时间典当铺",
     		"tag": ["Web", "情感"],
     		"isCollected": true,
-    		"proId": "p001",
-            "date": "2016.01.28"
+    		"id": "p001",
+            "creationDate": "2016.01.28"
     	},
     
         "user": {
@@ -347,12 +344,12 @@
         	"username": "adoug",
         	"email": "942434869@qq.com",
         	"name": "张骥",
-    		"sex": "boy",
-    		"profe": "软件工程",
+    		"gender": "boy",
+    		"major": "软件工程",
     		"phone": "15029679086",
-    		"stunum": "1603121451",
-    		"profile": "ps,c++,ui设计",
-    		"pexperice": "人脸识别系统"
+    		"stuNum": "1603121451",
+    		"skill": "ps,c++,ui设计",
+    		"experience": "人脸识别系统"
         }
     }
    ```
@@ -362,11 +359,11 @@
    - request `[POST]` `[Form]`
    ```
    {
-        apply:UI设计师
-        profile:ps,c++,ui设计
-        pexperice:人脸识别系统
-        proId:p001
-        uid:u001
+        apply: "UI设计师"
+        skill: "ps,c++,ui设计"
+        experience: "人脸识别系统"
+        proId: "p001"
+        userId: "u001"
    }
    ```
    - response `[JSON]`
@@ -396,7 +393,7 @@
    - request
    ```
    {
-        uid: "u001",
+        userId: "u001",
         pageNum: 0,
         pageSize: 5
    }
@@ -409,21 +406,21 @@
         	"pageNum": 0,
         	"hasMore": false,
         	"projects": [{
-        		"proId": "p001",
-        		"proname": "SSR召唤符画法项目",
+        		"id": "p001",
+        		"name": "SSR召唤符画法项目",
         		"isCollected": true,
         		"username": "adoug",
-        		"date": "2016.02.05",
-        		"tags": ["Web", "情感"],
-        		"desc": "一万次悲伤/依然会有意义/我一直在最温暖的地方等你/似乎只能这样/停留一个方向/已不能改变"
+        		"creationDate": "2016.02.05",
+        		"tag": ["Web", "情感"],
+        		"content": "一万次悲伤/依然会有意义/我一直在最温暖的地方等你/似乎只能这样/停留一个方向/已不能改变"
         	}, {
-        		"proId": "p002",
-        		"proname": "tic项目池",
+        		"id": "p002",
+        		"name": "tic项目池",
         		"isCollected": false,
         		"username": "adoug",
-        		"date": "2016.02.05",
-        		"tags": ["Web", "情感"],
-        		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
+        		"creationDate": "2016.02.05",
+        		"tag": ["Web", "情感"],
+        		"content": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
         	}]
     }
    ```
@@ -442,7 +439,7 @@
    - request
    ```
    {
-        userid: 'u001',
+        userId: 'u001',
         pageNum: 0,
         pageSize: 5,
         keyWords: 'web 情感'
@@ -455,50 +452,50 @@
 	"pageNum": 1,
 	"hasMore": true,
 	"projects": [{
-		"proId": "p001",
-		"proname": "SSR召唤符画法项目",
+		"id": "p001",
+		"name": "SSR召唤符画法项目",
 		"isCollected": true,
 		"username": "adoug",
-		"userid": "u001",
-		"date": "2016.02.05",
-		"tags": ["Web", "情感"],
-		"desc": "一万次悲伤/依然会有意义/我一直在最温暖的地方等你/似乎只能这样/停留一个方向/已不能改变"
+		"userId": "u001",
+		"creationDate": "2016.02.05",
+		"tag": ["Web", "情感"],
+		"content": "一万次悲伤/依然会有意义/我一直在最温暖的地方等你/似乎只能这样/停留一个方向/已不能改变"
 	}, {
-		"proId": "p002",
-		"proname": "tic项目池",
+		"id": "p002",
+		"name": "tic项目池",
 		"isCollected": false,
 		"username": "adoug",
-		"userid": "u001",
-		"date": "2016.02.05",
-		"tags": ["Web", "情感"],
-		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
+		"userId": "u001",
+		"creationDate": "2016.02.05",
+		"tag": ["Web", "情感"],
+		"content": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
 	}, {
-		"proId": "p003",
-		"proname": "时间典当铺APP",
+		"id": "p003",
+		"name": "时间典当铺APP",
 		"isCollected": false,
 		"username": "adoug",
-		"userid": "u001",
-		"date": "2016.02.05",
-		"tags": ["Web", "情感"],
-		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
+		"userId": "u001",
+		"creationDate": "2016.02.05",
+		"tag": ["Web", "情感"],
+		"content": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
 	}, {
-		"proId": "p004",
-		"proname": "时间典当铺APP",
+		"id": "p004",
+		"name": "时间典当铺APP",
 		"isCollected": false,
 		"username": "adoug",
-		"userid": "u001",
-		"date": "2016.02.05",
-		"tags": ["Web", "情感"],
-		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
+		"userId": "u001",
+		"creationDate": "2016.02.05",
+		"tag": ["Web", "情感"],
+		"content": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
 	}, {
-		"proId": "p005",
-		"proname": "时间典当铺APP",
+		"id": "p005",
+		"name": "时间典当铺APP",
 		"isCollected": false,
 		"username": "adoug",
-		"userid": "u001",
-		"date": "2016.02.05",
-		"tags": ["Web", "情感"],
-		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
+		"userId": "u001",
+		"creationDate": "2016.02.05",
+		"tag": ["Web", "情感"],
+		"content": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
 	}}]
     }
    ```
@@ -508,7 +505,7 @@
    - request
    ```
         {
-            userid: 'u001',
+            userId: 'u001',
             hotSize: 2,
             keyWords: 'Web 情感'
         }
@@ -518,23 +515,23 @@
    {
 	"hotSize": 2,
 	"projects": [{
-		"proId": "p001",
-		"proname": "SSR召唤符画法",
+		"id": "p001",
+		"name": "SSR召唤符画法",
 		"isCollected": true,
 		"username": "adoug",
-		"userid": "u001",
-		"date": "2016.02.05",
-		"tags": ["Web", "情感"],
-		"desc": "一万次悲伤/依然会有意义/我一直在最温暖的地方等你/似乎只能这样/停留一个方向/已不能改变"
+		"userId": "u001",
+		"creationDate": "2016.02.05",
+		"tag": ["Web", "情感"],
+		"content": "一万次悲伤/依然会有意义/我一直在最温暖的地方等你/似乎只能这样/停留一个方向/已不能改变"
 	}, {
-		"proId": "p002",
-		"proname": "tic项目池",
+		"id": "p002",
+		"name": "tic项目池",
 		"isCollected": false,
 		"username": "adoug",
-		"userid": "u001",
-		"date": "2016.02.05",
-		"tags": ["Web", "情感"],
-		"desc": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
+		"userId": "u001",
+		"creationDate": "2016.02.05",
+		"tag": ["Web", "情感"],
+		"content": "我祈祷拥有一颗透明的心灵/和会流泪的眼睛/给我再去相信的勇气/oh越过谎言去拥抱你"
 	}]
     }
    ```
@@ -544,7 +541,7 @@
    - request
    ```
    {
-        userid: 'u001',
+        userId: 'u001',
         proId: 'p001'
    }
    ```
@@ -560,7 +557,7 @@
    - request
    ```
    {
-        userid: 'u001',
+        userId: 'u001',
         proId: 'p001'
    }
    ```
@@ -651,11 +648,25 @@
    {
     	"user": {
     		"id": "u001",
-    		"username": "adoug",
-    		"hasMsg": true/false
+    		"username": "adoug"
     	}
     }
    ```
+
+   - api: /xdtic/fn/hasMsg
+     - 说明：查询用户是否有未读消息
+     - request `[GET]`
+     ```
+     {
+        userId: 'u001'
+     }
+     ```
+     - response `[JSON]`
+     ```
+     {
+        hasMsg: true/false
+     }
+     ```
 
 #### 个人信息页面
 
@@ -669,16 +680,16 @@
     		"username": "adoug",
     		"email": "942434869@qq.com",
     		"name": "张骥",
-  			"sex": "boy"/"girl",
-  			"profe": "软件工程",
+  			"gender": "boy"/"girl",
+  			"major": "软件工程",
   			"phone": "15029679086",
-  			"stunum": "1603121451",
-  			"profile": "ps,c++,ui设计",
-  			"pexperice": "人脸识别系统"
+  			"stuNum": "1603121451",
+  			"skill": "ps,c++,ui设计",
+  			"experience": "人脸识别系统"
     	}
     }
    ```
-   - api: /xdtic/fn/update/profile `[POST]`
+   - api: /xdtic/fn/upcreationDate/profile `[POST]`
      - 说明：用户修改个人信息
      - request `[FORM]`
      ```
@@ -688,12 +699,12 @@
       	"username": "adoug",
       	"email": "942434869@qq.com",
       	"name": "张骥",
-  			"sex": "boy"/"girl",
-  			"profe": "软件工程",
+  			"gender": "boy"/"girl",
+  			"major": "软件工程",
   			"phone": "15029679086",
-  			"stunum": "1603121451",
-  			"profile": "ps,c++,ui设计",
-  			"pexperice": "人脸识别系统"
+  			"stuNum": "1603121451",
+  			"skill": "ps,c++,ui设计",
+  			"experience": "人脸识别系统"
       }
      }
      ```
@@ -714,12 +725,12 @@
         "username": "adoug",
        	"email": "942434869@qq.com",
        	"name": "张骥",
- 		    "sex": "boy"/"girl",
- 		    "profe": "软件工程",
+ 		    "gender": "boy"/"girl",
+ 		    "major": "软件工程",
           			"phone": "15029679086",
-          			"stunum": "1603121451",
-          			"profile": "ps,c++,ui设计",
-          			"pexperice": "人脸识别系统"
+          			"stuNum": "1603121451",
+          			"skill": "ps,c++,ui设计",
+          			"experience": "人脸识别系统"
      }
      ```
      
@@ -763,10 +774,10 @@
     	
         "msgs": [{
 		"type": "join"/"post"/"pass", /*分三种类型*/
-		"uid": 1,
-		"mid": 1,
-		"massage": "你已成功报名BU Qun的5分钟撩妹app，请等待发布者的联系，祝你顺利~",
-		"existDate": "10分钟前"
+		"userId": 1,
+		"id": 1,
+		"content": "你已成功报名BU Qun的5分钟撩妹app，请等待发布者的联系，祝你顺利~",
+		"creationDate": "10分钟前"
 	}]
    }
    ```
@@ -776,7 +787,7 @@
    - request `[POST]` `[JSON]`
    ```
    {
-        mid: [m001, m002]
+        id: [m001, m002]
    }
    ```
    - response `[JSON]`
@@ -854,12 +865,12 @@
 	"hasMore": false,
 
 	"projects": [{
-		"proId": "p001",
-		"proname": "SSR召唤符画法",
+		"id": "p001",
+		"name": "SSR召唤符画法",
 		"username": "adoug"
 	}, {
-		"proId": "p002",
-		"proname": "tic项目池",
+		"id": "p002",
+		"name": "tic项目池",
 		"username": "adoug"
 	}]
     }
@@ -914,15 +925,14 @@
 ```
 {
     "project": {
-		"hasProcessed": true, //是否已处理
-		"proname": "时间典当铺",
+		"name": "时间典当铺",
 		"tag": ["Web", "情感"],
-		"proId": "p001",
-		"prowant": "产品经理：2名  UI设计：1名 前端：1名",
-		"promassage": "这里就是项目的详情了，文字就不限量了，感觉应该加上可以添加图片的功能，这里的文字颜
+		"id": "p001",
+		"recruit": "产品经理：2名  UI设计：1名 前端：1名",
+		"content": "这里就是项目的详情了，文字就不限量了，感觉应该加上可以添加图片的功能，这里的文字颜
         色是#222222，字号15。",
-        "concat": "邮箱：yuqingyaa@163.com 如有疑问，敬请用以上方式咨询~",
-        "date": "2016.01.28"
+        "contact": "邮箱：yuqingyaa@163.com 如有疑问，敬请用以上方式咨询~",
+        "creationDate": "2016.01.28"
 	},
 
   "projectCreator": {
@@ -956,12 +966,12 @@
 	"hasMore": false,
 
 	"projects": [{
-		"proId": "p001",
-		"proname": "SSR召唤符画法",
+		"id": "p001",
+		"name": "SSR召唤符画法",
 		"username": "adoug"
 	}, {
-		"proId": "p002",
-		"proname": "tic项目池",
+		"id": "p002",
+		"name": "tic项目池",
 		"username": "adoug"
 	}]
     }
@@ -1009,7 +1019,7 @@
     - request `[POST]` `[JSON]`
     ```
     {
-        uid: ["u001"] / "All"  //All表示删除所有用户
+        userId: ["u001"] / "All"  //All表示删除所有用户
     }
     ```
     - response `[JSON]`

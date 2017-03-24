@@ -18,12 +18,9 @@
 					</div>
 				</header>
 				<main>
-					<div class="tic-four-grid">
-						<c:set var="notice" value="" />
-						<c:if test="${user.hasMsg}">
-							<c:set var="notice" value="notice" />
-						</c:if>
-						<a href="<c:url value='/user/msgs' />?userid=<c:out value="${user.id}" />" v-tap class="grid <c:out value="${notice}" />">
+					<div class="tic-four-grid" id="app">
+						<a href="<c:url value='/user/msgs' />?userid=<c:out value="${user.id}" />" v-tap class="grid"
+						 :class="{notice: hasMsg}">
 							<img src="/xdtic/static/images/sys-msg.png" alt="系统消息">
 							<p>系统消息</p>
 						</a>
@@ -72,6 +69,20 @@
     	<fis:parent />
     	<fis:require id="static/scss/center.scss" />
     </fis:block>
+
+	<fis:block name="jsPre">
+		<script type="text/javascript">
+			var userInfo = {
+				id: "<c:out value="${user.id}" />"
+			};
+		</script>
+	</fis:block>
+
+	<fis:block name="js">
+		<fis:parent />
+
+		<fis:require id="static/js/user/center.js" />
+	</fis:block>
  
   <%-- auto inject by fis3-preprocess-extlang--%>
   <fis:require name="page/user/center.jsp" />

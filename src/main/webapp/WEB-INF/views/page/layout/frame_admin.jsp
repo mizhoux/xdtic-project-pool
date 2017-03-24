@@ -79,6 +79,7 @@
                 <fis:block name="footer">
                 </fis:block>
             </div>
+            
         </fis:block>
     </fis:body>
 

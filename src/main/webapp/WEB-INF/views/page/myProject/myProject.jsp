@@ -114,7 +114,7 @@
 				            	<span
 				            	 v-for="tag in project.tag">{{tag}}</span>
 				            </p>
-				            <p class="weui-media-box__desc">{{project.desc}}</p>
+				            <p class="weui-media-box__desc">{{project.content}}</p>
 				            <p class="tic-media-box__footer">
 				            	<span v-if="projectStatu.length != ''" class="tic-float-left tic-secondary">
 				            		{{projectStatu}}
