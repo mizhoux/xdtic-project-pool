@@ -1,5 +1,6 @@
 package wenjing.xdtic.action;
 
+import com.google.common.collect.ImmutableMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -84,7 +85,8 @@ public class UserFunction {
      * @param password 密码
      * @return
      */
-    @PostMapping(value = "user/login", consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "user/login",
+            consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public String userLogin(HttpServletRequest request,
             @RequestParam String username, @RequestParam String password) {
 
@@ -109,7 +111,8 @@ public class UserFunction {
      * @param passNewConfirm 第二次输入的新密码
      * @return
      */
-    @PostMapping(value = "user/resetPass", consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "user/resetPass",
+            consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public String updateUserPassword(
             @RequestParam String username,
             @RequestParam String passOld,
@@ -130,12 +133,12 @@ public class UserFunction {
      * 修改用户个人信息
      *
      * @param user 提交的个人信息（以 Form 提交）
-     * @param br
      * @param session
      * @return
      */
     @ResponseBody
-    @PostMapping(value = "update/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "update/profile",
+            consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode updateUserProfile(@Valid User user, HttpSession session) {
 
         boolean success = userService.updateUser(user);
@@ -228,14 +231,19 @@ public class UserFunction {
     }
 
     @ResponseBody
+    @GetMapping("hasMsg")
+    public Map<String, Boolean> hasUnreadMessage(@RequestParam Integer userId) {
+        return ImmutableMap.of("hasMsg", msgService.countUnreadMessages(userId) > 0);
+    }
+
+    @ResponseBody
     @PostMapping("user/project/operate")
     public RespCode deleteProject(@RequestBody Map<String, String> params) {
         String operation = params.get("operation");
         if ("delete".equals(operation)) {
-            Integer proId = Integer.valueOf(params.get("proId"));
-            boolean success = proService.deleteProject(proId);
+            Integer proId = Integer.valueOf(params.get("id"));
 
-            if (success) {
+            if (proService.deleteProject(proId)) {
                 return RespCode.OK;
             }
         }

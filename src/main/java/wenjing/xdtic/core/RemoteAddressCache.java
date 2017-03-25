@@ -18,6 +18,7 @@ public class RemoteAddressCache {
 
     @Bean("guavaCacheForRemoteAddress")
     public Cache<Object, Object> getCache() {
+        // 因为缓存策略不同，所以此处并不使用 Spring 的 GuavaCacheManager
         Cache<Object, Object> guavaCache = CacheBuilder.newBuilder()
                 .expireAfterWrite(30, TimeUnit.MINUTES)
                 .build();

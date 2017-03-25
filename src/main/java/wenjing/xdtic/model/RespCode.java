@@ -1,9 +1,12 @@
 package wenjing.xdtic.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 /**
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RespCode {
 
     /**
@@ -16,10 +19,6 @@ public class RespCode {
      */
     public static RespCode ERROR = new RespCode("error");
 
-    public static RespCode okOf(String comment) {
-        return new RespCode("ok", comment);
-    }
-
     public static RespCode errorOf(String comment) {
         return new RespCode("error", comment);
     }
@@ -28,7 +27,7 @@ public class RespCode {
     private final String comment;
 
     private RespCode(String code) {
-        this(code, "");
+        this(code, null);
     }
 
     private RespCode(String code, String comment) {
