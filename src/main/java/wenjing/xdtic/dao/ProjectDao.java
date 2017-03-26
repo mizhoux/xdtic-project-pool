@@ -317,20 +317,18 @@ public class ProjectDao {
      * @see org.springframework.jdbc.core.RowMapper
      */
     private Project mapProject(ResultSet rs, int rowNum) throws SQLException {
-        Project project = new Project();
 
-        project.setId(rs.getInt("id"));
-        project.setUserId(rs.getInt("user_id"));
-        project.setUsername(rs.getString("username"));
-        project.setName(rs.getString("name"));
-        project.setContent(rs.getString("content"));
-        project.setRecruit(rs.getString("recruit"));
-        project.setContact(rs.getString("contact"));
-        project.setStatus(rs.getByte("status"));
-        project.setCreationDate(rs.getTimestamp("creation_date"));
-        project.setTag(rs.getString("tag"));
-
-        return project;
+        return Project.builder()
+                .id(rs.getInt("id"))
+                .userId(rs.getInt("user_id"))
+                .username(rs.getString("username"))
+                .tag(rs.getString("tag"))
+                .name(rs.getString("name"))
+                .content(rs.getString("content"))
+                .recruit(rs.getString("recruit"))
+                .contact(rs.getString("contact"))
+                .status(rs.getByte("status"))
+                .creationDate(rs.getTimestamp("creation_date")).build();
     }
 
     private String getSearchCondition(String keywords) {

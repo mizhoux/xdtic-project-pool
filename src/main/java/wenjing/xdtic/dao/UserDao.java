@@ -173,22 +173,18 @@ public class UserDao {
      * @see org.springframework.jdbc.core.RowMapper
      */
     private User mapUser(ResultSet rs, int rowNum) throws SQLException {
-        User user = new User();
-
-        user.setId(rs.getInt("id"));
-        user.setUsername(rs.getString("username"));
-        //user.setPassword(rs.getString("password"));
-        user.setEmail(rs.getString("email"));
-        user.setPhone(rs.getString("phone"));
-        user.setNickname(rs.getString("nickname"));
-        user.setRealname(rs.getString("realname"));
-        user.setGender(rs.getString("gender"));
-        user.setMajor(rs.getString("major"));
-        user.setStuNum(rs.getString("stu_num"));
-        user.setSkill(rs.getString("skill"));
-        user.setExperience(rs.getString("experience"));
-
-        return user;
+        return User.builder()
+                .id(rs.getInt("id"))
+                .username(rs.getString("username"))
+                .email(rs.getString("email"))
+                .phone(rs.getString("phone"))
+                .nickname(rs.getString("nickname"))
+                .realname(rs.getString("realname"))
+                .gender(rs.getString("gender"))
+                .major(rs.getString("major"))
+                .stuNum(rs.getString("stu_num"))
+                .skill(rs.getString("skill"))
+                .experience(rs.getString("experience")).build();
     }
 
     private String getSearchCondition(String keyword) {

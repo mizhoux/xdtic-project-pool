@@ -87,4 +87,78 @@ public class SignInfo {
         this.username = username;
     }
 
+    public static class Builder {
+
+        private Integer id;
+        private Integer userId;
+        private Integer proId;
+        private String apply;
+        private String skill;
+        private String experience;
+        private Date signDate;
+        private String username;
+
+        private Builder() {
+        }
+
+        public Builder id(final Integer value) {
+            this.id = value;
+            return this;
+        }
+
+        public Builder userId(final Integer value) {
+            this.userId = value;
+            return this;
+        }
+
+        public Builder proId(final Integer value) {
+            this.proId = value;
+            return this;
+        }
+
+        public Builder apply(final String value) {
+            this.apply = value;
+            return this;
+        }
+
+        public Builder skill(final String value) {
+            this.skill = value;
+            return this;
+        }
+
+        public Builder experience(final String value) {
+            this.experience = value;
+            return this;
+        }
+
+        public Builder signDate(final Date value) {
+            this.signDate = value;
+            return this;
+        }
+
+        public Builder username(final String value) {
+            this.username = value;
+            return this;
+        }
+
+        public SignInfo build() {
+            return new SignInfo(id, userId, proId, apply, skill, experience, signDate, username);
+        }
+    }
+
+    public static SignInfo.Builder builder() {
+        return new SignInfo.Builder();
+    }
+
+    private SignInfo(final Integer id, final Integer userId, final Integer proId, final String apply, final String skill, final String experience, final Date signDate, final String username) {
+        this.id = id;
+        this.userId = userId;
+        this.proId = proId;
+        this.apply = apply;
+        this.skill = skill;
+        this.experience = experience;
+        this.signDate = signDate;
+        this.username = username;
+    }
+
 }

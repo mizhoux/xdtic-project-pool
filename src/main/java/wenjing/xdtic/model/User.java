@@ -48,6 +48,9 @@ public class User {
      */
     private boolean hasMsg;
 
+    public User() {
+    }
+
     public Integer getId() {
         return id;
     }
@@ -155,6 +158,115 @@ public class User {
     @Override
     public String toString() {
         return "User{" + "id=" + id + ", username=" + username + ", password=" + password + ", gender=" + gender + ", email=" + email + ", phone=" + phone + ", realname=" + realname + ", nickname=" + nickname + ", major=" + major + ", stuNum=" + stuNum + '}';
+    }
+
+    public static class Builder {
+
+        private Integer id;
+        private String username;
+        private String password;
+        private String email;
+        private String phone;
+        private String gender;
+        private String realname;
+        private String nickname;
+        private String major;
+        private String stuNum;
+        private String skill;
+        private String experience;
+        private boolean hasMsg;
+
+        private Builder() {
+        }
+
+        public Builder id(final Integer value) {
+            this.id = value;
+            return this;
+        }
+
+        public Builder username(final String value) {
+            this.username = value;
+            return this;
+        }
+
+        public Builder password(final String value) {
+            this.password = value;
+            return this;
+        }
+
+        public Builder email(final String value) {
+            this.email = value;
+            return this;
+        }
+
+        public Builder phone(final String value) {
+            this.phone = value;
+            return this;
+        }
+
+        public Builder gender(final String value) {
+            this.gender = value;
+            return this;
+        }
+
+        public Builder realname(final String value) {
+            this.realname = value;
+            return this;
+        }
+
+        public Builder nickname(final String value) {
+            this.nickname = value;
+            return this;
+        }
+
+        public Builder major(final String value) {
+            this.major = value;
+            return this;
+        }
+
+        public Builder stuNum(final String value) {
+            this.stuNum = value;
+            return this;
+        }
+
+        public Builder skill(final String value) {
+            this.skill = value;
+            return this;
+        }
+
+        public Builder experience(final String value) {
+            this.experience = value;
+            return this;
+        }
+
+        public Builder hasMsg(final boolean value) {
+            this.hasMsg = value;
+            return this;
+        }
+
+        public User build() {
+            return new User(id, username, password, email, phone, gender, realname, nickname, major, stuNum, skill, experience, hasMsg);
+        }
+    }
+
+    public static User.Builder builder() {
+        return new User.Builder();
+    }
+
+    private User(final Integer id, final String username, final String password, final String email, final String phone, final String gender, final String realname, final String nickname, final String major, final String stuNum, final String skill, final String experience, final boolean hasMsg) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.gender = gender;
+        this.realname = realname;
+        this.nickname = nickname;
+        this.major = major;
+        this.stuNum = stuNum;
+        this.skill = skill;
+        this.experience = experience;
+        this.hasMsg = hasMsg;
     }
 
 }

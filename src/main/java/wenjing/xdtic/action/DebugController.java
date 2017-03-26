@@ -75,6 +75,7 @@ public class DebugController {
     }
 
     @GetMapping("cache")
+    @SuppressWarnings("unchecked")
     public ConcurrentMap<Object, Object> viewCache() {
         Cache<Object, Object> cache
                 = (Cache<Object, Object>) cacheManager.getCache("project").getNativeCache();
