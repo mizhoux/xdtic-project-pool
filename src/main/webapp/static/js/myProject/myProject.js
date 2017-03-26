@@ -115,15 +115,9 @@ Vue.component('tic-project', {
 		},
 
 		projectDetailLink: function projectDetailLink() {
-			if (this.projecttype === 'post') {
+			if (this.project.userId == this.userid) {
 				return urlPrefix + '/myProject/myPost/detail';
-			}
-
-			if (this.projecttype === 'collect') {
-				return urlPrefix + '/project';
-			}
-
-			if (this.projecttype === 'join') {
+			} else {
 				return urlPrefix + '/project';
 			}
 		}
