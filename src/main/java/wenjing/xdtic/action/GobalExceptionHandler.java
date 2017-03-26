@@ -45,6 +45,7 @@ public class GobalExceptionHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public RespCode handleRuntimeException(RuntimeException ex) {
+        ex.printStackTrace(System.err);
         return RespCode.errorOf(ex.getMessage());
     }
 
