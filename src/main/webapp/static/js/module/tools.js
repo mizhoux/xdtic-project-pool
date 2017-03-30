@@ -119,12 +119,57 @@ define('static/js/module/tools', function(require, exports, module) {
       return form.join('&');
   }
   
+  /**
+   * 比较两个对象的属性差异，以origin为主，输出差异的key-value
+   * @param origin: Object 原始对象
+   * @param modifier: Object 变更后的对象
+   * @returns diff: Object
+   */
+  function diffObj(origin, modifier) {
+      var diff = {};
+  
+      for (var key in origin) {
+          if (origin.hasOwnProperty(key)) {
+              if (origin[key] !== modifier[key]) {
+                  diff[key] = modifier[key];
+              }
+          }
+      }
+  
+      return diff;
+  }
+  
+  function isEmpty(obj) {
+      for (var key in obj) {
+          if (obj.hasOwnProperty(key)) {
+              return false;
+          }
+      }
+  
+      return true;
+  }
+  
+  function copyObj(obj) {
+      var result = {};
+  
+      for (var key in obj) {
+          if (obj.hasOwnProperty(key)) {
+              result[key] = obj[key];
+          }
+      }
+  
+      return result;
+  }
+  
   module.exports = {
       formSerialize: serialize,
       SaferHTML: SaferHTML,
       getParams: getParams,
       avoidBack: avoidBack,
-      obj2form: obj2form
+      obj2form: obj2form,
+      diffObj: diffObj,
+      isEmpty: isEmpty,
+      copyObj: copyObj
   };
 
 });
