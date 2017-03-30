@@ -54,18 +54,15 @@ public class SignInfoDao {
     }
 
     private SignInfo mapSignInfo(ResultSet rs, int rowNum) throws SQLException {
-        SignInfo signInfo = new SignInfo();
-
-        signInfo.setId(rs.getInt("id"));
-        signInfo.setProId(rs.getInt("pro_id"));
-        signInfo.setUserId(rs.getInt("user_id"));
-        signInfo.setApply(rs.getString("apply"));
-        signInfo.setExperience(rs.getString("experience"));
-        signInfo.setSkill(rs.getString("skill"));
-        signInfo.setSignDate(rs.getTimestamp("sign_date"));
-        signInfo.setUsername(rs.getString("username"));
-
-        return signInfo;
+        return SignInfo.builder()
+                .id(rs.getInt("id"))
+                .proId(rs.getInt("pro_id"))
+                .userId(rs.getInt("user_id"))
+                .apply(rs.getString("apply"))
+                .experience(rs.getString("experience"))
+                .skill(rs.getString("skill"))
+                .signDate(rs.getTimestamp("sign_date"))
+                .username(rs.getString("username")).build();
     }
 
 }

@@ -54,13 +54,8 @@ public class ProjectFunction {
             @RequestParam("uid") Integer userId,
             @RequestParam boolean reject) {
 
-        Project project = new Project();
-
-        project.setId(id);
-        project.setContent(content);
-        project.setContact(contact);
-        project.setRecruit(recruit);
-        project.setUserId(userId);
+        Project project = Project.builder().id(id).userId(userId)
+                .content(content).recruit(recruit).contact(contact).build();
 
         boolean success = proService.updateProject(project, reject);
         return success ? RespCode.OK : RespCode.ERROR;
