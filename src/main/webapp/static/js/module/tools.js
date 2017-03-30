@@ -19,6 +19,7 @@ define('static/js/module/tools', function(require, exports, module) {
       var opLen, //select中option的个数
       opValue; //select中option的值
       //遍历每一个表单字段
+      var option;
       var i, j;
       for (i = 0; i < len; i++) {
           field = form.elements[i];
