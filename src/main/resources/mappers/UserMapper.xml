@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xdtic.projpool.dao.UserMapper">
+    
+    <resultMap id="BaseResultMap" type="xdtic.projpool.model.User">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="password" jdbcType="CHAR" property="password" />
+        <result column="gender" jdbcType="CHAR" property="gender" />
+        <result column="email" jdbcType="VARCHAR" property="email" />
+        <result column="phone" jdbcType="CHAR" property="phone" />
+        <result column="realname" jdbcType="VARCHAR" property="realname" />
+        <result column="nickname" jdbcType="VARCHAR" property="nickname" />
+        <result column="stu_num" jdbcType="CHAR" property="stuNum" />
+        <result column="major" jdbcType="VARCHAR" property="major" />
+        <result column="skill" jdbcType="VARCHAR" property="skill" />
+        <result column="experience" jdbcType="VARCHAR" property="experience" />
+    </resultMap>
+  
+    <delete id="deleteUser" parameterType="java.lang.Integer">
+        delete from user
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    
+    <delete id="deleteUsers">
+        delete from user where id in 
+        <foreach collection="list" item="uid" separator="," open="(" close=")">
+            #{uid}
+        </foreach>
+    </delete>
+  
+    <insert id="insert" parameterType="xdtic.projpool.model.User">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into user (id, username, password, 
+        gender, email, phone, realname, 
+        nickname, stu_num, major, 
+        skill, experience)
+        values (#{id,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=CHAR}, 
+        #{gender,jdbcType=CHAR}, #{email,jdbcType=VARCHAR}, #{phone,jdbcType=CHAR}, #{realname,jdbcType=VARCHAR}, 
+        #{nickname,jdbcType=VARCHAR}, #{stuNum,jdbcType=CHAR}, #{major,jdbcType=VARCHAR}, 
+        #{skill,jdbcType=VARCHAR}, #{experience,jdbcType=VARCHAR})
+    </insert>
+  
+    <insert id="addUser">
+        INSERT INTO user SET username = #{arg0}, password = MD5(#{arg1})
+    </insert>
+  
+    <update id="updateUser" parameterType="xdtic.projpool.model.User">
+        update user
+        set username = #{username,jdbcType=VARCHAR},
+        password = #{password,jdbcType=CHAR},
+        gender = #{gender,jdbcType=CHAR},
+        email = #{email,jdbcType=VARCHAR},
+        phone = #{phone,jdbcType=CHAR},
+        realname = #{realname,jdbcType=VARCHAR},
+        nickname = #{nickname,jdbcType=VARCHAR},
+        stu_num = #{stuNum,jdbcType=CHAR},
+        major = #{major,jdbcType=VARCHAR},
+        skill = #{skill,jdbcType=VARCHAR},
+        experience = #{experience,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    
+    <update id="updatePassword">
+        UPDATE user SET password = MD5(#{arg2}) 
+        WHERE username = #{arg0} AND password = #{arg1}
+    </update>
+  
+    <select id="getUserById" parameterType="Integer" resultMap="BaseResultMap">
+        select id, username, password, gender, email, phone, realname, nickname, stu_num, 
+        major, skill, experience
+        from user
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    
+    <select id="getAllUsers" resultMap="BaseResultMap">
+        select id, username, password, gender, email, phone, realname, nickname, stu_num, 
+        major, skill, experience
+        from user
+    </select>
+    
+    <select id="getUser" resultMap="BaseResultMap">
+        SELECT id, username, password, gender, email, phone, realname, nickname, stu_num, 
+        major, skill, experience
+        FROM user u
+        WHERE u.username = #{arg0} AND u.password = #{arg1}
+    </select>
+    
+    <select id="getUserId" parameterType="String" resultType="Integer">
+        SELECT id
+        FROM user u
+        WHERE u.username = #{arg0}
+    </select>
+    
+    <select id="getUserIdByEmail" parameterType="String" resultType="Integer">
+        SELECT id
+        FROM user u
+        WHERE u.username = #{arg0}
+    </select>
+    
+    <select id="getUserIdByPhone" parameterType="String" resultType="Integer">
+        SELECT id
+        FROM user u
+        WHERE u.username = #{arg0}
+    </select>
+    
+    <select id="countUsers" parameterType="String" resultType="Long">
+        SELECT COUNT(*) FROM user WHERE ${condition}
+    </select>
+    
+    <select id="getUsers" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select id, username, password, gender, email, phone, realname, nickname, stu_num, 
+        major, skill, experience
+        from user
+        where ${condition}
+    </select>
+    
+</mapper>

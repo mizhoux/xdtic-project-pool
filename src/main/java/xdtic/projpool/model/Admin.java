@@ -63,4 +63,9 @@ public class Admin {
         this.realname = realname;
     }
 
+    @Override
+    public String toString() {
+        return "Admin{" + "id=" + id + ", username=" + username + ", password=" + password + ", realname=" + realname + ", email=" + email + ", phone=" + phone + '}';
+    }
+
 }

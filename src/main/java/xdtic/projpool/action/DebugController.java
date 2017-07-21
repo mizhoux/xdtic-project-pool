@@ -1,6 +1,7 @@
 package xdtic.projpool.action;
 
 import com.google.common.cache.Cache;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.Valid;
@@ -15,17 +16,21 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import xdtic.projpool.util.RemoteAddressCache;
+import xdtic.projpool.model.Admin;
 import xdtic.projpool.model.Project;
 import xdtic.projpool.model.RespCode;
 import xdtic.projpool.model.User;
+import xdtic.projpool.service.AdminService;
 import xdtic.projpool.service.ProjectService;
 import xdtic.projpool.service.UserService;
+import xdtic.projpool.util.Log;
+import xdtic.projpool.util.RemoteAddressCache;
 
 /**
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
+@Log
 @Validated
 @RestController
 @RequestMapping("debug")
@@ -43,9 +48,27 @@ public class DebugController {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private AdminService adminService;
+
+    @GetMapping("admin/{username}/{password}")
+    public Admin getAdmin(@PathVariable String username, @PathVariable String password) {
+        return adminService.getAdmin(username, password).orElse(new Admin());
+    }
+
     @GetMapping("user/{id}")
     public User getUser(@PathVariable Integer id) {
         return userService.getUser(id).orElse(new User());
+    }
+
+    @GetMapping("user/contains/{username}")
+    public boolean containsUser(@PathVariable String username) {
+        return userService.containsUsername(username);
+    }
+
+    @GetMapping("users/{pageNum}/{pageSize}")
+    public List<User> getUsers(@PathVariable int pageNum, @PathVariable int pageSize) {
+        return userService.getUsers("", pageNum, pageSize);
     }
 
     @GetMapping("pro/{id}")

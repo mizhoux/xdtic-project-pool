@@ -1,0 +1,75 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd">
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"
+          p:location="classpath:jdbc.properties" />
+    
+    <!-- 配置 c3p0数据库连接池 的 dataSource，每个参数的用途参见 database.properties -->
+    <bean id="dataSource" 
+          class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+        <property name="driverClass" value="${jdbc.driverClassName}"/>
+        <property name="jdbcUrl" value="${jdbc.url}"/>
+        <property name="user" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+        <property name="maxPoolSize" value="${jdbc.maxPoolSize}"/>
+        <property name="minPoolSize" value="${jdbc.minPoolSize}"/>
+        <property name="initialPoolSize" value="${jdbc.initialPoolSize}"/>
+        <property name="maxIdleTime" value="${jdbc.maxIdleTime}"/>
+        <property name="acquireIncrement" value="${jdbc.acquireIncrement}"/>
+        <property name="maxStatements" value="${jdbc.maxStatements}"/>
+        <property name="idleConnectionTestPeriod" value="${jdbc.idleConnectionTestPeriod}"/>
+        <property name="acquireRetryAttempts" value="${jdbc.acquireRetryAttempts}" />
+    </bean>
+    
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">  
+        <property name="dataSource" ref="dataSource" />  
+    </bean> 
+    
+    <!-- Spring 和 MyBatis 整合 -->  
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
+        <property name="dataSource" ref="dataSource" />  
+        <property name="configLocation" value="classpath:mybatis-config.xml" />
+        <!-- 自动扫描 mapper.xml 文件，这样就不需要在 mybatis-config 中使用 mappers 标签配置 mapper.xml -->
+        <property name="mapperLocations" value="classpath:mappers/*.xml" />
+    </bean>
+  
+    <!-- DAO 接口所在包名，Spring 会自动查找该包下的接口 -->  
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">  
+        <property name="basePackage" value="xdtic.projpool.dao" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>
+    
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="add*" propagation="REQUIRED" />
+            
+            <tx:method name="delete*" propagation="REQUIRED" />
+            
+            <tx:method name="set*" propagation="REQUIRED" isolation="READ_COMMITTED"/>
+            <tx:method name="update*" propagation="REQUIRED" isolation="READ_COMMITTED"/>
+             
+            <tx:method name="get*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="count*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="contains*" propagation="REQUIRED" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+    
+    <aop:config expose-proxy="true">
+        <!-- 只对业务逻辑层实施事务 -->
+        <aop:pointcut id="txPointcut" expression="execution(* xdtic.projpool.service..*.*(..))" />
+        <aop:advisor pointcut-ref="txPointcut" advice-ref="txAdvice"/>
+    </aop:config>
+    
+</beans>

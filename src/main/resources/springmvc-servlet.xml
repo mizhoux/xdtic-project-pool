@@ -14,6 +14,9 @@
 
     <mvc:annotation-driven>
         <mvc:message-converters>
+            <bean id="jacksonHttpMessageConverter"
+                  class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+            </bean>
             <bean id="stringHttpMessageConverter"
                   class="org.springframework.http.converter.StringHttpMessageConverter">
                 <constructor-arg value="UTF-8" />

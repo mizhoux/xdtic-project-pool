@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xdtic.projpool.dao.AdminMapper">
+    
+    <resultMap id="BaseResultMap" type="xdtic.projpool.model.Admin">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="password" jdbcType="VARCHAR" property="password" />
+        <result column="realname" jdbcType="VARCHAR" property="realname" />
+        <result column="phone" jdbcType="CHAR" property="phone" />
+        <result column="email" jdbcType="CHAR" property="email" />
+    </resultMap>
+    
+    <select id="getAdmin" resultMap="BaseResultMap" >
+        SELECT id, username, password, realname, phone, email 
+        FROM admin AS a
+        WHERE a.username = #{arg0} AND a.password = #{arg1}
+    </select>
+    
+</mapper>

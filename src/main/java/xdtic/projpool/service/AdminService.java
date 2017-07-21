@@ -3,10 +3,11 @@ package xdtic.projpool.service;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import xdtic.projpool.dao.AdminDao;
+import xdtic.projpool.dao.AdminMapper;
 import xdtic.projpool.model.Admin;
 
 /**
+ * Admin Service
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
@@ -14,10 +15,12 @@ import xdtic.projpool.model.Admin;
 public class AdminService {
 
     @Autowired
-    private AdminDao adminDao;
+    private AdminMapper adminMapper;
 
     public Optional<Admin> getAdmin(String username, String password) {
-        return adminDao.getAdmin(username, password);
+        Admin admin = adminMapper.getAdmin(username, password);
+
+        return Optional.ofNullable(admin);
     }
 
 }
