@@ -91,12 +91,16 @@
     </listener>
 
     <servlet>
-        <servlet-name>XDTIC</servlet-name>
+        <servlet-name>XDTIC-ProjectPool</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:springmvc-servlet.xml</param-value>
+        </init-param>
     </servlet>
     <servlet-mapping>
-        <servlet-name>XDTIC</servlet-name>
+        <servlet-name>XDTIC-ProjectPool</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
     
