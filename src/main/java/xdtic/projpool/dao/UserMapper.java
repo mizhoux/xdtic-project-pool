@@ -4,6 +4,11 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import xdtic.projpool.model.User;
 
+/**
+ * User Mapper
+ *
+ * @author Michael Chow <mizhoux@gmail.com>
+ */
 public interface UserMapper {
 
     User getUser(String username, String password);
@@ -12,9 +17,13 @@ public interface UserMapper {
 
     Integer getUserId(String username);
 
+    String getUsername(Integer id);
+
     Integer getUserIdByEmail(String email);
 
     Integer getUserIdByPhone(String phone);
+
+    List<Integer> getCollectedProIds(Integer id);
 
     long countUsers(@Param("condition") String condition);
 

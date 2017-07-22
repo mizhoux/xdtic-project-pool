@@ -6,6 +6,7 @@
     <typeAliases>  
         <typeAlias alias="Admin" type="xdtic.projpool.model.Admin" />  
         <typeAlias alias="User" type="xdtic.projpool.model.User" />
+        <typeAlias alias="Project" type="xdtic.projpool.model.Project" />
     </typeAliases>
     
     <plugins>  

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xdtic.projpool.dao.MessageMapper">
+    
+    <resultMap id="BaseResultMap" type="xdtic.projpool.model.Message">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="user_id" jdbcType="INTEGER" property="userId" />
+        <result column="pro_id" jdbcType="INTEGER" property="proId" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+        <result column="read" jdbcType="BIT" property="read" />
+    </resultMap>
+   
+    <insert id="addMessage" parameterType="xdtic.projpool.model.Message">
+        insert into message (id, user_id, pro_id, 
+        content, creation_date, `read`)
+        values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{proId,jdbcType=INTEGER}, 
+        #{content,jdbcType=VARCHAR}, NOW(), #{read,jdbcType=BIT})
+    </insert>
+   
+    <update id="setMessagesRead">
+        UPDATE message m SET m.`read` = TRUE WHERE m.id IN
+        <foreach collection="list" item="mid" separator="," open="(" close=")">
+            #{mid}
+        </foreach>
+    </update>
+    
+    <select id="getMessage" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select id, user_id, pro_id, content, creation_date, `read`
+        from message
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+   
+    <select id="getMessagesByUserId" parameterType="Integer" resultMap="BaseResultMap">
+        select id, user_id, pro_id, content, creation_date, `read`
+        from message
+        where user_id = #{arg0}
+        ORDER BY creation_date DESC
+    </select>
+    
+    <select id="countMessagesByUserId" parameterType="Integer" resultType="Long">
+        SELECT COUNT(*) FROM message WHERE user_id = #{arg0}
+    </select>
+    
+    <select id="countUnreadMessagesByUserId" parameterType="Integer" resultType="Long">
+        SELECT COUNT(*) FROM message m WHERE m.user_id = #{arg0} AND m.read = FALSE
+    </select>
+</mapper>

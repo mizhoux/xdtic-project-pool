@@ -4,13 +4,14 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import xdtic.projpool.dao.MessageDao;
+import xdtic.projpool.dao.MessageMapper;
 import xdtic.projpool.dao.ProjectDao;
-import xdtic.projpool.dao.SignInfoDao;
+import xdtic.projpool.dao.SignInfoMapper;
 import xdtic.projpool.model.Message;
 import xdtic.projpool.model.SignInfo;
 
 /**
+ * Sign Info Service
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
@@ -21,29 +22,30 @@ public class SignInfoService {
     private ProjectDao projectDao;
 
     @Autowired
-    private MessageDao messageDao;
+    private MessageMapper messageMapper;
 
     @Autowired
-    private SignInfoDao signInfoDao;
+    private SignInfoMapper signInfoMapper;
 
     public boolean addSignInfo(SignInfo si) {
 
-        boolean success = signInfoDao.addSignInfo(si);
-        if (success) {
+        int result = signInfoMapper.addSignInfo(si);
+        if (result == 1) {
             projectDao.getProject(si.getProId())
                     .map(pro -> Message.of(pro, Message.Type.JOIN))
-                    .ifPresent(msg -> messageDao.addMessage(msg));
+                    .ifPresent(msg -> messageMapper.addMessage(msg));
         }
 
-        return success;
+        return result == 1;
     }
 
     public Optional<SignInfo> getSignInfo(Integer id) {
-        return signInfoDao.getSignInfo(id);
+        SignInfo signInfo = signInfoMapper.getSignInfo(id);
+        return Optional.ofNullable(signInfo);
     }
 
     public List<SignInfo> getSignInfos(Integer proId) {
-        return signInfoDao.getSignInfos(proId);
+        return signInfoMapper.getSignInfosByProId(proId);
     }
 
 }

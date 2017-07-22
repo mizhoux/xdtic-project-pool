@@ -59,20 +59,21 @@ public class ProjectDao {
 
     private static final String SQL_UPDATE_PROJECT
             = "UPDATE project SET content = ?, recruit = ?, contact = ? "
-            + "WHERE user_id = ? AND id = ?";
+            + "WHERE id = ?";
 
     public boolean updateProject(Project project) {
         return jdbcTmpl.update(SQL_UPDATE_PROJECT, project.getContent(),
-                project.getRecruit(), project.getContact(), project.getUserId(), project.getId()) == 1;
+                project.getRecruit(), project.getContact(), project.getId()) == 1;
     }
 
     private static final String SQL_UPDATE_PROJECT_WITH_STATUS
-            = "UPDATE project SET content = ?, recruit = ?, contact = ?, status = ?, date = NOW()"
-            + "WHERE user_id = ? AND id = ?";
+            = "UPDATE project SET content = ?, recruit = ?, contact = ?, status = ?"
+            + "WHERE id = ?";
 
     public boolean updateProjectWithStatus(Project project) {
-        return jdbcTmpl.update(SQL_UPDATE_PROJECT_WITH_STATUS, project.getContent(), project.getRecruit(),
-                project.getContact(), project.getStatus(), project.getUserId(), project.getId()) == 1;
+        return jdbcTmpl.update(SQL_UPDATE_PROJECT_WITH_STATUS,
+                project.getContent(), project.getRecruit(),
+                project.getContact(), project.getStatus(), project.getId()) == 1;
     }
 
     public Optional<Project> getProject(Integer id) {
@@ -110,10 +111,9 @@ public class ProjectDao {
      *
      * @param keyword
      * @param hotSize
-     * @param userId 当前 session 中的用户，用来判断项目是否已经被该用户收藏
      * @return
      */
-    public List<Project> getHotProjects(String keyword, int hotSize, Integer userId) {
+    public List<Project> getHotProjects(String keyword, int hotSize) {
 
         String sql = "SELECT p.* FROM project AS p, "
                 + "(SELECT ps.pro_id, COUNT(*) AS num FROM pro_stars ps GROUP BY ps.pro_id ORDER BY num DESC LIMIT ?) AS t "

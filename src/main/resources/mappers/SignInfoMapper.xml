@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xdtic.projpool.dao.SignInfoMapper">
+    
+    <resultMap id="BaseResultMap" type="xdtic.projpool.model.SignInfo">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="user_id" jdbcType="INTEGER" property="userId" />
+        <result column="pro_id" jdbcType="INTEGER" property="proId" />
+        <result column="apply" jdbcType="VARCHAR" property="apply" />
+        <result column="skill" jdbcType="VARCHAR" property="skill" />
+        <result column="experience" jdbcType="VARCHAR" property="experience" />
+        <result column="sign_date" jdbcType="TIMESTAMP" property="signDate" />
+    </resultMap>
+
+    <insert id="addSignInfo" parameterType="xdtic.projpool.model.SignInfo">
+        INSERT INTO sign_info (id, user_id, pro_id, apply, skill, experience, sign_date)
+        VALUES (
+        #{id,jdbcType=INTEGER}, 
+        #{userId,jdbcType=INTEGER},
+        #{proId,jdbcType=INTEGER}, 
+        #{apply,jdbcType=VARCHAR}, 
+        #{skill,jdbcType=VARCHAR}, 
+        #{experience,jdbcType=VARCHAR}, NOW())
+    </insert>
+    
+    <select id="getSignInfo" parameterType="Integer" resultMap="BaseResultMap">
+        SELECT u.username, s.* FROM sign_info s, user u
+        WHERE s.id = #{arg0} AND u.id = s.user_id
+    </select>
+    
+    <select id="getSignInfosByProId" parameterType="Integer" resultMap="BaseResultMap">
+        SELECT u.username, s.* FROM sign_info s, user u 
+        WHERE pro_id = #{arg0} AND u.id = s.user_id
+    </select>
+    
+    <select id="containsSignInfo" resultType="Long">
+        SELECT COUNT(*) FROM sign_info WHERE user_id = #{arg0} AND pro_id = #{arg1}
+    </select>
+</mapper>

@@ -94,6 +94,12 @@
         WHERE u.username = #{arg0}
     </select>
     
+    <select id="getUsername" parameterType="Integer" resultType="String">
+        SELECT username
+        FROM user u
+        WHERE u.id = #{arg0}
+    </select>
+    
     <select id="getUserIdByEmail" parameterType="String" resultType="Integer">
         SELECT id
         FROM user u
@@ -115,6 +121,10 @@
         major, skill, experience
         from user
         where ${condition}
+    </select>
+    
+    <select id="getCollectedProIds" parameterType="Integer" resultType="Integer">
+        SELECT ps.pro_id FROM pro_stars ps WHERE ps.user_id = #{arg0}
     </select>
     
 </mapper>

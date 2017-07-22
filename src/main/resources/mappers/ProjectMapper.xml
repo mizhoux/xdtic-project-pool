@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="xdtic.projpool.dao.ProjectMapper">
+    
+    <resultMap id="BaseResultMap" type="xdtic.projpool.model.Project">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="tag" jdbcType="VARCHAR" property="tag" />
+        <result column="status" jdbcType="TINYINT" property="status" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="contact" jdbcType="VARCHAR" property="contact" />
+        <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+        <result column="user_id" jdbcType="INTEGER" property="userId" />
+        <result column="username" jdbcType="VARCHAR" property="username" />
+        <result column="recruit" jdbcType="LONGVARCHAR" property="recruit" />
+    </resultMap>
+    
+    <insert id="addProject" parameterType="Project" useGeneratedKeys="true" keyProperty="id">
+        insert into project (id, name, tag, 
+        status, content, contact, 
+        creation_date, user_id, username, 
+        recruit)
+        values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
+        #{status,jdbcType=TINYINT}, #{content,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
+        #{creationDate,jdbcType=TIMESTAMP}, #{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, 
+        #{recruit,jdbcType=LONGVARCHAR})
+    </insert>
+    
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+        delete from project
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    
+    <insert id="insert" parameterType="xdtic.projpool.model.Project">
+        <selectKey keyProperty="id" order="BEFORE" resultType="java.lang.Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into project (id, name, tag, 
+        status, content, contact, 
+        creation_date, user_id, username, 
+        recruit)
+        values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
+        #{status,jdbcType=TINYINT}, #{content,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
+        #{creationDate,jdbcType=TIMESTAMP}, #{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, 
+        #{recruit,jdbcType=LONGVARCHAR})
+    </insert>
+    
+    <update id="updateByPrimaryKey" parameterType="xdtic.projpool.model.Project">
+        update project
+        set name = #{name,jdbcType=VARCHAR},
+        tag = #{tag,jdbcType=VARCHAR},
+        status = #{status,jdbcType=TINYINT},
+        content = #{content,jdbcType=VARCHAR},
+        contact = #{contact,jdbcType=VARCHAR},
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+        user_id = #{userId,jdbcType=INTEGER},
+        username = #{username,jdbcType=VARCHAR},
+        recruit = #{recruit,jdbcType=LONGVARCHAR}
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+    
+    <select id="selectByPrimaryKey" parameterType="Integer" resultMap="BaseResultMap">
+        select id, name, tag, status, content, contact, creation_date, user_id, username, 
+        recruit
+        from project
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    
+    <select id="getHotProjects" parameterType="String" resultMap="BaseResultMap">
+        SELECT p.* FROM project AS p, 
+        (SELECT ps.pro_id, COUNT(*) AS num FROM pro_stars ps GROUP BY ps.pro_id ORDER BY num DESC) AS t
+        WHERE p.status = 1 AND p.id = t.pro_id AND ${condition}
+    </select>
+    
+    <select id="getAcceptedProjects" parameterType="String" resultMap="BaseResultMap">
+        SELECT p.* FROM project AS p 
+        WHERE  p.status = 1 AND ${condition}
+        ORDER  BY creation_date DESC
+    </select>
+    
+    <select id="countAcceptedProjects" parameterType="String" resultType="Long">
+        SELECT COUNT(*) FROM project p
+        WHERE p.status = 1 AND ${condition}
+    </select>
+    
+    <select id="getUncheckedProjects" parameterType="String" resultMap="BaseResultMap">
+        SELECT p.* FROM project AS p 
+        WHERE p.status = 0 AND ${condition}
+        ORDER BY creation_date DESC
+    </select>
+    
+    <select id="countUncheckedProjects" parameterType="String" resultType="Long">
+        SELECT COUNT(*) FROM project p 
+        WHERE p.status = 0 AND ${condition}
+    </select>
+    
+    <select id="getPostedProjects" parameterType="Integer" resultMap="BaseResultMap">
+        SELECT p.* FROM project p 
+        WHERE p.user_id = #{arg0} ORDER BY creation_date DESC
+    </select>
+    
+    <select id="countPostedProjects" parameterType="Integer" resultType="Long">
+        SELECT COUNT(*) FROM project WHERE user_id = #{arg0}
+    </select>
+    
+    <select id="getCollectedProjects" parameterType="Integer" resultMap="BaseResultMap">
+        SELECT p.* FROM project p
+        WHERE p.id IN 
+        (SELECT ps.pro_id FROM pro_stars ps WHERE ps.user_id = #{arg0})
+    </select>
+    
+    <select id="countCollectedProjects" parameterType="Integer" resultType="Long">
+        SELECT COUNT(*) FROM project p 
+        WHERE p.id IN 
+        (SELECT ps.pro_id FROM pro_stars ps WHERE ps.user_id = #{arg0})
+    </select>
+    
+    <select id="getJoinedProjects" parameterType="Integer" resultMap="BaseResultMap">
+        SELECT p.* FROM project p 
+        WHERE p.id IN (SELECT s.pro_id FROM sign_info s WHERE s.user_id = #{arg0}) 
+        ORDER BY creation_date DESC
+    </select>
+    
+    <select id="countJoinedProjects" parameterType="Integer" resultType="Long">
+        SELECT COUNT(*) FROM project p WHERE p.id IN 
+        (SELECT s.pro_id FROM sign_info s WHERE s.user_id = #{arg0})
+    </select>
+    
+    <insert id="addCollection">
+        INSERT INTO pro_stars SET user_id = #{arg0}, pro_id = #{arg1}
+    </insert>
+    
+    <delete id="deleteCollection">
+        DELETE FROM pro_stars WHERE user_id = #{arg0} AND pro_id = #{arg1}
+    </delete>
+    
+    <select id="containsCollection" resultType="Long">
+        SELECT COUNT(*) FROM pro_stars WHERE user_id = #{arg0} AND pro_id = #{arg1}
+    </select>
+    
+    <update id="updateProjectWithStatus" parameterType="xdtic.projpool.model.Project">
+        update project set 
+        status = #{status,jdbcType=TINYINT},
+        content = #{content,jdbcType=VARCHAR},
+        contact = #{contact,jdbcType=VARCHAR},
+        recruit = #{recruit,jdbcType=LONGVARCHAR}
+        where id = #{id}
+    </update>
+    
+    <update id="updateProject" parameterType="xdtic.projpool.model.Project">
+        update project set 
+        content = #{content,jdbcType=VARCHAR},
+        contact = #{contact,jdbcType=VARCHAR},
+        recruit = #{recruit,jdbcType=LONGVARCHAR}
+        where id = #{id}
+    </update>
+    
+    <update id="updateProjectStatus">
+        UPDATE project SET status = #{arg1} WHERE id = #{arg0}
+    </update>
+    
+</mapper>

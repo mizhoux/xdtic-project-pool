@@ -1,14 +1,16 @@
 package xdtic.projpool.service;
 
+import com.github.pagehelper.PageHelper;
 import java.util.List;
 import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import xdtic.projpool.dao.MessageDao;
+import xdtic.projpool.dao.MessageMapper;
 import xdtic.projpool.model.Message;
 import xdtic.projpool.model.PagingModel;
 
 /**
+ * Message Service
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
@@ -16,35 +18,46 @@ import xdtic.projpool.model.PagingModel;
 public class MessageService {
 
     @Autowired
-    private MessageDao messageDao;
+    private MessageMapper messageMapper;
 
     public boolean addMessage(Message msg) {
-        return messageDao.addMessage(msg);
+        int result = messageMapper.addMessage(msg);
+
+        return result == 1;
     }
 
-    public List<Message> getMessages(Integer userId, int pageNum, int pageSize) {
-        int offset = pageNum * pageSize;
-        return messageDao.getMessages(userId, offset, pageSize);
+    public List<Message> getMessagesByUserId(Integer userId, int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum + 1, pageSize);
+        
+        List<Message> messages = messageMapper.getMessagesByUserId(userId);
+
+        return messages;
     }
 
     public PagingModel<Message> getPagingMessages(Integer userId, int pageNum, int pageSize) {
 
-        Supplier<List<Message>> msgs = () -> getMessages(userId, pageNum, pageSize);
+        Supplier<List<Message>> msgs = () -> getMessagesByUserId(userId, pageNum, pageSize);
         Supplier<Long> totalNumOfMsgs = () -> countMessages(userId);
 
         return PagingModel.of("msgs", msgs, totalNumOfMsgs, pageNum, pageSize);
     }
 
     public long countMessages(Integer userId) {
-        return messageDao.countMessages(userId);
+        return messageMapper.countMessagesByUserId(userId);
     }
 
     public boolean setMessagesRead(List<Integer> ids) {
-        return ids.isEmpty() ? true : messageDao.setMessagesRead(ids);
+        if (ids.isEmpty()) {
+            return true;
+        }
+
+        int result = messageMapper.setMessagesRead(ids);
+
+        return result > 0;
     }
 
     public long countUnreadMessages(Integer userId) {
-        return messageDao.countUnreadMessages(userId);
+        return messageMapper.countUnreadMessagesByUserId(userId);
     }
 
 }
