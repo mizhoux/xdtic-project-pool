@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import xdtic.projpool.util.RemoteAddressCache;
 import xdtic.projpool.model.Admin;
 import xdtic.projpool.model.PagingModel;
 import xdtic.projpool.model.Project;
@@ -23,8 +22,10 @@ import xdtic.projpool.model.User;
 import xdtic.projpool.service.AdminService;
 import xdtic.projpool.service.ProjectService;
 import xdtic.projpool.service.UserService;
+import xdtic.projpool.util.RemoteAddressCache;
 
 /**
+ * Admin Function
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */

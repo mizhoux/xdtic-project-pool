@@ -12,6 +12,10 @@ import javax.validation.constraints.Size;
  */
 public class Project {
 
+    public static final byte STATUS_UNCHECK = 0;
+    public static final byte STATUS_ACCEPTED = 1;
+    public static final byte STATUS_REJECTED = 2;
+
     private Integer id;
 
     @NotNull(message = "用户 ID 不能为 null")

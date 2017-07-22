@@ -5,9 +5,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xdtic.projpool.dao.MessageMapper;
-import xdtic.projpool.dao.ProjectDao;
+import xdtic.projpool.dao.ProjectMapper;
 import xdtic.projpool.dao.SignInfoMapper;
 import xdtic.projpool.model.Message;
+import xdtic.projpool.model.Project;
 import xdtic.projpool.model.SignInfo;
 
 /**
@@ -19,7 +20,7 @@ import xdtic.projpool.model.SignInfo;
 public class SignInfoService {
 
     @Autowired
-    private ProjectDao projectDao;
+    private ProjectMapper projectMapper;
 
     @Autowired
     private MessageMapper messageMapper;
@@ -31,11 +32,11 @@ public class SignInfoService {
 
         int result = signInfoMapper.addSignInfo(si);
         if (result == 1) {
-            projectDao.getProject(si.getProId())
-                    .map(pro -> Message.of(pro, Message.Type.JOIN))
-                    .ifPresent(msg -> messageMapper.addMessage(msg));
+            Project project = projectMapper.getProject(si.getProId());
+            if (project != null) {
+                messageMapper.addMessage(Message.of(project, Message.Type.JOIN));
+            }
         }
-
         return result == 1;
     }
 

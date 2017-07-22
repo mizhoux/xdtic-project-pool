@@ -15,23 +15,19 @@ public interface UserMapper {
 
     User getUserById(Integer id);
 
-    Integer getUserId(String username);
+    Integer getUserIdByUsername(String username);
 
-    String getUsername(Integer id);
+    String getUsernameById(Integer id);
 
     Integer getUserIdByEmail(String email);
 
     Integer getUserIdByPhone(String phone);
 
-    List<Integer> getCollectedProIds(Integer id);
-
     long countUsers(@Param("condition") String condition);
 
     List<User> getUsers(@Param("condition") String condition);
 
-    List<User> getAllUsers();
-
-    int updateUser(User record);
+    int updateUser(User user);
 
     int updatePassword(String username, String oldPassword, String newPassword);
 
@@ -41,6 +37,5 @@ public interface UserMapper {
 
     int deleteUsers(List<Integer> ids);
 
-    int insert(User record);
-
+    List<Integer> getCollectedProIds(Integer id);
 }

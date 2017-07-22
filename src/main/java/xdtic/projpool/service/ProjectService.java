@@ -48,7 +48,7 @@ public class ProjectService {
     //@CachePut(value = CACHE_NAME, key = "#result.id", unless = "#result == null")
     public Optional<Project> addProject(Project project) {
 
-        String username = userMapper.getUsername(project.getUserId());
+        String username = userMapper.getUsernameById(project.getUserId());
         if (username == null) {
             return Optional.empty();
         }
@@ -67,7 +67,7 @@ public class ProjectService {
 
     @Cacheable(value = CACHE_NAME, key = "#id", unless = "#result == null")
     public Optional<Project> getProject(Integer id) {
-        return Optional.ofNullable(projectMapper.selectByPrimaryKey(id))
+        return Optional.ofNullable(projectMapper.getProject(id))
                 .map(this::makeTagsForFront);
     }
 
@@ -199,7 +199,7 @@ public class ProjectService {
 
     @CacheEvict(value = CACHE_NAME, key = "#proId")
     public boolean deleteProject(Integer proId) {
-        return projectMapper.deleteByPrimaryKey(proId) == 1;
+        return projectMapper.deleteProject(proId) == 1;
     }
 
     public PagingModel<Project> getPagingUncheckedProjects(String keyword, int pageNum, int pageSize) {
@@ -256,7 +256,7 @@ public class ProjectService {
     @CacheEvict(value = CACHE_NAME, key = "#project.id")
     public boolean updateProject(Project project, boolean reject) {
         if (reject) {
-            project.setStatus((byte) 0);
+            project.setStatus(Project.STATUS_UNCHECK);
             return projectMapper.updateProjectWithStatus(project) == 1;
         }
 
@@ -269,7 +269,7 @@ public class ProjectService {
 
         switch (operation) {
             case "reject":
-                success = projectMapper.updateProjectStatus(proId, 2) == 1;
+                success = projectMapper.updateProjectStatus(proId, Project.STATUS_REJECTED) == 1;
                 if (success) {
                     getProject(proId)
                             .map(p -> Message.of(p, Message.Type.REJECT, comment))
@@ -277,7 +277,7 @@ public class ProjectService {
                 }
                 break;
             case "accept":
-                success = projectMapper.updateProjectStatus(proId, 1) == 1;
+                success = projectMapper.updateProjectStatus(proId, Project.STATUS_ACCEPTED) == 1;
                 if (success) {
                     getProject(proId)
                             .map(p -> Message.of(p, Message.Type.PASS))

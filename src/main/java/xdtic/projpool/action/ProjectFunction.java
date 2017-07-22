@@ -20,6 +20,7 @@ import xdtic.projpool.service.ProjectService;
 import xdtic.projpool.service.SignInfoService;
 
 /**
+ * Project Function
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */

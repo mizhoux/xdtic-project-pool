@@ -10,7 +10,7 @@ import xdtic.projpool.model.SignInfo;
  */
 public interface SignInfoMapper {
 
-    int addSignInfo(SignInfo record);
+    int addSignInfo(SignInfo signInfo);
 
     SignInfo getSignInfo(Integer id);
 

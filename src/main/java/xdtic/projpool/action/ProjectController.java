@@ -15,6 +15,7 @@ import xdtic.projpool.service.SignInfoService;
 import xdtic.projpool.service.UserService;
 
 /**
+ * Project Controller
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */

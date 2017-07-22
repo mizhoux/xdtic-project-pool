@@ -57,7 +57,7 @@ public class UserService {
     }
 
     public boolean containsUsername(String username) {
-        Integer userId = userMapper.getUserId(username);
+        Integer userId = userMapper.getUserIdByUsername(username);
 
         return userId != null;
     }
@@ -107,7 +107,7 @@ public class UserService {
     }
 
     public RespCode validUser(User user) {
-        Integer userId = userMapper.getUserId(user.getUsername());
+        Integer userId = userMapper.getUserIdByUsername(user.getUsername());
 
         if (userId != null && !userId.equals(user.getId())) {
             return RespCode.errorOf("用户名已被使用");

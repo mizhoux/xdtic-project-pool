@@ -29,9 +29,11 @@
         <property name="acquireRetryAttempts" value="${jdbc.acquireRetryAttempts}" />
     </bean>
     
+    <!--    
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">  
         <property name="dataSource" ref="dataSource" />  
     </bean> 
+    -->
     
     <!-- Spring 和 MyBatis 整合 -->  
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">  
@@ -67,7 +69,7 @@
     </tx:advice>
     
     <aop:config expose-proxy="true">
-        <!-- 只对业务逻辑层实施事务 -->
+        <!-- 只对 Service 实施事务 -->
         <aop:pointcut id="txPointcut" expression="execution(* xdtic.projpool.service..*.*(..))" />
         <aop:advisor pointcut-ref="txPointcut" advice-ref="txAdvice"/>
     </aop:config>

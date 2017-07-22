@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import xdtic.projpool.model.RespCode;
 
 /**
+ * Gobal Exception Handler
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */

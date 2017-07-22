@@ -11,17 +11,11 @@ import xdtic.projpool.model.Project;
  */
 public interface ProjectMapper {
 
+    Project getProject(Integer id);
+
     int addProject(Project project);
 
-    int deleteByPrimaryKey(Integer id);
-
-    int insert(Project record);
-
-    Project selectByPrimaryKey(Integer id);
-
-    List<Project> selectAll();
-
-    int updateByPrimaryKey(Project record);
+    int deleteProject(Integer id);
 
     List<Project> getAcceptedProjects(@Param("condition") String condition);
 

@@ -11,6 +11,7 @@ import xdtic.projpool.model.Project;
 import xdtic.projpool.service.ProjectService;
 
 /**
+ * Admin Controller
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */

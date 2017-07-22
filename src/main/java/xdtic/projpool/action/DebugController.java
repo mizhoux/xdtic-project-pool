@@ -27,6 +27,7 @@ import xdtic.projpool.util.Log;
 import xdtic.projpool.util.RemoteAddressCache;
 
 /**
+ * Debug Controller
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */

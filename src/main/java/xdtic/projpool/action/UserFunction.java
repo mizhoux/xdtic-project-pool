@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import xdtic.projpool.util.RemoteAddressCache;
 import xdtic.projpool.model.Message;
 import xdtic.projpool.model.PagingModel;
 import xdtic.projpool.model.RespCode;
@@ -27,9 +26,10 @@ import xdtic.projpool.model.User;
 import xdtic.projpool.service.MessageService;
 import xdtic.projpool.service.ProjectService;
 import xdtic.projpool.service.UserService;
+import xdtic.projpool.util.RemoteAddressCache;
 
 /**
- * api 功能 <br>
+ * 用户操作的 API 功能 <br>
  * 功能包括：用户注册、登录、修改个人信息、修改密码，验证用户是否已经存在，获得用户当前的系统消息
  *
  * @author Michael Chow <mizhoux@gmail.com>
