@@ -1,3 +1,4 @@
+;/*!/static/js/user/profile.js*/
 /**
  * @fileOverview for profile.jsp
  * @Author       adoug

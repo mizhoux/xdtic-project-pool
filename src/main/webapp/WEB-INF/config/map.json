@@ -1,5 +1,278 @@
 {
     "res": {
+        "static/js/admin/index.js": {
+            "uri": "/xdtic/static/js/admin/index.js",
+            "type": "js"
+        },
+        "static/js/admin/project/check.js": {
+            "uri": "/xdtic/static/js/admin/project/check.js",
+            "type": "js",
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
+        "static/js/admin/project/detail.js": {
+            "uri": "/xdtic/static/js/admin/project/detail.js",
+            "type": "js",
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
+        "static/js/admin/project/look.js": {
+            "uri": "/xdtic/static/js/admin/project/look.js",
+            "type": "js",
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
+        "static/js/admin/user/look.js": {
+            "uri": "/xdtic/static/js/admin/user/look.js",
+            "type": "js",
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
+        "static/js/hall/hall.js": {
+            "uri": "/xdtic/static/js/hall/hall.js",
+            "type": "js",
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ],
+            "pkg": "p2"
+        },
+        "static/js/module/formSerialize.js": {
+            "uri": "/xdtic/static/js/module/formSerialize.js",
+            "type": "js",
+            "extras": {
+                "moduleId": "static/js/module/formSerialize"
+            },
+            "pkg": "p1"
+        },
+        "static/js/module/tools.js": {
+            "uri": "/xdtic/static/js/module/tools.js",
+            "type": "js",
+            "extras": {
+                "moduleId": "static/js/module/tools"
+            },
+            "pkg": "p1"
+        },
+        "static/js/myProject/myCollect/toJoin.js": {
+            "uri": "/xdtic/static/js/myProject/myCollect/toJoin.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "static/js/module/tools.js"
+            ]
+        },
+        "static/js/myProject/myPost/editDetail.js": {
+            "uri": "/xdtic/static/js/myProject/myPost/editDetail.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "static/js/module/tools.js"
+            ]
+        },
+        "static/js/myProject/myProject.js": {
+            "uri": "/xdtic/static/js/myProject/myProject.js",
+            "type": "js",
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "static/js/module/tools.js"
+            ]
+        },
+        "static/js/myProject/postProject.js": {
+            "uri": "/xdtic/static/js/myProject/postProject.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "static/js/module/tools.js"
+            ]
+        },
+        "static/js/user/center.js": {
+            "uri": "/xdtic/static/js/user/center.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ],
+            "pkg": "p8"
+        },
+        "static/js/user/login.js": {
+            "uri": "/xdtic/static/js/user/login.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "node_modules/crypto-js/md5.js",
+                "static/js/module/formSerialize.js",
+                "static/js/module/tools.js"
+            ],
+            "pkg": "p3"
+        },
+        "static/js/user/msgs.js": {
+            "uri": "/xdtic/static/js/user/msgs.js",
+            "type": "js",
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ],
+            "pkg": "p4"
+        },
+        "static/js/user/profile.js": {
+            "uri": "/xdtic/static/js/user/profile.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "static/js/module/tools.js"
+            ],
+            "pkg": "p5"
+        },
+        "static/js/user/register.js": {
+            "uri": "/xdtic/static/js/user/register.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ],
+            "pkg": "p6"
+        },
+        "static/js/user/resetPass.js": {
+            "uri": "/xdtic/static/js/user/resetPass.js",
+            "type": "js",
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "node_modules/crypto-js/md5.js"
+            ],
+            "pkg": "p7"
+        },
+        "static/libs/admin/common.js": {
+            "uri": "/xdtic/static/libs/admin/common.js",
+            "type": "js"
+        },
+        "static/libs/common.js": {
+            "uri": "/xdtic/static/libs/common.js",
+            "type": "js",
+            "pkg": "p0"
+        },
+        "static/libs/mod.js": {
+            "uri": "/xdtic/static/libs/mod.js",
+            "type": "js",
+            "pkg": "p0"
+        },
+        "static/libs/vue-tap.js": {
+            "uri": "/xdtic/static/libs/vue-tap.js",
+            "type": "js",
+            "pkg": "p0"
+        },
+        "static/libs/vue.js": {
+            "uri": "/xdtic/static/libs/vue.js",
+            "type": "js",
+            "pkg": "p0"
+        },
+        "static/scss/admin/common.scss": {
+            "uri": "/xdtic/static/scss/admin/common.css",
+            "type": "css"
+        },
+        "static/scss/admin/index.scss": {
+            "uri": "/xdtic/static/scss/admin/index.css",
+            "type": "css"
+        },
+        "static/scss/admin/projectCheck.scss": {
+            "uri": "/xdtic/static/scss/admin/projectCheck.css",
+            "type": "css"
+        },
+        "static/scss/admin/projectDetail.scss": {
+            "uri": "/xdtic/static/scss/admin/projectDetail.css",
+            "type": "css"
+        },
+        "static/scss/admin/projectLook.scss": {
+            "uri": "/xdtic/static/scss/admin/projectLook.css",
+            "type": "css"
+        },
+        "static/scss/admin/semantic.css": {
+            "uri": "/xdtic/static/scss/admin/semantic.css",
+            "type": "css"
+        },
+        "static/scss/admin/userLook.scss": {
+            "uri": "/xdtic/static/scss/admin/userLook.css",
+            "type": "css"
+        },
+        "static/scss/center.scss": {
+            "uri": "/xdtic/static/scss/center.css",
+            "type": "css"
+        },
+        "static/scss/common.scss": {
+            "uri": "/xdtic/static/scss/common.css",
+            "type": "css",
+            "pkg": "p13"
+        },
+        "static/scss/detailPost.scss": {
+            "uri": "/xdtic/static/scss/detailPost.css",
+            "type": "css"
+        },
+        "static/scss/editDetailPost.scss": {
+            "uri": "/xdtic/static/scss/editDetailPost.css",
+            "type": "css"
+        },
+        "static/scss/hall.scss": {
+            "uri": "/xdtic/static/scss/hall.css",
+            "type": "css"
+        },
+        "static/scss/msgs.scss": {
+            "uri": "/xdtic/static/scss/msgs.css",
+            "type": "css"
+        },
+        "static/scss/myProject.scss": {
+            "uri": "/xdtic/static/scss/myProject.css",
+            "type": "css"
+        },
+        "static/scss/postProject.scss": {
+            "uri": "/xdtic/static/scss/postProject.css",
+            "type": "css"
+        },
+        "static/scss/profile.scss": {
+            "uri": "/xdtic/static/scss/profile.css",
+            "type": "css"
+        },
+        "static/scss/register.scss": {
+            "uri": "/xdtic/static/scss/register.css",
+            "type": "css"
+        },
+        "static/scss/signDetail.scss": {
+            "uri": "/xdtic/static/scss/signDetail.css",
+            "type": "css"
+        },
+        "static/scss/signInfo.scss": {
+            "uri": "/xdtic/static/scss/signInfo.css",
+            "type": "css"
+        },
+        "static/scss/toJoin.scss": {
+            "uri": "/xdtic/static/scss/toJoin.css",
+            "type": "css"
+        },
+        "static/scss/weui.css": {
+            "uri": "/xdtic/static/scss/weui.css",
+            "type": "css",
+            "pkg": "p13"
+        },
         "page/admin/index.jsp": {
             "uri": "/page/admin/index.jsp",
             "type": "jsp",
@@ -184,7 +457,8 @@
         },
         "page/widget/footer/nav.scss": {
             "uri": "/xdtic/static/page/widget/footer/nav.css",
-            "type": "css"
+            "type": "css",
+            "pkg": "p13"
         },
         "page/widget/header/projectDetailHeader.js": {
             "uri": "/xdtic/static/page/widget/header/projectDetailHeader.js",
@@ -227,263 +501,13 @@
             "uri": "/xdtic/static/page/widget/main/projectDetail.css",
             "type": "css"
         },
-        "static/js/admin/index.js": {
-            "uri": "/xdtic/static/js/admin/index.js",
-            "type": "js"
-        },
-        "static/js/admin/project/check.js": {
-            "uri": "/xdtic/static/js/admin/project/check.js",
-            "type": "js",
-            "deps": [
-                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js"
-            ]
-        },
-        "static/js/admin/project/detail.js": {
-            "uri": "/xdtic/static/js/admin/project/detail.js",
-            "type": "js",
-            "deps": [
-                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js"
-            ]
-        },
-        "static/js/admin/project/look.js": {
-            "uri": "/xdtic/static/js/admin/project/look.js",
-            "type": "js",
-            "deps": [
-                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js"
-            ]
-        },
-        "static/js/admin/user/look.js": {
-            "uri": "/xdtic/static/js/admin/user/look.js",
-            "type": "js",
-            "deps": [
-                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js"
-            ]
-        },
-        "static/js/hall/hall.js": {
-            "uri": "/xdtic/static/js/hall/hall.js",
-            "type": "js",
-            "deps": [
-                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js"
-            ]
-        },
-        "static/js/module/formSerialize.js": {
-            "uri": "/xdtic/static/js/module/formSerialize.js",
+        "node_modules/vue-infinite-scroll/vue-infinite-scroll.js": {
+            "uri": "/xdtic/static/node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
             "type": "js",
             "extras": {
-                "moduleId": "static/js/module/formSerialize"
-            }
-        },
-        "static/js/module/tools.js": {
-            "uri": "/xdtic/static/js/module/tools.js",
-            "type": "js",
-            "extras": {
-                "moduleId": "static/js/module/tools"
-            }
-        },
-        "static/js/myProject/myCollect/toJoin.js": {
-            "uri": "/xdtic/static/js/myProject/myCollect/toJoin.js",
-            "type": "js",
-            "deps": [
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js",
-                "static/js/module/tools.js"
-            ]
-        },
-        "static/js/myProject/myPost/editDetail.js": {
-            "uri": "/xdtic/static/js/myProject/myPost/editDetail.js",
-            "type": "js",
-            "deps": [
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js",
-                "static/js/module/tools.js"
-            ]
-        },
-        "static/js/myProject/myProject.js": {
-            "uri": "/xdtic/static/js/myProject/myProject.js",
-            "type": "js",
-            "deps": [
-                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js",
-                "static/js/module/tools.js"
-            ]
-        },
-        "static/js/myProject/postProject.js": {
-            "uri": "/xdtic/static/js/myProject/postProject.js",
-            "type": "js",
-            "deps": [
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js",
-                "static/js/module/tools.js"
-            ]
-        },
-        "static/js/user/center.js": {
-            "uri": "/xdtic/static/js/user/center.js",
-            "type": "js",
-            "deps": [
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js"
-            ]
-        },
-        "static/js/user/login.js": {
-            "uri": "/xdtic/static/js/user/login.js",
-            "type": "js",
-            "deps": [
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js",
-                "node_modules/crypto-js/md5.js",
-                "static/js/module/formSerialize.js",
-                "static/js/module/tools.js"
-            ]
-        },
-        "static/js/user/msgs.js": {
-            "uri": "/xdtic/static/js/user/msgs.js",
-            "type": "js",
-            "deps": [
-                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js"
-            ]
-        },
-        "static/js/user/profile.js": {
-            "uri": "/xdtic/static/js/user/profile.js",
-            "type": "js",
-            "deps": [
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js",
-                "static/js/module/tools.js"
-            ]
-        },
-        "static/js/user/register.js": {
-            "uri": "/xdtic/static/js/user/register.js",
-            "type": "js",
-            "deps": [
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js"
-            ]
-        },
-        "static/js/user/resetPass.js": {
-            "uri": "/xdtic/static/js/user/resetPass.js",
-            "type": "js",
-            "deps": [
-                "node_modules/es6-promise/dist/es6-promise.js",
-                "node_modules/whatwg-fetch/fetch.js",
-                "node_modules/crypto-js/md5.js"
-            ]
-        },
-        "static/libs/admin/common.js": {
-            "uri": "/xdtic/static/libs/admin/common.js",
-            "type": "js"
-        },
-        "static/libs/common.js": {
-            "uri": "/xdtic/static/libs/common.js",
-            "type": "js"
-        },
-        "static/libs/mod.js": {
-            "uri": "/xdtic/static/libs/mod.js",
-            "type": "js"
-        },
-        "static/libs/vue-tap.js": {
-            "uri": "/xdtic/static/libs/vue-tap.js",
-            "type": "js"
-        },
-        "static/libs/vue.js": {
-            "uri": "/xdtic/static/libs/vue.js",
-            "type": "js"
-        },
-        "static/scss/admin/common.scss": {
-            "uri": "/xdtic/static/scss/admin/common.css",
-            "type": "css"
-        },
-        "static/scss/admin/index.scss": {
-            "uri": "/xdtic/static/scss/admin/index.css",
-            "type": "css"
-        },
-        "static/scss/admin/projectCheck.scss": {
-            "uri": "/xdtic/static/scss/admin/projectCheck.css",
-            "type": "css"
-        },
-        "static/scss/admin/projectDetail.scss": {
-            "uri": "/xdtic/static/scss/admin/projectDetail.css",
-            "type": "css"
-        },
-        "static/scss/admin/projectLook.scss": {
-            "uri": "/xdtic/static/scss/admin/projectLook.css",
-            "type": "css"
-        },
-        "static/scss/admin/semantic.css": {
-            "uri": "/xdtic/static/scss/admin/semantic.css",
-            "type": "css"
-        },
-        "static/scss/admin/userLook.scss": {
-            "uri": "/xdtic/static/scss/admin/userLook.css",
-            "type": "css"
-        },
-        "static/scss/center.scss": {
-            "uri": "/xdtic/static/scss/center.css",
-            "type": "css"
-        },
-        "static/scss/common.scss": {
-            "uri": "/xdtic/static/scss/common.css",
-            "type": "css"
-        },
-        "static/scss/detailPost.scss": {
-            "uri": "/xdtic/static/scss/detailPost.css",
-            "type": "css"
-        },
-        "static/scss/editDetailPost.scss": {
-            "uri": "/xdtic/static/scss/editDetailPost.css",
-            "type": "css"
-        },
-        "static/scss/hall.scss": {
-            "uri": "/xdtic/static/scss/hall.css",
-            "type": "css"
-        },
-        "static/scss/msgs.scss": {
-            "uri": "/xdtic/static/scss/msgs.css",
-            "type": "css"
-        },
-        "static/scss/myProject.scss": {
-            "uri": "/xdtic/static/scss/myProject.css",
-            "type": "css"
-        },
-        "static/scss/postProject.scss": {
-            "uri": "/xdtic/static/scss/postProject.css",
-            "type": "css"
-        },
-        "static/scss/profile.scss": {
-            "uri": "/xdtic/static/scss/profile.css",
-            "type": "css"
-        },
-        "static/scss/register.scss": {
-            "uri": "/xdtic/static/scss/register.css",
-            "type": "css"
-        },
-        "static/scss/signDetail.scss": {
-            "uri": "/xdtic/static/scss/signDetail.css",
-            "type": "css"
-        },
-        "static/scss/signInfo.scss": {
-            "uri": "/xdtic/static/scss/signInfo.css",
-            "type": "css"
-        },
-        "static/scss/toJoin.scss": {
-            "uri": "/xdtic/static/scss/toJoin.css",
-            "type": "css"
-        },
-        "static/scss/weui.css": {
-            "uri": "/xdtic/static/scss/weui.css",
-            "type": "css"
+                "moduleId": "node_modules/vue-infinite-scroll/vue-infinite-scroll"
+            },
+            "pkg": "p1"
         },
         "node_modules/es6-promise/dist/es6-promise.js": {
             "uri": "/xdtic/static/node_modules/es6-promise/dist/es6-promise.js",
@@ -493,21 +517,16 @@
             },
             "deps": [
                 "node_modules/process/browser.js"
-            ]
+            ],
+            "pkg": "p1"
         },
         "node_modules/whatwg-fetch/fetch.js": {
             "uri": "/xdtic/static/node_modules/whatwg-fetch/fetch.js",
             "type": "js",
             "extras": {
                 "moduleId": "node_modules/whatwg-fetch/fetch"
-            }
-        },
-        "node_modules/vue-infinite-scroll/vue-infinite-scroll.js": {
-            "uri": "/xdtic/static/node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
-            "type": "js",
-            "extras": {
-                "moduleId": "node_modules/vue-infinite-scroll/vue-infinite-scroll"
-            }
+            },
+            "pkg": "p1"
         },
         "node_modules/crypto-js/md5.js": {
             "uri": "/xdtic/static/node_modules/crypto-js/md5.js",
@@ -517,22 +536,143 @@
             },
             "deps": [
                 "node_modules/crypto-js/core.js"
-            ]
+            ],
+            "pkg": "p1"
         },
         "node_modules/process/browser.js": {
             "uri": "/xdtic/static/node_modules/process/browser.js",
             "type": "js",
             "extras": {
                 "moduleId": "node_modules/process/browser"
-            }
+            },
+            "pkg": "p1"
         },
         "node_modules/crypto-js/core.js": {
             "uri": "/xdtic/static/node_modules/crypto-js/core.js",
             "type": "js",
             "extras": {
                 "moduleId": "node_modules/crypto-js/core"
-            }
+            },
+            "pkg": "p1"
         }
     },
-    "pkg": {}
+    "pkg": {
+        "p0": {
+            "uri": "/xdtic/static/pkg/js/main_8106faf.js",
+            "type": "js",
+            "has": [
+                "static/libs/common.js",
+                "static/libs/mod.js",
+                "static/libs/vue.js",
+                "static/libs/vue-tap.js"
+            ]
+        },
+        "p1": {
+            "uri": "/xdtic/static/pkg/js/module_937eefd.js",
+            "type": "js",
+            "has": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/process/browser.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "node_modules/crypto-js/core.js",
+                "node_modules/crypto-js/md5.js",
+                "static/js/module/formSerialize.js",
+                "static/js/module/tools.js"
+            ]
+        },
+        "p2": {
+            "uri": "/xdtic/static/pkg/js/hall/hall_b1ae2d5.js",
+            "type": "js",
+            "has": [
+                "static/js/hall/hall.js"
+            ],
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
+        "p3": {
+            "uri": "/xdtic/static/pkg/js/user/login_1ca99de.js",
+            "type": "js",
+            "has": [
+                "static/js/user/login.js"
+            ],
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "node_modules/crypto-js/md5.js",
+                "static/js/module/formSerialize.js",
+                "static/js/module/tools.js"
+            ]
+        },
+        "p4": {
+            "uri": "/xdtic/static/pkg/js/user/msgs_4d6319f.js",
+            "type": "js",
+            "has": [
+                "static/js/user/msgs.js"
+            ],
+            "deps": [
+                "node_modules/vue-infinite-scroll/vue-infinite-scroll.js",
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
+        "p5": {
+            "uri": "/xdtic/static/pkg/js/user/profile_923cb8d.js",
+            "type": "js",
+            "has": [
+                "static/js/user/profile.js"
+            ],
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "static/js/module/tools.js"
+            ]
+        },
+        "p6": {
+            "uri": "/xdtic/static/pkg/js/user/register_6c07bb5.js",
+            "type": "js",
+            "has": [
+                "static/js/user/register.js"
+            ],
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
+        "p7": {
+            "uri": "/xdtic/static/pkg/js/user/resetPass_16bddcb.js",
+            "type": "js",
+            "has": [
+                "static/js/user/resetPass.js"
+            ],
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js",
+                "node_modules/crypto-js/md5.js"
+            ]
+        },
+        "p8": {
+            "uri": "/xdtic/static/pkg/js/user/center_2a38b0b.js",
+            "type": "js",
+            "has": [
+                "static/js/user/center.js"
+            ],
+            "deps": [
+                "node_modules/es6-promise/dist/es6-promise.js",
+                "node_modules/whatwg-fetch/fetch.js"
+            ]
+        },
+        "p13": {
+            "uri": "/xdtic/static/pkg/css/main_37e4530.css",
+            "type": "css",
+            "has": [
+                "static/scss/weui.css",
+                "static/scss/common.scss",
+                "page/widget/footer/nav.scss"
+            ]
+        }
+    }
 }
