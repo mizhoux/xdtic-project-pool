@@ -16,26 +16,26 @@
     </resultMap>
     
     <insert id="addProject" parameterType="Project" useGeneratedKeys="true" keyProperty="id">
-        insert into project (id, name, tag, 
-        status, content, contact, 
-        creation_date, user_id, username, 
-        recruit)
-        values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
-        #{status,jdbcType=TINYINT}, #{content,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
-        #{creationDate,jdbcType=TIMESTAMP}, #{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, 
+        INSERT INTO project (id, name, tag, status, content, contact, 
+        creation_date, user_id, username, recruit)
+        values (#{id,jdbcType=INTEGER}, 
+        #{name,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
+        #{status,jdbcType=TINYINT}, #{content,jdbcType=VARCHAR}, 
+        #{contact,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP},
+        #{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, 
         #{recruit,jdbcType=LONGVARCHAR})
     </insert>
     
     <delete id="deleteProject" parameterType="Integer">
-        delete from project
-        where id = #{id,jdbcType=INTEGER}
+        DELETE FROM project
+        WHERE id = #{id,jdbcType=INTEGER}
     </delete>
     
     <select id="getProject" parameterType="Integer" resultMap="BaseResultMap">
-        select id, name, tag, status, content, contact, creation_date, user_id, username, 
-        recruit
-        from project
-        where id = #{id,jdbcType=INTEGER}
+        SELECT id, name, tag, status, content, 
+        contact, creation_date, user_id, username, recruit
+        FROM project
+        WHERE id = #{id,jdbcType=INTEGER}
     </select>
     
     <select id="getHotProjects" parameterType="String" resultMap="BaseResultMap">
@@ -111,20 +111,20 @@
     </select>
     
     <update id="updateProjectWithStatus" parameterType="xdtic.projpool.model.Project">
-        update project set 
-        status = #{status,jdbcType=TINYINT},
+        UPDATE project 
+        SET status = #{status,jdbcType=TINYINT},
         content = #{content,jdbcType=VARCHAR},
         contact = #{contact,jdbcType=VARCHAR},
         recruit = #{recruit,jdbcType=LONGVARCHAR}
-        where id = #{id}
+        WHERE id = #{id}
     </update>
     
     <update id="updateProject" parameterType="xdtic.projpool.model.Project">
-        update project set 
-        content = #{content,jdbcType=VARCHAR},
+        UPDATE project 
+        SET content = #{content,jdbcType=VARCHAR},
         contact = #{contact,jdbcType=VARCHAR},
         recruit = #{recruit,jdbcType=LONGVARCHAR}
-        where id = #{id}
+        WHERE id = #{id}
     </update>
     
     <update id="updateProjectStatus">

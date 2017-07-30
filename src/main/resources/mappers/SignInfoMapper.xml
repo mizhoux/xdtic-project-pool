@@ -36,4 +36,5 @@
     <select id="containsSignInfo" resultType="Long">
         SELECT COUNT(*) FROM sign_info WHERE user_id = #{arg0} AND pro_id = #{arg1}
     </select>
+    
 </mapper>
