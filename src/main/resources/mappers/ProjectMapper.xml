@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xdtic.projpool.dao.ProjectMapper">
     
-    <resultMap id="BaseResultMap" type="xdtic.projpool.model.Project">
+    <resultMap id="BaseResultMap" type="Project">
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="tag" jdbcType="VARCHAR" property="tag" />
@@ -110,7 +110,7 @@
         SELECT COUNT(*) FROM pro_stars WHERE user_id = #{arg0} AND pro_id = #{arg1}
     </select>
     
-    <update id="updateProjectWithStatus" parameterType="xdtic.projpool.model.Project">
+    <update id="updateProjectWithStatus" parameterType="Project">
         UPDATE project 
         SET status = #{status,jdbcType=TINYINT},
         content = #{content,jdbcType=VARCHAR},
@@ -119,7 +119,7 @@
         WHERE id = #{id}
     </update>
     
-    <update id="updateProject" parameterType="xdtic.projpool.model.Project">
+    <update id="updateProject" parameterType="Project">
         UPDATE project 
         SET content = #{content,jdbcType=VARCHAR},
         contact = #{contact,jdbcType=VARCHAR},

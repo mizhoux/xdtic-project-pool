@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xdtic.projpool.dao.UserMapper">
     
-    <resultMap id="BaseResultMap" type="xdtic.projpool.model.User">
+    <resultMap id="BaseResultMap" type="User">
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="username" jdbcType="VARCHAR" property="username" />
         <result column="password" jdbcType="CHAR" property="password" />
@@ -17,7 +17,7 @@
         <result column="experience" jdbcType="VARCHAR" property="experience" />
     </resultMap>
   
-    <delete id="deleteUser" parameterType="java.lang.Integer">
+    <delete id="deleteUser" parameterType="Integer">
         DELETE FROM user
         WHERE id = #{id,jdbcType=INTEGER}
     </delete>
@@ -33,7 +33,7 @@
         INSERT INTO user SET username = #{arg0}, password = MD5(#{arg1})
     </insert>
   
-    <update id="updateUser" parameterType="xdtic.projpool.model.User">
+    <update id="updateUser" parameterType="User">
         UPDATE user 
         SET username = #{username,jdbcType=VARCHAR},
         gender = #{gender,jdbcType=CHAR},
@@ -86,7 +86,7 @@
         SELECT COUNT(*) FROM user WHERE ${condition}
     </select>
     
-    <select id="getUsers" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="getUsers" parameterType="String" resultMap="BaseResultMap">
         SELECT id, username, password, gender, email, phone, 
         realname, nickname, stu_num, major, skill, experience
         FROM user WHERE ${condition}

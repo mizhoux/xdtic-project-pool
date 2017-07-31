@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xdtic.projpool.dao.MessageMapper">
     
-    <resultMap id="BaseResultMap" type="xdtic.projpool.model.Message">
+    <resultMap id="BaseResultMap" type="Message">
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="user_id" jdbcType="INTEGER" property="userId" />
         <result column="pro_id" jdbcType="INTEGER" property="proId" />
@@ -11,7 +11,7 @@
         <result column="read" jdbcType="BIT" property="read" />
     </resultMap>
    
-    <insert id="addMessage" parameterType="xdtic.projpool.model.Message">
+    <insert id="addMessage" parameterType="Message">
         INSERT INTO message ( id, user_id, pro_id, content, creation_date, `read`)
         VALUES ( #{id,jdbcType=INTEGER}, 
         #{userId,jdbcType=INTEGER}, 
@@ -28,7 +28,7 @@
         </foreach>
     </update>
     
-    <select id="getMessage" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    <select id="getMessage" parameterType="Integer" resultMap="BaseResultMap">
         SELECT id, user_id, pro_id, content, creation_date, `read`
         FROM message
         WHERE id = #{id,jdbcType=INTEGER}

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xdtic.projpool.dao.SignInfoMapper">
     
-    <resultMap id="BaseResultMap" type="xdtic.projpool.model.SignInfo">
+    <resultMap id="BaseResultMap" type="SignInfo">
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="user_id" jdbcType="INTEGER" property="userId" />
         <result column="pro_id" jdbcType="INTEGER" property="proId" />
@@ -12,7 +12,7 @@
         <result column="sign_date" jdbcType="TIMESTAMP" property="signDate" />
     </resultMap>
 
-    <insert id="addSignInfo" parameterType="xdtic.projpool.model.SignInfo">
+    <insert id="addSignInfo" parameterType="SignInfo">
         INSERT INTO sign_info (id, user_id, pro_id, apply, skill, experience, sign_date)
         VALUES (
         #{id,jdbcType=INTEGER}, 

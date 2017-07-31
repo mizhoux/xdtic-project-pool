@@ -7,6 +7,8 @@
         <typeAlias alias="Admin" type="xdtic.projpool.model.Admin" />  
         <typeAlias alias="User" type="xdtic.projpool.model.User" />
         <typeAlias alias="Project" type="xdtic.projpool.model.Project" />
+        <typeAlias alias="Message" type="xdtic.projpool.model.Message" />
+        <typeAlias alias="SignInfo" type="xdtic.projpool.model.SignInfo" />
     </typeAliases>
     
     <plugins>  
