@@ -140,7 +140,9 @@ public class UserFunction {
     @PostMapping(value = "update/profile",
             consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode updateUserProfile(@Valid User user, HttpSession session) {
-
+        User u = (User) session.getAttribute("user");
+        user.setId(u.getId());
+        
         boolean success = userService.updateUser(user);
         if (success) {
             session.setAttribute("user", user);
@@ -150,10 +152,11 @@ public class UserFunction {
     }
 
     @ResponseBody
-    @PostMapping(value = "valid/profile",
-            consumes = APPLICATION_FORM_URLENCODED_VALUE)
-    public RespCode validUserProfile(@Valid User user) {
-        return userService.validUser(user);
+    @PostMapping(value = "valid/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    public RespCode validUserProfile(@Valid User user, HttpSession session) {
+        User u = (User) session.getAttribute("user");
+        Integer userId = u.getId();
+        return userService.validUser(userId, user);
     }
 
     /**

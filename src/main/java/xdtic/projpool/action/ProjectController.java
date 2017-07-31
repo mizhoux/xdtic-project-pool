@@ -26,10 +26,10 @@ public class ProjectController {
     private UserService userService;
 
     @Autowired
-    private ProjectService proService;
+    private ProjectService projService;
 
     @Autowired
-    private SignInfoService siService;
+    private SignInfoService signService;
 
     @GetMapping("myProject")
     public String getMyProjectPage() {
@@ -45,17 +45,17 @@ public class ProjectController {
     public String getProjectDetailPage(
             HttpServletRequest request, @RequestParam Integer proId) {
 
-        Optional<Project> project = proService.getProject(proId);
+        Optional<Project> project = projService.getProject(proId);
         project.ifPresent(pro -> {
             User user = (User) request.getSession().getAttribute("user");
-            pro.setIsCollected(proService.containsCollection(user.getId(), proId));
+            pro.setIsCollected(projService.containsCollection(user.getId(), proId));
 
             request.setAttribute("project", pro);
 
             userService.getUser(pro.getUserId())
                     .ifPresent(creator -> request.setAttribute("projectCreator", creator));
 
-            boolean userIsJoined = proService.containsSignInfo(user.getId(), pro.getId());
+            boolean userIsJoined = projService.containsSignInfo(user.getId(), pro.getId());
             request.setAttribute("userIsJoined", userIsJoined);
         });
 
@@ -66,10 +66,10 @@ public class ProjectController {
     public String getPostProjectDetailPage(
             HttpServletRequest request, @RequestParam Integer proId) {
 
-        Optional<Project> project = proService.getProject(proId);
+        Optional<Project> project = projService.getProject(proId);
         project.ifPresent(pro -> {
             User user = (User) request.getSession().getAttribute("user");
-            pro.setIsCollected(proService.containsCollection(user.getId(), proId));
+            pro.setIsCollected(projService.containsCollection(user.getId(), proId));
 
             request.setAttribute("project", pro);
         });
@@ -81,10 +81,10 @@ public class ProjectController {
     public String getProjectEditDetailPage(
             HttpServletRequest request, @RequestParam Integer proId) {
 
-        Optional<Project> project = proService.getProject(proId);
+        Optional<Project> project = projService.getProject(proId);
         project.ifPresent(pro -> {
             User user = (User) request.getSession().getAttribute("user");
-            pro.setIsCollected(proService.containsCollection(user.getId(), proId));
+            pro.setIsCollected(projService.containsCollection(user.getId(), proId));
 
             request.setAttribute("project", pro);
         });
@@ -96,9 +96,9 @@ public class ProjectController {
     public String getSignInfosPage(
             HttpServletRequest request, @RequestParam Integer proId) {
 
-        Optional<Project> project = proService.getProject(proId);
+        Optional<Project> project = projService.getProject(proId);
         project.ifPresent(pro -> {
-            List<SignInfo> signInfos = siService.getSignInfos(proId);
+            List<SignInfo> signInfos = signService.getSignInfos(proId);
             request.setAttribute("project", pro);
             request.setAttribute("signInfos", signInfos);
         });
@@ -110,7 +110,7 @@ public class ProjectController {
     public String getSignInfoDetail(
             HttpServletRequest request, @RequestParam Integer signId) {
 
-        Optional<SignInfo> signInfo = siService.getSignInfo(signId);
+        Optional<SignInfo> signInfo = signService.getSignInfo(signId);
         signInfo.ifPresent(si -> request.setAttribute("signInfo", si));
 
         signInfo.map(si -> si.getUserId())
@@ -125,9 +125,9 @@ public class ProjectController {
             @RequestParam Integer proId,
             @RequestParam("uid") Integer userId) {
 
-        Optional<Project> project = proService.getProject(proId);
+        Optional<Project> project = projService.getProject(proId);
         project.ifPresent(pro -> {
-            pro.setIsCollected(proService.containsCollection(userId, proId));
+            pro.setIsCollected(projService.containsCollection(userId, proId));
             request.setAttribute("project", pro);
         });
 
@@ -135,3 +135,4 @@ public class ProjectController {
     }
 
 }
+

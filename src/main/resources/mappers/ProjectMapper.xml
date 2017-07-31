@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xdtic.projpool.dao.ProjectMapper">
     
-    <resultMap id="BaseResultMap" type="xdtic.projpool.model.Project">
+    <resultMap id="BaseResultMap" type="Project">
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="name" jdbcType="VARCHAR" property="name" />
         <result column="tag" jdbcType="VARCHAR" property="tag" />
@@ -16,26 +16,26 @@
     </resultMap>
     
     <insert id="addProject" parameterType="Project" useGeneratedKeys="true" keyProperty="id">
-        insert into project (id, name, tag, 
-        status, content, contact, 
-        creation_date, user_id, username, 
-        recruit)
-        values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
-        #{status,jdbcType=TINYINT}, #{content,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
-        #{creationDate,jdbcType=TIMESTAMP}, #{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, 
+        INSERT INTO project (id, name, tag, status, content, contact, 
+        creation_date, user_id, username, recruit)
+        values (#{id,jdbcType=INTEGER}, 
+        #{name,jdbcType=VARCHAR}, #{tag,jdbcType=VARCHAR}, 
+        #{status,jdbcType=TINYINT}, #{content,jdbcType=VARCHAR}, 
+        #{contact,jdbcType=VARCHAR}, #{creationDate,jdbcType=TIMESTAMP},
+        #{userId,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, 
         #{recruit,jdbcType=LONGVARCHAR})
     </insert>
     
     <delete id="deleteProject" parameterType="Integer">
-        delete from project
-        where id = #{id,jdbcType=INTEGER}
+        DELETE FROM project
+        WHERE id = #{id,jdbcType=INTEGER}
     </delete>
     
     <select id="getProject" parameterType="Integer" resultMap="BaseResultMap">
-        select id, name, tag, status, content, contact, creation_date, user_id, username, 
-        recruit
-        from project
-        where id = #{id,jdbcType=INTEGER}
+        SELECT id, name, tag, status, content, 
+        contact, creation_date, user_id, username, recruit
+        FROM project
+        WHERE id = #{id,jdbcType=INTEGER}
     </select>
     
     <select id="getHotProjects" parameterType="String" resultMap="BaseResultMap">
@@ -110,21 +110,21 @@
         SELECT COUNT(*) FROM pro_stars WHERE user_id = #{arg0} AND pro_id = #{arg1}
     </select>
     
-    <update id="updateProjectWithStatus" parameterType="xdtic.projpool.model.Project">
-        update project set 
-        status = #{status,jdbcType=TINYINT},
+    <update id="updateProjectWithStatus" parameterType="Project">
+        UPDATE project 
+        SET status = #{status,jdbcType=TINYINT},
         content = #{content,jdbcType=VARCHAR},
         contact = #{contact,jdbcType=VARCHAR},
         recruit = #{recruit,jdbcType=LONGVARCHAR}
-        where id = #{id}
+        WHERE id = #{id}
     </update>
     
-    <update id="updateProject" parameterType="xdtic.projpool.model.Project">
-        update project set 
-        content = #{content,jdbcType=VARCHAR},
+    <update id="updateProject" parameterType="Project">
+        UPDATE project 
+        SET content = #{content,jdbcType=VARCHAR},
         contact = #{contact,jdbcType=VARCHAR},
         recruit = #{recruit,jdbcType=LONGVARCHAR}
-        where id = #{id}
+        WHERE id = #{id}
     </update>
     
     <update id="updateProjectStatus">

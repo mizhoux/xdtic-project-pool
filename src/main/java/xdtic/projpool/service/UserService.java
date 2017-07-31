@@ -106,20 +106,20 @@ public class UserService {
         return userMapper.deleteUsers(ids) == ids.size();
     }
 
-    public RespCode validUser(User user) {
+    public RespCode validUser(Integer currentUserId, User user) {
         Integer userId = userMapper.getUserIdByUsername(user.getUsername());
 
-        if (userId != null && !userId.equals(user.getId())) {
+        if (userId != null && !userId.equals(currentUserId)) {
             return RespCode.errorOf("用户名已被使用");
         }
 
         userId = userMapper.getUserIdByEmail(user.getEmail());
-        if (userId != null && !userId.equals(user.getId())) {
+        if (userId != null && !userId.equals(currentUserId)) {
             return RespCode.errorOf("邮箱已被使用");
         }
 
         userId = userMapper.getUserIdByPhone(user.getPhone());
-        if (userId != null && !userId.equals(user.getId())) {
+        if (userId != null && !userId.equals(currentUserId)) {
             return RespCode.errorOf("电话号码已被使用");
         }
 

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="xdtic.projpool.dao.UserMapper">
     
-    <resultMap id="BaseResultMap" type="xdtic.projpool.model.User">
+    <resultMap id="BaseResultMap" type="User">
         <id column="id" jdbcType="INTEGER" property="id" />
         <result column="username" jdbcType="VARCHAR" property="username" />
         <result column="password" jdbcType="CHAR" property="password" />
@@ -17,13 +17,13 @@
         <result column="experience" jdbcType="VARCHAR" property="experience" />
     </resultMap>
   
-    <delete id="deleteUser" parameterType="java.lang.Integer">
-        delete from user
-        where id = #{id,jdbcType=INTEGER}
+    <delete id="deleteUser" parameterType="Integer">
+        DELETE FROM user
+        WHERE id = #{id,jdbcType=INTEGER}
     </delete>
     
     <delete id="deleteUsers">
-        delete from user where id in 
+        DELETE FROM user WHERE id IN 
         <foreach collection="list" item="uid" separator="," open="(" close=")">
             #{uid}
         </foreach>
@@ -33,9 +33,9 @@
         INSERT INTO user SET username = #{arg0}, password = MD5(#{arg1})
     </insert>
   
-    <update id="updateUser" parameterType="xdtic.projpool.model.User">
-        update user
-        set username = #{username,jdbcType=VARCHAR},
+    <update id="updateUser" parameterType="User">
+        UPDATE user 
+        SET username = #{username,jdbcType=VARCHAR},
         gender = #{gender,jdbcType=CHAR},
         email = #{email,jdbcType=VARCHAR},
         phone = #{phone,jdbcType=CHAR},
@@ -45,61 +45,51 @@
         major = #{major,jdbcType=VARCHAR},
         skill = #{skill,jdbcType=VARCHAR},
         experience = #{experience,jdbcType=VARCHAR}
-        where id = #{id,jdbcType=INTEGER}
+        WHERE id = #{id,jdbcType=INTEGER}
     </update>
     
     <update id="updatePassword">
-        UPDATE user SET password = MD5(#{arg2}) 
+        UPDATE user 
+        SET password = MD5(#{arg2}) 
         WHERE username = #{arg0} AND password = #{arg1}
     </update>
   
     <select id="getUserById" parameterType="Integer" resultMap="BaseResultMap">
-        select id, username, password, gender, email, phone, realname, nickname, stu_num, 
-        major, skill, experience
-        from user
-        where id = #{id,jdbcType=INTEGER}
+        SELECT id, username, password, gender, email, phone,  
+        realname, nickname, stu_num, major, skill, experience
+        FROM user WHERE id = #{id,jdbcType=INTEGER}
     </select>
     
     <select id="getUser" resultMap="BaseResultMap">
-        SELECT id, username, password, gender, email, phone, realname, nickname, stu_num, 
-        major, skill, experience
-        FROM user u
-        WHERE u.username = #{arg0} AND u.password = #{arg1}
+        SELECT id, username, password, gender, email, phone,  
+        realname, nickname, stu_num, major, skill, experience
+        FROM user WHERE username = #{arg0} AND password = #{arg1}
     </select>
     
     <select id="getUserIdByUsername" parameterType="String" resultType="Integer">
-        SELECT id
-        FROM user u
-        WHERE u.username = #{arg0}
+        SELECT id FROM user u WHERE u.username = #{arg0}
     </select>
     
     <select id="getUsernameById" parameterType="Integer" resultType="String">
-        SELECT username
-        FROM user u
-        WHERE u.id = #{arg0}
+        SELECT username FROM user u WHERE u.id = #{arg0}
     </select>
     
     <select id="getUserIdByEmail" parameterType="String" resultType="Integer">
-        SELECT id
-        FROM user u
-        WHERE u.username = #{arg0}
+        SELECT id FROM user u WHERE u.username = #{arg0}
     </select>
     
     <select id="getUserIdByPhone" parameterType="String" resultType="Integer">
-        SELECT id
-        FROM user u
-        WHERE u.username = #{arg0}
+        SELECT id FROM user u WHERE u.username = #{arg0}
     </select>
     
     <select id="countUsers" parameterType="String" resultType="Long">
         SELECT COUNT(*) FROM user WHERE ${condition}
     </select>
     
-    <select id="getUsers" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select id, username, password, gender, email, phone, realname, nickname, stu_num, 
-        major, skill, experience
-        from user
-        where ${condition}
+    <select id="getUsers" parameterType="String" resultMap="BaseResultMap">
+        SELECT id, username, password, gender, email, phone, 
+        realname, nickname, stu_num, major, skill, experience
+        FROM user WHERE ${condition}
     </select>
     
     <select id="getCollectedProIds" parameterType="Integer" resultType="Integer">
