@@ -9,7 +9,7 @@
 			<fis:widget name="page/widget/header/signInfoHeader.jsp" />	
 		</header>
 
-		<main>
+		<main id="signDetailContent">
 			<div class="tic-sign-info-wrap">
 				<div class="tic-left">
 					<img src="/xdtic/static/images/avatar.png" alt="<c:out value='${signInfo.username}' />">
@@ -63,12 +63,12 @@
 					<hr>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">个人能力</span>
-						<span class="tic-td-content"><c:out value='${signUser.skill}' /></span>
+						<span class="tic-td-content">{{signUserSkill}}</span>
 					</div>
 					<hr>
 					<div class="tic-tr-two">
 						<span class="tic-td-label">项目经历</span>
-						<span class="tic-td-content"><c:out value='${signUser.experience}' /></span>
+						<span class="tic-td-content">{{signUserExperience}}</span>
 					</div>
 				</form>
 			</div>
@@ -83,10 +83,28 @@
 	</fis:block>
 
 	<fis:block name="jsPre">
+		<script type="text/javascript">
+			var getMultiline = function(f) {
+				return f.toString().replace(/^[^\/]+\/\*!?\s?/, '')
+					.replace(/\*\/[^\/]+$/, '').trim();
+			};
+
+			var signUserInfo = {
+				skill: getMultiline(function() {/*
+					<c:out value="${signUser.skill}" />
+				*/
+				}),
+				experience: getMultiline(function() {/*
+					<c:out value="${signUser.experience}" />
+				*/
+				})
+			};
+		</script>
     </fis:block>
 
 	<fis:block name="js">
 		<fis:parent />
+		<fis:require id="static/js/myProject/myPost/signDetail.js" />
 	</fis:block>
  
   <%-- auto inject by fis3-preprocess-extlang--%>

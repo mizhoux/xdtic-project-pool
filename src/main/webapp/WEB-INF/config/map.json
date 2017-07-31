@@ -84,6 +84,10 @@
                 "static/js/module/tools.js"
             ]
         },
+        "static/js/myProject/myPost/signDetail.js": {
+            "uri": "/xdtic/static/js/myProject/myPost/signDetail.js",
+            "type": "js"
+        },
         "static/js/myProject/myProject.js": {
             "uri": "/xdtic/static/js/myProject/myProject.js",
             "type": "js",
@@ -558,7 +562,7 @@
     },
     "pkg": {
         "p0": {
-            "uri": "/xdtic/static/pkg/js/main_8106faf.js",
+            "uri": "/xdtic/static/pkg/js/main_5ba9ba6.js",
             "type": "js",
             "has": [
                 "static/libs/common.js",

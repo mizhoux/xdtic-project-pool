@@ -91,9 +91,18 @@
 		        "id": '<c:out value="${project.id}" />',
 		        "name": '<c:out value="${project.name}" />',
 				"tag": '<c:out value="${project.tag}" />',
-				"content": '<c:out value="${project.content}" />',
-				"recruit": '<c:out value="${project.recruit}" />',
-				"contact": '<c:out value="${project.contact}" />'
+				"content": getMultiline(function() {/*
+					<c:out value="${project.content}" />
+				*/
+				}),
+				"recruit": getMultiline(function() {/*
+					<c:out value="${project.recruit}" />
+				*/
+				}),
+				"contact": getMultiline(function() {/*
+					<c:out value="${project.contact}" />
+				*/
+				})
 		    };
 		    var userInfo = {
 		        "id": '<c:out value="${user.id}" />'
