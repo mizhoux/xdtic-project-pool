@@ -1,4 +1,4 @@
-package xdtic.projpool.action;
+package xdtic.projpool.controller;
 
 import java.util.Map;
 import javax.validation.Valid;

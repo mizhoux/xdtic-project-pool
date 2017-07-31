@@ -1,4 +1,4 @@
-package xdtic.projpool.action;
+package xdtic.projpool.controller;
 
 import javax.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;

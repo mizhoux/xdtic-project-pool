@@ -1,4 +1,4 @@
-package xdtic.projpool.action;
+package xdtic.projpool.controller;
 
 import com.google.common.cache.Cache;
 import java.util.List;
