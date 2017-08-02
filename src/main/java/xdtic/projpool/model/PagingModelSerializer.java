@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 
 /**
+ * Paging Model Serializer
  *
  * @author Michael Chow
  */
@@ -22,7 +23,7 @@ public class PagingModelSerializer extends JsonSerializer<PagingModel> {
         gen.writeBooleanField("hasMore", model.isHasMore());
         String entitiesName = model.getEntitiesName();
         gen.writeObjectField(entitiesName, model.getEntities());
-        
+
         gen.writeEndObject();
     }
 

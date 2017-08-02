@@ -6,6 +6,7 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 
 /**
+ * User
  *
  * @author wenjing
  */
