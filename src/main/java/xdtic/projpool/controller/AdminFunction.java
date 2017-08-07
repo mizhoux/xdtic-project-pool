@@ -22,6 +22,7 @@ import xdtic.projpool.model.User;
 import xdtic.projpool.service.AdminService;
 import xdtic.projpool.service.ProjectService;
 import xdtic.projpool.service.UserService;
+import xdtic.projpool.util.LoginUtil;
 import xdtic.projpool.util.RemoteAddressCache;
 
 /**
@@ -48,11 +49,10 @@ public class AdminFunction {
     @PostMapping(value = "login", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public String login(HttpServletRequest request,
             @RequestParam String username, @RequestParam String password) {
-
         Optional<Admin> admin = adminService.getAdmin(username, password);
 
         admin.ifPresent(a -> {
-            addrCache.put("A".concat(request.getRemoteAddr()), a);
+            addrCache.put(LoginUtil.getAdminIPIdentity(request.getRemoteAddr()), a);
             request.getSession().setAttribute("admin", a);
         });
 

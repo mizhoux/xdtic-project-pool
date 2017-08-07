@@ -1,7 +1,12 @@
 package xdtic.projpool.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -14,17 +19,14 @@ import java.util.List;
 @JsonSerialize(using = PagingModelSerializer.class)
 public class PagingModel<T> {
 
-    private int pageNum;
-    private int size;
-    private boolean hasMore;
+    private final int pageNum;
+    private final int size;
+    private final boolean hasMore;
 
-    private List<T> entities;
+    private final List<T> entities;
 
     @JsonIgnore
     private String entitiesName = "entities";
-
-    public PagingModel() {
-    }
 
     public static class Builder<T> {
 
@@ -71,7 +73,8 @@ public class PagingModel<T> {
         return new PagingModel.Builder();
     }
 
-    private PagingModel(final int pageNum, final int size, final boolean hasMore, final List<T> entities, final String entitiesName) {
+    private PagingModel(final int pageNum, final int size,
+            final boolean hasMore, final List<T> entities, final String entitiesName) {
         this.pageNum = pageNum;
         this.size = size;
         this.hasMore = hasMore;
@@ -97,6 +100,25 @@ public class PagingModel<T> {
 
     public String getEntitiesName() {
         return entitiesName;
+    }
+
+}
+
+class PagingModelSerializer extends JsonSerializer<PagingModel> {
+
+    @Override
+    public void serialize(
+            PagingModel model, JsonGenerator gen, SerializerProvider serializers)
+            throws IOException, JsonProcessingException {
+        gen.writeStartObject();
+
+        gen.writeObjectField("pageNum", model.getPageNum());
+        gen.writeObjectField("size", model.getSize());
+        gen.writeBooleanField("hasMore", model.isHasMore());
+        String entitiesName = model.getEntitiesName();
+        gen.writeObjectField(entitiesName, model.getEntities());
+
+        gen.writeEndObject();
     }
 
 }
