@@ -1,5 +1,6 @@
 package xdtic.projpool.service;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
@@ -9,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.StringJoiner;
-import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -21,6 +21,7 @@ import xdtic.projpool.dao.UserMapper;
 import xdtic.projpool.model.Message;
 import xdtic.projpool.model.PagingModel;
 import xdtic.projpool.model.Project;
+import xdtic.projpool.util.Pair;
 
 /**
  * Project Service
@@ -80,10 +81,10 @@ public class ProjectService {
      * @param userId 用来判断项目是否已经被该用户收藏
      * @return
      */
-    public List<Project> getAcceptedProjects(
+    public Pair<List<Project>, Long> getAcceptedProjects(
             String keyword, int pageNum, int pageSize, Integer userId) {
 
-        PageHelper.startPage(pageNum + 1, pageSize);
+        Page<Object> page = PageHelper.startPage(pageNum + 1, pageSize);
 
         String condition = getSearchCondition(keyword);
         List<Project> projects = projectMapper.getAcceptedProjects(condition);
@@ -95,7 +96,7 @@ public class ProjectService {
             projects.forEach(p -> p.setIsCollected(collectedProIds.contains(p.getId())));
         }
 
-        return projects;
+        return Pair.of(projects, page.getTotal());
     }
 
     public long countAcceptedProjects(String keyword) {
@@ -116,22 +117,22 @@ public class ProjectService {
         return ImmutableMap.of("hotSize", projects.size(), "projects", projects);
     }
 
-    public List<Project> getUncheckedProjects(String keyword, int pageNum, int pageSize) {
+    public Pair<List<Project>, Long> getUncheckedProjects(String keyword, int pageNum, int pageSize) {
 
-        PageHelper.startPage(pageNum + 1, pageSize);
+        Page<Object> page = PageHelper.startPage(pageNum + 1, pageSize);
         List<Project> projects = projectMapper.getUncheckedProjects(getSearchCondition(keyword));
         projects.forEach(this::makeTagsForFront);
 
-        return projects;
+        return Pair.of(projects, page.getTotal());
     }
 
     public long countUncheckedProjects(String keyword) {
         return projectMapper.countUncheckedProjects(getSearchCondition(keyword));
     }
 
-    public List<Project> getPostedProjects(Integer userId, int pageNum, int pageSize) {
+    public Pair<List<Project>, Long> getPostedProjects(Integer userId, int pageNum, int pageSize) {
 
-        PageHelper.startPage(pageNum + 1, pageSize);
+        Page<Object> page = PageHelper.startPage(pageNum + 1, pageSize);
         List<Project> projects = projectMapper.getPostedProjects(userId);
 
         Collection<Integer> collectedProIds = getCollectedProjectIds(userId);
@@ -140,16 +141,16 @@ public class ProjectService {
             makeTagsForFront(pro);
         });
 
-        return projects;
+        return Pair.of(projects, page.getTotal());
     }
 
     public long countPostedProjects(Integer userId) {
         return projectMapper.countPostedProjects(userId);
     }
 
-    public List<Project> getCollectedProjects(Integer userId, int pageNum, int pageSize) {
+    public Pair<List<Project>, Long> getCollectedProjects(Integer userId, int pageNum, int pageSize) {
 
-        PageHelper.startPage(pageNum + 1, pageSize);
+        Page<Object> page = PageHelper.startPage(pageNum + 1, pageSize);
 
         List<Project> projects = projectMapper.getCollectedProjects(userId);
         projects.forEach(pro -> {
@@ -157,14 +158,15 @@ public class ProjectService {
             makeTagsForFront(pro);
         });
 
-        return projects;
+        return Pair.of(projects, page.getTotal());
     }
 
     public long countCollectedProjects(Integer userId) {
         return projectMapper.countCollectedProjects(userId);
     }
 
-    public List<Project> getJoinedProjects(Integer userId, int pageNum, int pageSize) {
+    public Pair<List<Project>, Long> getJoinedProjects(Integer userId, int pageNum, int pageSize) {
+        Page<Object> page = PageHelper.startPage(pageNum + 1, pageSize);
 
         List<Project> projects = projectMapper.getJoinedProjects(userId);
 
@@ -174,7 +176,7 @@ public class ProjectService {
             makeTagsForFront(pro);
         });
 
-        return projects;
+        return Pair.of(projects, page.getTotal());
     }
 
     public long countJoinedProjects(Integer userId) {
@@ -202,12 +204,11 @@ public class ProjectService {
         return projectMapper.deleteProject(proId) == 1;
     }
 
-    public PagingModel<Project> getPagingUncheckedProjects(String keyword, int pageNum, int pageSize) {
+    public PagingModel<Project> getPagingUncheckedProjects(
+            String keyword, int pageNum, int pageSize) {
 
-        Supplier<Long> totalNumOfProjects = () -> countUncheckedProjects(keyword);
-        Supplier<List<Project>> projects = () -> getUncheckedProjects(keyword, pageNum, pageSize);
-
-        return PagingModel.of("projects", projects, totalNumOfProjects, pageNum, pageSize);
+        Pair<List<Project>, Long> pair = getUncheckedProjects(keyword, pageNum, pageSize);
+        return parsePagingModel(pair, pageNum, pageSize);
     }
 
     /**
@@ -223,34 +224,41 @@ public class ProjectService {
     public PagingModel<Project> getPagingAcceptedProjects(
             String keyword, int pageNum, int pageSize, Integer userId) {
 
-        Supplier<Long> totalNumOfProjects = () -> countAcceptedProjects(keyword);
-        Supplier<List<Project>> projects = () -> getAcceptedProjects(keyword, pageNum, pageSize, userId);
-
-        return PagingModel.of("projects", projects, totalNumOfProjects, pageNum, pageSize);
+        Pair<List<Project>, Long> pair = getAcceptedProjects(keyword, pageNum, pageSize, userId);
+        return parsePagingModel(pair, pageNum, pageSize);
     }
 
-    public PagingModel<Project> getPagingCollectedProjects(Integer userId, int pageNum, int pageSize) {
+    public PagingModel<Project> getPagingCollectedProjects(
+            Integer userId, int pageNum, int pageSize) {
 
-        Supplier<Long> totalNumOfProjects = () -> countCollectedProjects(userId);
-        Supplier<List<Project>> projects = () -> getCollectedProjects(userId, pageNum, pageSize);
-
-        return PagingModel.of("projects", projects, totalNumOfProjects, pageNum, pageSize);
+        Pair<List<Project>, Long> pair = getCollectedProjects(userId, pageNum, pageSize);
+        return parsePagingModel(pair, pageNum, pageSize);
     }
 
-    public PagingModel<Project> getPagingPostedProjects(Integer userId, int pageNum, int pageSize) {
+    public PagingModel<Project> getPagingPostedProjects(
+            Integer userId, int pageNum, int pageSize) {
 
-        Supplier<Long> totalNumOfProjects = () -> countPostedProjects(userId);
-        Supplier<List<Project>> projects = () -> getPostedProjects(userId, pageNum, pageSize);
-
-        return PagingModel.of("projects", projects, totalNumOfProjects, pageNum, pageSize);
+        Pair<List<Project>, Long> pair = getPostedProjects(userId, pageNum, pageSize);
+        return parsePagingModel(pair, pageNum, pageSize);
     }
 
-    public PagingModel<Project> getPagingJoinedProjects(Integer userId, int pageNum, int pageSize) {
+    public PagingModel<Project> getPagingJoinedProjects(
+            Integer userId, int pageNum, int pageSize) {
 
-        Supplier<Long> totalNumOfProjects = () -> countJoinedProjects(userId);
-        Supplier<List<Project>> projects = () -> getJoinedProjects(userId, pageNum, pageSize);
+        Pair<List<Project>, Long> pair = getJoinedProjects(userId, pageNum, pageSize);
+        return parsePagingModel(pair, pageNum, pageSize);
+    }
 
-        return PagingModel.of("projects", projects, totalNumOfProjects, pageNum, pageSize);
+    private PagingModel<Project> parsePagingModel(
+            Pair<List<Project>, Long> pair, int pageNum, int pageSize) {
+
+        return PagingModel.builder()
+                .entitiesName("projects")
+                .entities(pair.left())
+                .pageNum(pageNum)
+                .size(pair.left().size())
+                .hasMore((pageNum + 1) * pageSize < pair.right())
+                .build();
     }
 
     @CacheEvict(value = CACHE_NAME, key = "#project.id")

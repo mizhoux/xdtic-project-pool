@@ -1,16 +1,17 @@
 package xdtic.projpool.service;
 
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import java.util.List;
 import java.util.Optional;
 import java.util.StringJoiner;
-import java.util.function.Supplier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import xdtic.projpool.dao.UserMapper;
 import xdtic.projpool.model.PagingModel;
 import xdtic.projpool.model.RespCode;
 import xdtic.projpool.model.User;
+import xdtic.projpool.util.Pair;
 
 /**
  * User Service
@@ -39,21 +40,25 @@ public class UserService {
         return Optional.ofNullable(user);
     }
 
-    public List<User> getUsers(String keyword, int pageNum, int pageSize) {
+    private Pair<List<User>, Long> getUsers(String keyword, int pageNum, int pageSize) {
         String condition = getSearchCondition(keyword);
 
-        PageHelper.startPage(pageNum + 1, pageSize);
+        Page<Object> page = PageHelper.startPage(pageNum + 1, pageSize);
         List<User> users = userMapper.getUsers(condition);
 
-        return users;
+        return Pair.of(users, page.getTotal());
     }
 
     public PagingModel<User> getPagingUsers(String keyword, int pageNum, int pageSize) {
 
-        Supplier<List<User>> users = () -> getUsers(keyword, pageNum, pageSize);
-        Supplier<Long> totalNumberOfUsers = () -> countUsers(keyword);
-
-        return PagingModel.of("users", users, totalNumberOfUsers, pageNum, pageSize);
+        Pair<List<User>, Long> pair = getUsers(keyword, pageNum, pageSize);
+        return PagingModel.builder()
+                .entitiesName("users")
+                .entities(pair.left())
+                .pageNum(pageNum)
+                .size(pair.left().size())
+                .hasMore((pageNum + 1) * pageSize < pair.right())
+                .build();
     }
 
     public boolean containsUsername(String username) {
@@ -66,18 +71,6 @@ public class UserService {
         String condition = getSearchCondition(keyword);
 
         return userMapper.countUsers(condition);
-    }
-
-    private String getSearchCondition(String keyword) {
-        StringJoiner columnJoiner = new StringJoiner(",',',", "CONCAT(", ")");
-
-        columnJoiner.add("username").add("IFNULL(realname, '')");
-        String columns = columnJoiner.toString();
-
-        StringBuilder condition = new StringBuilder(55);
-        condition.append(columns).append(" LIKE '%").append(keyword).append("%'");
-
-        return condition.toString();
     }
 
     public boolean updateUser(User user) {
@@ -126,4 +119,15 @@ public class UserService {
         return RespCode.OK;
     }
 
+    private String getSearchCondition(String keyword) {
+        StringJoiner columnJoiner = new StringJoiner(",',',", "CONCAT(", ")");
+
+        columnJoiner.add("username").add("IFNULL(realname, '')");
+        String columns = columnJoiner.toString();
+
+        StringBuilder condition = new StringBuilder(55);
+        condition.append(columns).append(" LIKE '%").append(keyword).append("%'");
+
+        return condition.toString();
+    }
 }

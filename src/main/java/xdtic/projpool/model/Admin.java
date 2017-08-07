@@ -1,6 +1,7 @@
 package xdtic.projpool.model;
 
 /**
+ * Administrator
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */

@@ -1,4 +1,4 @@
-package xdtic.projpool.action;
+package xdtic.projpool.controller;
 
 import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;

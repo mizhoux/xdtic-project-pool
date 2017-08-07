@@ -24,7 +24,7 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
     
-    <context:component-scan base-package="xdtic.projpool.action" />
+    <context:component-scan base-package="xdtic.projpool.controller" />
     
     <aop:aspectj-autoproxy proxy-target-class="true"/>
 	

@@ -3,6 +3,7 @@ package xdtic.projpool.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
+ * Response Code
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */

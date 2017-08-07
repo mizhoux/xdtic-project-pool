@@ -1,7 +1,6 @@
-package xdtic.projpool.action;
+package xdtic.projpool.controller;
 
 import com.google.common.cache.Cache;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.Valid;
@@ -65,11 +64,6 @@ public class DebugController {
     @GetMapping("user/contains/{username}")
     public boolean containsUser(@PathVariable String username) {
         return userService.containsUsername(username);
-    }
-
-    @GetMapping("users/{pageNum}/{pageSize}")
-    public List<User> getUsers(@PathVariable int pageNum, @PathVariable int pageSize) {
-        return userService.getUsers("", pageNum, pageSize);
     }
 
     @GetMapping("pro/{id}")

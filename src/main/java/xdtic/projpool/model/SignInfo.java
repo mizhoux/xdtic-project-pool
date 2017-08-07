@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.Date;
 
 /**
+ * Sign Information
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */

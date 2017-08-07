@@ -1,4 +1,4 @@
-package xdtic.projpool.action;
+package xdtic.projpool.controller;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.List;
