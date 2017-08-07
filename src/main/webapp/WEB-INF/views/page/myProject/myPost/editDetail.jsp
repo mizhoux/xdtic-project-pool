@@ -86,6 +86,12 @@
 	</fis:block>
 
 	<fis:block name="jsPre">
+		<script>
+		var getMultiline = function(f) {
+			return f.toString().replace(/^[^\/]+\/\*!?\s?/, '')
+				.replace(/\*\/[^\/]+$/, '').trim();
+		};
+		</script>
 		<script type="text/javascript">
 		    var projectInfo = {
 		        "id": '<c:out value="${project.id}" />',
