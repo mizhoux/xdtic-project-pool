@@ -1,6 +1,6 @@
 package xdtic.projpool.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.alibaba.fastjson.annotation.JSONField;
 import java.util.Date;
 
 /**
@@ -21,7 +21,7 @@ public class Message {
     private String content;
     private boolean read;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date creationDate;
 
     public static Message of(Project project, Message.Type type) {

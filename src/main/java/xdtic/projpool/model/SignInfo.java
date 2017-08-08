@@ -1,6 +1,6 @@
 package xdtic.projpool.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.alibaba.fastjson.annotation.JSONField;
 import java.util.Date;
 
 /**
@@ -19,7 +19,7 @@ public class SignInfo {
     private String skill;
     private String experience;
 
-    @JsonFormat(pattern = "yyyy.MM.dd HH:mm")
+    @JSONField(format = "yyyy.MM.dd HH:mm")
     private Date signDate;
 
     private String username;

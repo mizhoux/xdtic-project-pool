@@ -15,9 +15,8 @@
         <spring.version>4.3.4.RELEASE</spring.version>
         <mysql.jdbc.version>5.1.26</mysql.jdbc.version>
         <mybatis.version>3.4.4</mybatis.version>
-        <jackson.version>2.5.0</jackson.version>
         <slf4j.version>1.7.7</slf4j.version>
-        <fastjson.version>1.1.41</fastjson.version>
+        <fastjson.version>1.1.46</fastjson.version>
         <velocity.version>1.7</velocity.version>
         <velocity-tools.version>2.0</velocity-tools.version>
         <servlet.version>3.1.0</servlet.version>
@@ -70,23 +69,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
             <version>${spring.version}</version>
-        </dependency>
-        
-        <!-- Jackson JSON -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>${jackson.version}</version>
         </dependency>
         
         <!-- Database -->

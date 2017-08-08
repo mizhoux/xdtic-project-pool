@@ -1,6 +1,6 @@
 package xdtic.projpool.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.alibaba.fastjson.annotation.JSONField;
 import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.NotNull;
@@ -48,7 +48,7 @@ public class Project {
      */
     private byte status;
 
-    @JsonFormat(pattern = "yyyy.MM.dd")
+    @JSONField(format = "yyyy.MM.dd")
     private Date creationDate;
 
     // 非数据库中字段，前端需要

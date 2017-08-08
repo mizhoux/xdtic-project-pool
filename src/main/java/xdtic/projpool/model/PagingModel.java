@@ -1,12 +1,6 @@
 package xdtic.projpool.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import java.io.IOException;
+import com.alibaba.fastjson.annotation.JSONField;
 import java.util.List;
 
 /**
@@ -16,7 +10,6 @@ import java.util.List;
  * @author Michael Chow
  * @param <T> 实体类型
  */
-@JsonSerialize(using = PagingModelSerializer.class)
 public class PagingModel<T> {
 
     private final int pageNum;
@@ -25,7 +18,7 @@ public class PagingModel<T> {
 
     private final List<T> entities;
 
-    @JsonIgnore
+    @JSONField(serialize = false)
     private String entitiesName = "entities";
 
     public static class Builder<T> {
@@ -100,25 +93,6 @@ public class PagingModel<T> {
 
     public String getEntitiesName() {
         return entitiesName;
-    }
-
-}
-
-class PagingModelSerializer extends JsonSerializer<PagingModel> {
-
-    @Override
-    public void serialize(
-            PagingModel model, JsonGenerator gen, SerializerProvider serializers)
-            throws IOException, JsonProcessingException {
-        gen.writeStartObject();
-
-        gen.writeObjectField("pageNum", model.getPageNum());
-        gen.writeObjectField("size", model.getSize());
-        gen.writeBooleanField("hasMore", model.isHasMore());
-        String entitiesName = model.getEntitiesName();
-        gen.writeObjectField(entitiesName, model.getEntities());
-
-        gen.writeEndObject();
     }
 
 }
