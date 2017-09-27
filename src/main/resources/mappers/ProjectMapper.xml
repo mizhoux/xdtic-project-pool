@@ -32,7 +32,7 @@
     </delete>
     
     <select id="getProject" parameterType="Integer" resultMap="BaseResultMap">
-        SELECT id, name, tag, status, content, 
+        SELECT id, name, tag, status content, 
         contact, creation_date, user_id, username, recruit
         FROM project
         WHERE id = #{id,jdbcType=INTEGER}
@@ -40,7 +40,7 @@
     
     <select id="getHotProjects" parameterType="String" resultMap="BaseResultMap">
         SELECT p.* FROM project AS p, 
-        (SELECT ps.pro_id, COUNT(*) AS num FROM pro_stars ps GROUP BY ps.pro_id ORDER BY num DESC) AS t
+        (SELECT ps.pro_id, COUNT(*) AS num FROM project_star ps GROUP BY ps.pro_id ORDER BY num DESC) AS t
         WHERE p.status = 1 AND p.id = t.pro_id AND ${condition}
     </select>
     
@@ -78,13 +78,13 @@
     <select id="getCollectedProjects" parameterType="Integer" resultMap="BaseResultMap">
         SELECT p.* FROM project p
         WHERE p.id IN 
-        (SELECT ps.pro_id FROM pro_stars ps WHERE ps.user_id = #{arg0})
+        (SELECT ps.pro_id FROM project_star ps WHERE ps.user_id = #{arg0})
     </select>
     
     <select id="countCollectedProjects" parameterType="Integer" resultType="Long">
         SELECT COUNT(*) FROM project p 
         WHERE p.id IN 
-        (SELECT ps.pro_id FROM pro_stars ps WHERE ps.user_id = #{arg0})
+        (SELECT ps.pro_id FROM project_star ps WHERE ps.user_id = #{arg0})
     </select>
     
     <select id="getJoinedProjects" parameterType="Integer" resultMap="BaseResultMap">
@@ -99,29 +99,29 @@
     </select>
     
     <insert id="addCollection">
-        INSERT INTO pro_stars SET user_id = #{arg0}, pro_id = #{arg1}
+        INSERT INTO project_star SET user_id = #{arg0}, pro_id = #{arg1}
     </insert>
     
     <delete id="deleteCollection">
-        DELETE FROM pro_stars WHERE user_id = #{arg0} AND pro_id = #{arg1}
+        DELETE FROM project_star WHERE user_id = #{arg0} AND pro_id = #{arg1}
     </delete>
     
     <select id="containsCollection" resultType="Long">
-        SELECT COUNT(*) FROM pro_stars WHERE user_id = #{arg0} AND pro_id = #{arg1}
+        SELECT COUNT(*) FROM project_star WHERE user_id = #{arg0} AND pro_id = #{arg1}
     </select>
     
-    <update id="updateProjectWithStatus" parameterType="Project">
+    <update id="updateProject" parameterType="Project">
         UPDATE project 
-        SET status = #{status,jdbcType=TINYINT},
-        content = #{content,jdbcType=VARCHAR},
+        SET content = #{content,jdbcType=VARCHAR},
         contact = #{contact,jdbcType=VARCHAR},
         recruit = #{recruit,jdbcType=LONGVARCHAR}
         WHERE id = #{id}
     </update>
     
-    <update id="updateProject" parameterType="Project">
+    <update id="updateProjectWithStatus" parameterType="Project">
         UPDATE project 
-        SET content = #{content,jdbcType=VARCHAR},
+        SET status = #{status,jdbcType=TINYINT},
+        content = #{content,jdbcType=VARCHAR},
         contact = #{contact,jdbcType=VARCHAR},
         recruit = #{recruit,jdbcType=LONGVARCHAR}
         WHERE id = #{id}

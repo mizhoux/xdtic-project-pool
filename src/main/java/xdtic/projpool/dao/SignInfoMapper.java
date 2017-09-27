@@ -14,7 +14,7 @@ public interface SignInfoMapper {
 
     SignInfo getSignInfo(Integer id);
 
-    List<SignInfo> getSignInfosByProId(Integer proId);
+    List<SignInfo> getSignInfoByProId(Integer proId);
 
     long containsSignInfo(Integer userId, Integer proId);
 }

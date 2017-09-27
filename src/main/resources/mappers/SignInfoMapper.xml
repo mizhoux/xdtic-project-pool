@@ -28,7 +28,7 @@
         WHERE s.id = #{arg0} AND u.id = s.user_id
     </select>
     
-    <select id="getSignInfosByProId" parameterType="Integer" resultMap="BaseResultMap">
+    <select id="getSignInfoByProId" parameterType="Integer" resultMap="BaseResultMap">
         SELECT u.username, s.* FROM sign_info s, user u 
         WHERE pro_id = #{arg0} AND u.id = s.user_id
     </select>

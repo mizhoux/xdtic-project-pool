@@ -45,22 +45,19 @@ public class ProjectService {
     @Autowired
     private SignInfoMapper signInfoMapper;
 
-    // #result.id -> Big bug ???
-    //@CachePut(value = CACHE_NAME, key = "#result.id", unless = "#result == null")
     public Optional<Project> addProject(Project project) {
 
         String username = userMapper.getUsernameById(project.getUserId());
         if (username == null) {
-            return Optional.empty();
-        }
 
-        project.setUsername(username);
+            project.setUsername(username);
 
-        int result = projectMapper.addProject(project);
-        if (result == 1) {
-            int msgResult = messageMapper.addMessage(Message.of(project, Message.Type.POST));
-            System.out.println("msgResult: " + msgResult);
-            return Optional.of(project);
+            int result = projectMapper.addProject(project);
+            if (result == 1) {
+                messageMapper.addMessage(Message.of(project, Message.Type.POST));
+
+                return Optional.of(project);
+            }
         }
 
         return Optional.empty();
@@ -68,7 +65,8 @@ public class ProjectService {
 
     @Cacheable(value = CACHE_NAME, key = "#id", unless = "#result == null")
     public Optional<Project> getProject(Integer id) {
-        return Optional.ofNullable(projectMapper.getProject(id))
+        return Optional
+                .ofNullable(projectMapper.getProject(id))
                 .map(this::makeTagsForFront);
     }
 
@@ -280,16 +278,16 @@ public class ProjectService {
                 success = projectMapper.updateProjectStatus(proId, Project.STATUS_REJECTED) == 1;
                 if (success) {
                     getProject(proId)
-                            .map(p -> Message.of(p, Message.Type.REJECT, comment))
-                            .ifPresent(messageMapper::addMessage);
+                            .map(pro -> Message.of(pro, Message.Type.REJECT, comment))
+                            .ifPresent(msg -> messageMapper.addMessage(msg));
                 }
                 break;
             case "accept":
                 success = projectMapper.updateProjectStatus(proId, Project.STATUS_ACCEPTED) == 1;
                 if (success) {
                     getProject(proId)
-                            .map(p -> Message.of(p, Message.Type.PASS))
-                            .ifPresent(messageMapper::addMessage);
+                            .map(pro -> Message.of(pro, Message.Type.PASS))
+                            .ifPresent(msg -> messageMapper.addMessage(msg));
                 }
                 break;
             case "delete":

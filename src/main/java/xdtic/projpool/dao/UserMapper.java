@@ -37,5 +37,10 @@ public interface UserMapper {
 
     int deleteUsers(List<Integer> ids);
 
+    /**
+     * 获得用户收藏（点赞）的项目的 ids
+     * @param id 用户 id
+     * @return
+     */
     List<Integer> getCollectedProIds(Integer id);
 }
