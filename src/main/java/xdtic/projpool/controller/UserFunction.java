@@ -26,6 +26,7 @@ import xdtic.projpool.model.User;
 import xdtic.projpool.service.MessageService;
 import xdtic.projpool.service.ProjectService;
 import xdtic.projpool.service.UserService;
+import xdtic.projpool.util.LoginUtil;
 import xdtic.projpool.util.RemoteAddressCache;
 
 /**
@@ -96,7 +97,7 @@ public class UserFunction {
             u.setHasMsg(msgService.countUnreadMessages(u.getId()) > 0);
 
             request.getSession().setAttribute("user", u);
-            addrCache.put("U".concat(request.getRemoteAddr()), u);
+            addrCache.put(LoginUtil.getUserIPIdentity(request.getRemoteAddr()), u);
         });
 
         return user.map(u -> "redirect:/user/loginBySession").orElse("user/register");
@@ -142,7 +143,7 @@ public class UserFunction {
     public RespCode updateUserProfile(@Valid User user, HttpSession session) {
         User u = (User) session.getAttribute("user");
         user.setId(u.getId());
-        
+
         boolean success = userService.updateUser(user);
         if (success) {
             session.setAttribute("user", user);

@@ -45,9 +45,21 @@ public interface ProjectMapper {
 
     long containsCollection(Integer userId, Integer proId);
 
-    int updateProjectWithStatus(Project project);
-
+    /**
+     * 根据 id 更新 Project，包括 content, contact，recruit
+     *
+     * @param project 包括 id 的 Project 实体
+     * @return 受影响的行数，期待值为 1
+     */
     int updateProject(Project project);
+
+    /**
+     * 根据 id 更新 Project，包括 content, contact，recruit，status
+     *
+     * @param project 包括 id 的 Project 实体
+     * @return 受影响的行数，期待值为 1
+     */
+    int updateProjectWithStatus(Project project);
 
     int updateProjectStatus(Integer proId, int status);
 }

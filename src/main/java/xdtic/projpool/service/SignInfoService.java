@@ -45,8 +45,8 @@ public class SignInfoService {
         return Optional.ofNullable(signInfo);
     }
 
-    public List<SignInfo> getSignInfos(Integer proId) {
-        return signInfoMapper.getSignInfosByProId(proId);
+    public List<SignInfo> getSignInfoByProId(Integer proId) {
+        return signInfoMapper.getSignInfoByProId(proId);
     }
 
 }

@@ -27,7 +27,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 return true;
             }
 
-            if (addrCache.containsKey("A".concat(request.getRemoteAddr()))) {
+            if (addrCache.containsKey(
+                    LoginUtil.getAdminIPIdentity(request.getRemoteAddr()))) {
                 return true;
             }
 
@@ -39,7 +40,8 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
                 return true;
             }
 
-            if (addrCache.containsKey("U".concat(request.getRemoteAddr()))) {
+            if (addrCache.containsKey(
+                    LoginUtil.getUserIPIdentity(request.getRemoteAddr()))) {
                 return true;
             }
 

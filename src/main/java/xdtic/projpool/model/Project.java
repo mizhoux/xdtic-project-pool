@@ -1,6 +1,6 @@
 package xdtic.projpool.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.alibaba.fastjson.annotation.JSONField;
 import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.NotNull;
@@ -20,8 +20,8 @@ public class Project {
     private Integer id;
 
     @NotNull(message = "用户 ID 不能为 null")
-    private Integer userId;
-    private String username;
+    private Integer userId;  // 发布项目的用户的 id
+    private String username; // 发布项目的用户的用户名，冗余数据，方便查询
 
     @NotNull
     @Size(min = 2, max = 30, message = "项目标签长度需要在 2~30 之间")
@@ -45,10 +45,11 @@ public class Project {
 
     /**
      * 0：待审核；1：审核通过；2：被拒绝
+     * （应该命名为 state，但是前端已经使用 status）
      */
-    private byte status;
+    private byte status = 0;
 
-    @JsonFormat(pattern = "yyyy.MM.dd")
+    @JSONField(format = "yyyy.MM.dd")
     private Date creationDate;
 
     // 非数据库中字段，前端需要
@@ -174,9 +175,9 @@ public class Project {
         private Integer id;
         private Integer userId;
         private String username;
+        private String tag;
         private String name;
         private String content;
-        private String tag;
         private String recruit;
         private String contact;
         private byte status;
@@ -202,6 +203,11 @@ public class Project {
             return this;
         }
 
+        public Builder tag(final String value) {
+            this.tag = value;
+            return this;
+        }
+
         public Builder name(final String value) {
             this.name = value;
             return this;
@@ -209,11 +215,6 @@ public class Project {
 
         public Builder content(final String value) {
             this.content = value;
-            return this;
-        }
-
-        public Builder tag(final String value) {
-            this.tag = value;
             return this;
         }
 
@@ -248,7 +249,7 @@ public class Project {
         }
 
         public Project build() {
-            return new Project(id, userId, username, name, content, tag, recruit, contact, status, creationDate, isCollected, tags);
+            return new xdtic.projpool.model.Project(id, userId, username, tag, name, content, recruit, contact, status, creationDate, isCollected, tags);
         }
     }
 
@@ -256,13 +257,13 @@ public class Project {
         return new Project.Builder();
     }
 
-    private Project(final Integer id, final Integer userId, final String username, final String name, final String content, final String tag, final String recruit, final String contact, final byte status, final Date creationDate, final boolean isCollected, final List<String> tags) {
+    private Project(final Integer id, final Integer userId, final String username, final String tag, final String name, final String content, final String recruit, final String contact, final byte status, final Date creationDate, final boolean isCollected, final List<String> tags) {
         this.id = id;
         this.userId = userId;
         this.username = username;
+        this.tag = tag;
         this.name = name;
         this.content = content;
-        this.tag = tag;
         this.recruit = recruit;
         this.contact = contact;
         this.status = status;

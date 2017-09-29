@@ -1,7 +1,6 @@
 package xdtic.projpool.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.alibaba.fastjson.annotation.JSONField;
 import java.util.List;
 
 /**
@@ -11,20 +10,16 @@ import java.util.List;
  * @author Michael Chow
  * @param <T> 实体类型
  */
-@JsonSerialize(using = PagingModelSerializer.class)
 public class PagingModel<T> {
 
-    private int pageNum;
-    private int size;
-    private boolean hasMore;
+    private final int pageNum;
+    private final int size;
+    private final boolean hasMore;
 
-    private List<T> entities;
+    private final List<T> entities;
 
-    @JsonIgnore
+    @JSONField(serialize = false)
     private String entitiesName = "entities";
-
-    public PagingModel() {
-    }
 
     public static class Builder<T> {
 
@@ -71,7 +66,8 @@ public class PagingModel<T> {
         return new PagingModel.Builder();
     }
 
-    private PagingModel(final int pageNum, final int size, final boolean hasMore, final List<T> entities, final String entitiesName) {
+    private PagingModel(final int pageNum, final int size,
+            final boolean hasMore, final List<T> entities, final String entitiesName) {
         this.pageNum = pageNum;
         this.size = size;
         this.hasMore = hasMore;

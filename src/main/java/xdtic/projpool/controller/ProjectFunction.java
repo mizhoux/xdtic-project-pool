@@ -35,15 +35,13 @@ public class ProjectFunction {
     @Autowired
     private SignInfoService siService;
 
-    @PostMapping(value = "project/post",
-            consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "project/post", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode postProject(@Valid Project project) {
         return proService.addProject(project)
                 .map(p -> RespCode.OK).orElse(RespCode.ERROR);
     }
 
-    @PostMapping(value = "project/update",
-            consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "project/update", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode updateProject(
             @RequestParam Integer id,
             @Size(min = 10, message = "项目内容至少 10 个字")

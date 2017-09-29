@@ -98,7 +98,7 @@ public class ProjectController {
 
         Optional<Project> project = projService.getProject(proId);
         project.ifPresent(pro -> {
-            List<SignInfo> signInfos = signService.getSignInfos(proId);
+            List<SignInfo> signInfos = signService.getSignInfoByProId(proId);
             request.setAttribute("project", pro);
             request.setAttribute("signInfos", signInfos);
         });

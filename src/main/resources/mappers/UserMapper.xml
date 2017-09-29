@@ -93,7 +93,7 @@
     </select>
     
     <select id="getCollectedProIds" parameterType="Integer" resultType="Integer">
-        SELECT ps.pro_id FROM pro_stars ps WHERE ps.user_id = #{arg0}
+        SELECT ps.pro_id FROM project_star ps WHERE ps.user_id = #{arg0}
     </select>
     
 </mapper>
