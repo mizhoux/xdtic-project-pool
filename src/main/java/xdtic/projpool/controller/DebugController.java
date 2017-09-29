@@ -1,7 +1,6 @@
 package xdtic.projpool.controller;
 
 import com.google.common.cache.Cache;
-import java.util.Map;
 import java.util.concurrent.ConcurrentMap;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
@@ -23,7 +22,6 @@ import xdtic.projpool.service.AdminService;
 import xdtic.projpool.service.ProjectService;
 import xdtic.projpool.service.UserService;
 import xdtic.projpool.util.Log;
-import xdtic.projpool.util.RemoteAddressCache;
 
 /**
  * Debug Controller
@@ -35,9 +33,6 @@ import xdtic.projpool.util.RemoteAddressCache;
 @RestController
 @RequestMapping("debug")
 public class DebugController {
-
-    @Autowired
-    private RemoteAddressCache addrCache;
 
     @Autowired
     private UserService userService;
@@ -99,11 +94,6 @@ public class DebugController {
                 = (Cache<Object, Object>) cacheManager.getCache("project").getNativeCache();
 
         return cache.asMap();
-    }
-
-    @GetMapping("addr_cache")
-    public Map<Object, Object> viewRemoteAddressCache() {
-        return addrCache.toMap();
     }
 
 }

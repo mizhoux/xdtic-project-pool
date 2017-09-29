@@ -1,10 +1,8 @@
 package xdtic.projpool.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import xdtic.projpool.util.RemoteAddressCache;
 
 /**
  * 基本的路由控制器
@@ -14,9 +12,6 @@ import xdtic.projpool.util.RemoteAddressCache;
 @Controller
 public class HomeController {
 
-    @Autowired
-    private RemoteAddressCache addrCache;
-
     @GetMapping({"/", "index", "login"})
     public String index() {
         return "user/login";
@@ -24,7 +19,6 @@ public class HomeController {
 
     @GetMapping("logout")
     public String logout(HttpServletRequest request) {
-        addrCache.remove("U".concat(request.getRemoteAddr()));
         request.getSession().invalidate();
 
         return "redirect:/";

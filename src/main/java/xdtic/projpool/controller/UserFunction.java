@@ -26,8 +26,6 @@ import xdtic.projpool.model.User;
 import xdtic.projpool.service.MessageService;
 import xdtic.projpool.service.ProjectService;
 import xdtic.projpool.service.UserService;
-import xdtic.projpool.util.LoginUtil;
-import xdtic.projpool.util.RemoteAddressCache;
 
 /**
  * 用户操作的 API 功能 <br>
@@ -48,9 +46,6 @@ public class UserFunction {
 
     @Autowired
     private ProjectService proService;
-
-    @Autowired
-    private RemoteAddressCache addrCache;
 
     /**
      * 根据用户名和密码进行注册（以 Form 提交）
@@ -95,9 +90,7 @@ public class UserFunction {
 
         user.ifPresent(u -> {
             u.setHasMsg(msgService.countUnreadMessages(u.getId()) > 0);
-
             request.getSession().setAttribute("user", u);
-            addrCache.put(LoginUtil.getUserIPIdentity(request.getRemoteAddr()), u);
         });
 
         return user.map(u -> "redirect:/user/loginBySession").orElse("user/register");

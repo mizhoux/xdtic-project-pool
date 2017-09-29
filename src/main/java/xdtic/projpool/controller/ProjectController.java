@@ -41,37 +41,39 @@ public class ProjectController {
         return "myProject/postProject";
     }
 
+    // 查看收藏（点赞）的项目的详情
     @GetMapping({"project", "myProject/myCollect/detail"})
     public String getProjectDetailPage(
             HttpServletRequest request, @RequestParam Integer proId) {
 
         Optional<Project> project = projService.getProject(proId);
-        project.ifPresent(pro -> {
+        project.ifPresent(p -> {
             User user = (User) request.getSession().getAttribute("user");
-            pro.setIsCollected(projService.containsCollection(user.getId(), proId));
+            p.setIsCollected(projService.containsCollection(user.getId(), proId));
 
-            request.setAttribute("project", pro);
+            request.setAttribute("project", p);
 
-            userService.getUser(pro.getUserId())
+            userService.getUser(p.getUserId())
                     .ifPresent(creator -> request.setAttribute("projectCreator", creator));
 
-            boolean userIsJoined = projService.containsSignInfo(user.getId(), pro.getId());
+            boolean userIsJoined = projService.containsSignInfo(user.getId(), p.getId());
             request.setAttribute("userIsJoined", userIsJoined);
         });
 
         return project.map(p -> "myProject/myCollect/detail").orElse("error");
     }
 
+    // 查看提交的项目的详情
     @GetMapping("myProject/myPost/detail")
     public String getPostProjectDetailPage(
             HttpServletRequest request, @RequestParam Integer proId) {
 
         Optional<Project> project = projService.getProject(proId);
-        project.ifPresent(pro -> {
+        project.ifPresent(p -> {
             User user = (User) request.getSession().getAttribute("user");
-            pro.setIsCollected(projService.containsCollection(user.getId(), proId));
+            p.setIsCollected(projService.containsCollection(user.getId(), proId));
 
-            request.setAttribute("project", pro);
+            request.setAttribute("project", p);
         });
 
         return project.map(p -> "myProject/myPost/detail").orElse("error");
@@ -82,24 +84,24 @@ public class ProjectController {
             HttpServletRequest request, @RequestParam Integer proId) {
 
         Optional<Project> project = projService.getProject(proId);
-        project.ifPresent(pro -> {
+        project.ifPresent(p -> {
             User user = (User) request.getSession().getAttribute("user");
-            pro.setIsCollected(projService.containsCollection(user.getId(), proId));
+            p.setIsCollected(projService.containsCollection(user.getId(), proId));
 
-            request.setAttribute("project", pro);
+            request.setAttribute("project", p);
         });
 
         return project.map(p -> "myProject/myPost/editDetail").orElse("error");
     }
 
     @GetMapping("myProject/myPost/signInfo")
-    public String getSignInfosPage(
+    public String getSignInfoPage(
             HttpServletRequest request, @RequestParam Integer proId) {
 
         Optional<Project> project = projService.getProject(proId);
-        project.ifPresent(pro -> {
+        project.ifPresent(p -> {
             List<SignInfo> signInfos = signService.getSignInfoByProId(proId);
-            request.setAttribute("project", pro);
+            request.setAttribute("project", p);
             request.setAttribute("signInfos", signInfos);
         });
 
@@ -126,13 +128,12 @@ public class ProjectController {
             @RequestParam("uid") Integer userId) {
 
         Optional<Project> project = projService.getProject(proId);
-        project.ifPresent(pro -> {
-            pro.setIsCollected(projService.containsCollection(userId, proId));
-            request.setAttribute("project", pro);
+        project.ifPresent(p -> {
+            p.setIsCollected(projService.containsCollection(userId, proId));
+            request.setAttribute("project", p);
         });
 
         return project.map(p -> "myProject/myCollect/toJoin").orElse("error");
     }
 
 }
-

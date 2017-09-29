@@ -19,17 +19,6 @@
     <aop:aspectj-autoproxy proxy-target-class="true"/>
     
     <import resource="/springmvc-database.xml" />
-        
-    <!--
-    <bean id="guavaCacheBuilder"
-          class="com.google.common.cache.CacheBuilder" factory-method="from">
-        <constructor-arg value="expireAfterWrite=30m" />
-    </bean>
-    
-    <bean id="guavaCacheForIpAddr" factory-bean="guavaCacheBuilder" factory-method="build" />
-    -->
-    
-    <cache:annotation-driven cache-manager="cacheManager"/>
     
     <bean id="cacheManager" class="org.springframework.cache.guava.GuavaCacheManager">
         <property name="cacheBuilderSpec">
@@ -39,5 +28,8 @@
             </bean>
         </property>
     </bean>
+    
+    <!-- 启用缓存，缓存实现为 cacheManager 指向的 GuavaCacheManager -->
+    <cache:annotation-driven cache-manager="cacheManager"/>
     
 </beans>
