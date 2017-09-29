@@ -9,7 +9,6 @@
 var infiniteScroll = require('node_modules/vue-infinite-scroll/vue-infinite-scroll');
 Vue.use(infiniteScroll);
 
-var Promise = require('node_modules/es6-promise/dist/es6-promise').Promise;
 require('node_modules/whatwg-fetch/fetch');
 
 var tools = require('static/js/module/tools');
@@ -64,7 +63,8 @@ Vue.component('tic-project', {
 				method: 'GET',
 				headers: {
 					'Accept': 'application/json'
-				}
+				},
+				credentials: 'same-origin'
 			}).then(function (response) {
 				return response.json();
 			}).then(function (data) {
@@ -86,7 +86,8 @@ Vue.component('tic-project', {
 				method: 'GET',
 				headers: {
 					'Accept': 'application/json'
-				}
+				},
+				credentials: 'same-origin'
 			}).then(function (response) {
 				return response.json();
 			}).then(function (data) {
@@ -193,7 +194,7 @@ var projectBox = new Vue({
 				} else {
 					alert('终止项目失败，请稍后重试。');
 				}
-			})['catch'](function (error) {
+			})['catch'](function () {
 				alert('出错了，请稍后重试。');
 			});
 		}
@@ -221,7 +222,6 @@ var myProjectNav = new Vue({
 /**
  * [loadProject description]
  * @fileOverview 加载普通project列表
- * @param        {[int]}   pageNum [页码]
  */
 function loadProject() {
 	if (this.noMore) {
@@ -238,7 +238,8 @@ function loadProject() {
 		method: 'GET',
 		headers: {
 			'Accept': 'application/json'
-		}
+		},
+		credentials: 'same-origin'
 	}).then(function (response) {
 		return response.json();
 	}).then(function (data) {

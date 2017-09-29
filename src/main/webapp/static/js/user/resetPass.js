@@ -54,7 +54,8 @@ var formResetPass = new Vue({
                 body: JSON.stringify({
                     "username": formResetPass.username,
                     "password": MD5(formResetPass.passOld).toString()
-                })
+                }),
+                credentials: 'same-origin'
             }).then(function (response) {
                 return response.json();
             }).then(function (data) {
@@ -92,7 +93,8 @@ var formResetPass = new Vue({
                 body: JSON.stringify({
                     "username": formResetPass.username,
                     "password": MD5(formResetPass.passOld).toString()
-                })
+                }),
+                credentials: 'same-origin'
             }).then(function (response) {
                 return response.json();
             }).then(function (data) {

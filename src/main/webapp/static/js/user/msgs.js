@@ -8,7 +8,6 @@
 
 var infiniteScroll = require('node_modules/vue-infinite-scroll/vue-infinite-scroll').infiniteScroll;
 
-var Promise = require('node_modules/es6-promise/dist/es6-promise').Promise;
 require('node_modules/whatwg-fetch/fetch');
 
 var urlLoadMoreMsg = urlPrefix + '/fn/get/msg';
@@ -168,7 +167,8 @@ function loadMore() {
 		method: 'GET',
 		headers: {
 			'Accept': 'application/json'
-		}
+		},
+		credentials: 'same-origin'
 	}).then(function (response) {
 		return response.json();
 	}).then(function (data) {

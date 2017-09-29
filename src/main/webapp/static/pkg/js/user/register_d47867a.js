@@ -316,7 +316,8 @@ function nameIsUsed(resolve, reject, rule) {
         },
         body: JSON.stringify({
             username: self.username
-        })
+        }),
+        credentials: 'same-origin'
     }).then(function (response) {
         return response.json();
     }).then(function (data) {

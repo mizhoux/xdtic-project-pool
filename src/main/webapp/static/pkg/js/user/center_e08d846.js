@@ -1,3 +1,4 @@
+;/*!/static/js/user/center.js*/
 /**
  * Created by chenpeng on 2017/3/25.
  */

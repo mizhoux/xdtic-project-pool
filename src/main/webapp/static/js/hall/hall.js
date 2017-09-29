@@ -67,7 +67,8 @@ Vue.component('tic-project', {
 				method: 'GET',
 				headers: {
 					'Accept': 'application/json'
-				}
+				},
+				credentials: 'same-origin'
 			}).then(function (response) {
 				return response.json();
 			}).then(function (data) {
@@ -91,7 +92,8 @@ Vue.component('tic-project', {
 				method: 'GET',
 				headers: {
 					'Accept': 'application/json'
-				}
+				},
+				credentials: 'same-origin'
 			}).then(function (response) {
 				return response.json();
 			}).then(function (data) {
@@ -227,7 +229,8 @@ function loadProject() {
 		method: 'GET',
 		headers: {
 			'Accept': 'application/json'
-		}
+		},
+		credentials: 'same-origin'
 	}).then(function (response) {
 		return response.json();
 	}).then(function (data) {
@@ -261,7 +264,8 @@ function loadHotProject() {
 		method: 'GET',
 		headers: {
 			'Accept': 'application/json'
-		}
+		},
+		credentials: 'same-origin'
 	}).then(function (response) {
 		return response.json();
 	}).then(function (data) {
