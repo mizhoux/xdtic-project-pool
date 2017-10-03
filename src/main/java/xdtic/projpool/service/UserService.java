@@ -43,7 +43,7 @@ public class UserService {
     private Pair<List<User>, Long> getUsers(String keyword, int pageNum, int pageSize) {
         String condition = getSearchCondition(keyword);
 
-        Page<Object> page = PageHelper.startPage(pageNum + 1, pageSize);
+        Page page = PageHelper.startPage(pageNum + 1, pageSize);
         List<User> users = userMapper.getUsers(condition);
 
         return Pair.of(users, page.getTotal());

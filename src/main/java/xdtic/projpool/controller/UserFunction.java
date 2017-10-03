@@ -123,6 +123,22 @@ public class UserFunction {
         return "user/resetPass"; // 更新密码不成功
     }
 
+    @ResponseBody
+    @PostMapping("user/project/operate")
+    public RespCode deleteProject(@RequestBody Map<String, String> params) {
+        String operation = params.get("operation");
+
+        if ("delete".equals(operation)) {
+            Integer proId = Integer.valueOf(params.get("id"));
+
+            if (proService.deleteProject(proId)) {
+                return RespCode.OK;
+            }
+        }
+
+        return RespCode.ERROR;
+    }
+
     /**
      * 修改用户个人信息
      *
@@ -146,7 +162,8 @@ public class UserFunction {
     }
 
     @ResponseBody
-    @PostMapping(value = "valid/profile", consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "valid/profile",
+            consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode validUserProfile(@Valid User user, HttpSession session) {
         User u = (User) session.getAttribute("user");
         Integer userId = u.getId();
@@ -191,7 +208,8 @@ public class UserFunction {
      * @return
      */
     @ResponseBody
-    @PostMapping(value = "valid/user", consumes = APPLICATION_FORM_URLENCODED_VALUE)
+    @PostMapping(value = "valid/user",
+            consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public RespCode validUser(
             @RequestParam String username, @RequestParam String password) {
 
@@ -231,21 +249,6 @@ public class UserFunction {
     @GetMapping("hasMsg")
     public Map<String, Boolean> hasUnreadMessage(@RequestParam Integer userId) {
         return ImmutableMap.of("hasMsg", msgService.countUnreadMessages(userId) > 0);
-    }
-
-    @ResponseBody
-    @PostMapping("user/project/operate")
-    public RespCode deleteProject(@RequestBody Map<String, String> params) {
-        String operation = params.get("operation");
-        if ("delete".equals(operation)) {
-            Integer proId = Integer.valueOf(params.get("id"));
-
-            if (proService.deleteProject(proId)) {
-                return RespCode.OK;
-            }
-        }
-
-        return RespCode.ERROR;
     }
 
 }

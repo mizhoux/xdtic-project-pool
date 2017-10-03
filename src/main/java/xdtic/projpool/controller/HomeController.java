@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 /**
  * 基本的路由控制器
  *
- * @author mizhou
+ * @author Michael Chow <mizhoux@gmail.com>
  */
 @Controller
 public class HomeController {
