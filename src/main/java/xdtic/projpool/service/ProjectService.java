@@ -97,10 +97,6 @@ public class ProjectService {
         return Pair.of(projects, page.getTotal());
     }
 
-    public long countAcceptedProjects(String keyword) {
-        return projectMapper.countAcceptedProjects(getSearchCondition(keyword));
-    }
-
     public Map<String, Object> getHotProjects(String keyword, int hotSize, Integer userId) {
 
         PageHelper.startPage(1, hotSize);
@@ -122,10 +118,6 @@ public class ProjectService {
         projects.forEach(this::makeTagsForFront);
 
         return Pair.of(projects, page.getTotal());
-    }
-
-    public long countUncheckedProjects(String keyword) {
-        return projectMapper.countUncheckedProjects(getSearchCondition(keyword));
     }
 
     public Pair<List<Project>, Long> getPostedProjects(Integer userId, int pageNum, int pageSize) {
@@ -323,6 +315,12 @@ public class ProjectService {
     }
 
     private String getSearchCondition(String keywords) {
+        keywords = keywords.trim();
+        
+        if (keywords.isEmpty()) {
+            return "";
+        }
+
         StringJoiner columnJoiner = new StringJoiner(",',',", "CONCAT(", ")");
         columnJoiner.add("p.tag").add("p.name").add("p.content").add("p.username");
         String columns = columnJoiner.toString();

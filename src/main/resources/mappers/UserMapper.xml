@@ -82,14 +82,13 @@
         SELECT id FROM user u WHERE u.username = #{arg0}
     </select>
     
-    <select id="countUsers" parameterType="String" resultType="Long">
-        SELECT COUNT(*) FROM user WHERE ${condition}
-    </select>
-    
     <select id="getUsers" parameterType="String" resultMap="BaseResultMap">
         SELECT id, username, password, gender, email, phone, 
         realname, nickname, stu_num, major, skill, experience
-        FROM user WHERE ${condition}
+        FROM user 
+        <if test="condition != null and '' != condition">
+            WHERE ${condition}
+        </if>
     </select>
     
     <select id="getCollectedProIds" parameterType="Integer" resultType="Integer">

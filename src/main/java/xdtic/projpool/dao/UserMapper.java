@@ -23,8 +23,6 @@ public interface UserMapper {
 
     Integer getUserIdByPhone(String phone);
 
-    long countUsers(@Param("condition") String condition);
-
     List<User> getUsers(@Param("condition") String condition);
 
     int updateUser(User user);

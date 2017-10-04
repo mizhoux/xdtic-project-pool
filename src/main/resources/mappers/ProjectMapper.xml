@@ -41,29 +41,28 @@
     <select id="getHotProjects" parameterType="String" resultMap="BaseResultMap">
         SELECT p.* FROM project AS p, 
         (SELECT ps.pro_id, COUNT(*) AS num FROM project_star ps GROUP BY ps.pro_id ORDER BY num DESC) AS t
-        WHERE p.status = 1 AND p.id = t.pro_id AND ${condition}
+        WHERE p.status = 1 AND p.id = t.pro_id
+        <if test="condition != null and '' != condition" >
+            AND ${condition}
+        </if>
     </select>
     
     <select id="getAcceptedProjects" parameterType="String" resultMap="BaseResultMap">
         SELECT p.* FROM project AS p 
-        WHERE  p.status = 1 AND ${condition}
-        ORDER  BY creation_date DESC
-    </select>
-    
-    <select id="countAcceptedProjects" parameterType="String" resultType="Long">
-        SELECT COUNT(*) FROM project p
-        WHERE p.status = 1 AND ${condition}
+        WHERE  p.status = 1
+        <if test="condition != null and '' != condition" >
+            AND ${condition}
+        </if>
+        ORDER BY creation_date DESC
     </select>
     
     <select id="getUncheckedProjects" parameterType="String" resultMap="BaseResultMap">
         SELECT p.* FROM project AS p 
-        WHERE p.status = 0 AND ${condition}
+        WHERE p.status = 0
+        <if test="condition != null and '' != condition" >
+            AND ${condition}
+        </if>
         ORDER BY creation_date DESC
-    </select>
-    
-    <select id="countUncheckedProjects" parameterType="String" resultType="Long">
-        SELECT COUNT(*) FROM project p 
-        WHERE p.status = 0 AND ${condition}
     </select>
     
     <select id="getPostedProjects" parameterType="Integer" resultMap="BaseResultMap">

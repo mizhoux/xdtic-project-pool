@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import xdtic.projpool.model.PagingModel;
 import xdtic.projpool.model.Project;
@@ -24,8 +23,8 @@ import xdtic.projpool.service.SignInfoService;
  *
  * @author Michael Chow <mizhoux@gmail.com>
  */
-@Validated
-@RestController
+@Validated // 字段校验需要
+@RestController // 所有方法都加上 @ResponseBody
 @RequestMapping("fn")
 public class ProjectFunction {
 
@@ -107,7 +106,6 @@ public class ProjectFunction {
         return proService.getPagingAcceptedProjects(keyword, pageNum, pageSize, userId);
     }
 
-    @ResponseBody
     @GetMapping("get/hotProject")
     public Map<String, Object> getHotProjects(
             @RequestParam("userid") Integer userId,

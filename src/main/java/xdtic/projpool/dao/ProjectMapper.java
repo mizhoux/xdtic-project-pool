@@ -19,13 +19,9 @@ public interface ProjectMapper {
 
     List<Project> getAcceptedProjects(@Param("condition") String condition);
 
-    long countAcceptedProjects(@Param("condition") String condition);
-
     List<Project> getHotProjects(@Param("condition") String condition);
 
     List<Project> getUncheckedProjects(@Param("condition") String condition);
-
-    long countUncheckedProjects(@Param("condition") String condition);
 
     List<Project> getPostedProjects(Integer userId);
 

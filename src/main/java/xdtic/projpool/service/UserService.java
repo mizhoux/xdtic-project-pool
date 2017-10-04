@@ -40,15 +40,6 @@ public class UserService {
         return Optional.ofNullable(user);
     }
 
-    private Pair<List<User>, Long> getUsers(String keyword, int pageNum, int pageSize) {
-        String condition = getSearchCondition(keyword);
-
-        Page page = PageHelper.startPage(pageNum + 1, pageSize);
-        List<User> users = userMapper.getUsers(condition);
-
-        return Pair.of(users, page.getTotal());
-    }
-
     public PagingModel<User> getPagingUsers(String keyword, int pageNum, int pageSize) {
 
         Pair<List<User>, Long> pair = getUsers(keyword, pageNum, pageSize);
@@ -61,16 +52,19 @@ public class UserService {
                 .build();
     }
 
+    private Pair<List<User>, Long> getUsers(String keyword, int pageNum, int pageSize) {
+        String condition = getSearchCondition(keyword);
+
+        Page page = PageHelper.startPage(pageNum + 1, pageSize);
+        List<User> users = userMapper.getUsers(condition);
+
+        return Pair.of(users, page.getTotal());
+    }
+
     public boolean containsUsername(String username) {
         Integer userId = userMapper.getUserIdByUsername(username);
 
         return userId != null;
-    }
-
-    public long countUsers(String keyword) {
-        String condition = getSearchCondition(keyword);
-
-        return userMapper.countUsers(condition);
     }
 
     public boolean updateUser(User user) {
@@ -120,6 +114,11 @@ public class UserService {
     }
 
     private String getSearchCondition(String keyword) {
+        keyword = keyword.trim();
+        if (keyword.isEmpty()) {
+            return "";
+        }
+
         StringJoiner columnJoiner = new StringJoiner(",',',", "CONCAT(", ")");
 
         columnJoiner.add("username").add("IFNULL(realname, '')");
