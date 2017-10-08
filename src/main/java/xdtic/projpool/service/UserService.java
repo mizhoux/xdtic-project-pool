@@ -41,8 +41,9 @@ public class UserService {
     }
 
     public PagingModel<User> getPagingUsers(String keyword, int pageNum, int pageSize) {
-
+        keyword = keyword == null ? "" : keyword.trim();
         Pair<List<User>, Long> pair = getUsers(keyword, pageNum, pageSize);
+
         return PagingModel.builder()
                 .entitiesName("users")
                 .entities(pair.left())
@@ -53,12 +54,25 @@ public class UserService {
     }
 
     private Pair<List<User>, Long> getUsers(String keyword, int pageNum, int pageSize) {
-        String condition = getSearchCondition(keyword);
+    //    String condition = getSearchCondition(keyword);
 
         Page page = PageHelper.startPage(pageNum + 1, pageSize);
-        List<User> users = userMapper.getUsers(condition);
+        List<User> users = userMapper.getUsers(keyword);
 
         return Pair.of(users, page.getTotal());
+    }
+
+    private String getSearchCondition(String keyword) {
+
+        StringJoiner columnJoiner = new StringJoiner(",',',", "CONCAT(", ")");
+
+        columnJoiner.add("username").add("IFNULL(realname, '')");
+        String columns = columnJoiner.toString();
+
+        StringBuilder condition = new StringBuilder(55);
+        condition.append(columns).append(" LIKE '%").append(keyword).append("%'");
+
+        return condition.toString();
     }
 
     public boolean containsUsername(String username) {
@@ -113,20 +127,4 @@ public class UserService {
         return RespCode.OK;
     }
 
-    private String getSearchCondition(String keyword) {
-        keyword = keyword.trim();
-        if (keyword.isEmpty()) {
-            return "";
-        }
-
-        StringJoiner columnJoiner = new StringJoiner(",',',", "CONCAT(", ")");
-
-        columnJoiner.add("username").add("IFNULL(realname, '')");
-        String columns = columnJoiner.toString();
-
-        StringBuilder condition = new StringBuilder(55);
-        condition.append(columns).append(" LIKE '%").append(keyword).append("%'");
-
-        return condition.toString();
-    }
 }

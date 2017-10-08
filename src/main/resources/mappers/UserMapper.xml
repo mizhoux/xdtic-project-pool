@@ -86,8 +86,9 @@
         SELECT id, username, password, gender, email, phone, 
         realname, nickname, stu_num, major, skill, experience
         FROM user 
-        <if test="condition != null and '' != condition">
-            WHERE ${condition}
+        <if test="keyword != null and '' != keyword">
+            WHERE username LIKE CONCAT('%', #{keyword}, '%') 
+            OR    realname LIKE CONCAT('%', #{keyword}, '%')
         </if>
     </select>
     

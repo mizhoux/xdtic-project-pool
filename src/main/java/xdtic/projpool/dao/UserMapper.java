@@ -23,7 +23,7 @@ public interface UserMapper {
 
     Integer getUserIdByPhone(String phone);
 
-    List<User> getUsers(@Param("condition") String condition);
+    List<User> getUsers(@Param("keyword") String keyword);
 
     int updateUser(User user);
 

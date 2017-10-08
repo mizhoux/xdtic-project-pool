@@ -48,7 +48,7 @@ public class ProjectService {
     public Optional<Project> addProject(Project project) {
 
         String username = userMapper.getUsernameById(project.getUserId());
-        if (username == null) {
+        if (username != null) {
 
             project.setUsername(username);
 
@@ -315,10 +315,9 @@ public class ProjectService {
     }
 
     private String getSearchCondition(String keywords) {
-        keywords = keywords.trim();
-        
+        keywords = keywords == null ? "" : keywords.trim();
         if (keywords.isEmpty()) {
-            return "";
+            return keywords;
         }
 
         StringJoiner columnJoiner = new StringJoiner(",',',", "CONCAT(", ")");
