@@ -25,7 +25,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             }
 
             request.getRequestDispatcher("/WEB-INF/views/page/admin/login.jsp")
-                   .forward(request, response);
+                    .forward(request, response);
 
         } else { // For User
             if (session.getAttribute("user") != null) {
@@ -33,7 +33,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
             }
 
             request.getRequestDispatcher("/WEB-INF/views/page/user/login.jsp")
-                   .forward(request, response);
+                    .forward(request, response);
         }
 
         return false;

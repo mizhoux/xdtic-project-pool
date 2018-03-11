@@ -46,7 +46,11 @@
             <mvc:exclude-mapping path="/debug/**"/>
             
             <mvc:exclude-mapping path="/user/register"/>
+            <mvc:exclude-mapping path="/fn/user/register"/>
+            
             <mvc:exclude-mapping path="/fn/user/login"/>
+            
+            <mvc:exclude-mapping path="/user/resetPass"/>
             <mvc:exclude-mapping path="/fn/user/resetPass"/>
             
             <mvc:exclude-mapping path="/fn/valid/profile"/>
