@@ -5,6 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.google.common.collect.ImmutableMap;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,7 @@ public class ProjectService {
         if (username != null) {
 
             project.setUsername(username);
+            project.setCreationDate(new Date());
 
             int result = projectMapper.addProject(project);
             if (result == 1) {

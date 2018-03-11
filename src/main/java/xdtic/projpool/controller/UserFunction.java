@@ -125,11 +125,17 @@ public class UserFunction {
 
     @ResponseBody
     @PostMapping("user/project/operate")
-    public RespCode deleteProject(@RequestBody Map<String, String> params) {
-        String operation = params.get("operation");
+    public RespCode deleteProject(@RequestBody Map<String, Object> params) {
+        Object operation = params.get("operation");
 
         if ("delete".equals(operation)) {
-            Integer proId = Integer.valueOf(params.get("id"));
+            Object id = params.get("id");
+            Integer proId;
+            if (id.getClass() == Integer.class) {
+                proId = (Integer) id;
+            } else {
+                proId = Integer.valueOf(id.toString());
+            }
 
             if (proService.deleteProject(proId)) {
                 return RespCode.OK;
