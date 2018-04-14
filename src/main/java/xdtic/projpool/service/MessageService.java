@@ -46,9 +46,9 @@ public class MessageService {
 
         Pair<List<Message>, Long> pair = getMessagesByUserId(userId, pageNum, pageSize);
 
-        PagingModel model = PagingModel.builder()
-                .entitiesName("msgs")
+        PagingModel<Message> model = PagingModel.<Message>builder()
                 .entities(pair.left())
+                .entitiesName("msgs")
                 .pageNum(pageNum)
                 .size(pair.left().size())
                 .hasMore((pageNum + 1) * pageSize < pair.right())

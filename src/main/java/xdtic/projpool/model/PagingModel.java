@@ -32,38 +32,38 @@ public class PagingModel<T> {
         private Builder() {
         }
 
-        public Builder pageNum(final int value) {
+        public Builder<T> pageNum(final int value) {
             this.pageNum = value;
             return this;
         }
 
-        public Builder size(final int value) {
+        public Builder<T> size(final int value) {
             this.size = value;
             return this;
         }
 
-        public Builder hasMore(final boolean value) {
+        public Builder<T> hasMore(final boolean value) {
             this.hasMore = value;
             return this;
         }
 
-        public Builder entities(final List<T> value) {
+        public Builder<T> entities(final List<T> value) {
             this.entities = value;
             return this;
         }
 
-        public Builder entitiesName(final String value) {
+        public Builder<T> entitiesName(final String value) {
             this.entitiesName = value;
             return this;
         }
 
-        public PagingModel build() {
-            return new PagingModel(pageNum, size, hasMore, entities, entitiesName);
+        public PagingModel<T> build() {
+            return new PagingModel<>(pageNum, size, hasMore, entities, entitiesName);
         }
     }
 
-    public static PagingModel.Builder builder() {
-        return new PagingModel.Builder();
+    public static <T> PagingModel.Builder<T> builder() {
+        return new PagingModel.Builder<>();
     }
 
     private PagingModel(final int pageNum, final int size,

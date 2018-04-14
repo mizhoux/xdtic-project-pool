@@ -44,9 +44,9 @@ public class UserService {
         keyword = keyword == null ? "" : keyword.trim();
         Pair<List<User>, Long> pair = getUsers(keyword, pageNum, pageSize);
 
-        return PagingModel.builder()
-                .entitiesName("users")
+        return PagingModel.<User>builder()
                 .entities(pair.left())
+                .entitiesName("users")
                 .pageNum(pageNum)
                 .size(pair.left().size())
                 .hasMore((pageNum + 1) * pageSize < pair.right())
@@ -54,9 +54,9 @@ public class UserService {
     }
 
     private Pair<List<User>, Long> getUsers(String keyword, int pageNum, int pageSize) {
-    //    String condition = getSearchCondition(keyword);
+        //    String condition = getSearchCondition(keyword);
 
-        Page page = PageHelper.startPage(pageNum + 1, pageSize);
+        Page<Object> page = PageHelper.startPage(pageNum + 1, pageSize);
         List<User> users = userMapper.getUsers(keyword);
 
         return Pair.of(users, page.getTotal());

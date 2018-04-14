@@ -35,7 +35,7 @@
         </dependency>
         
         <!-- Spring -->
-        <!--  spring-context 依赖于 spring-core,spring-expression,spring-aop 以及 spring-beans -->
+        <!--  spring-context 依赖于 spring-core, spring-aop, spring-beans, spring-expression -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -89,7 +89,7 @@
             <artifactId>mybatis</artifactId>  
             <version>${mybatis.version}</version>  
         </dependency>  
-        <dependency>  
+        <dependency>
             <groupId>org.mybatis</groupId>  
             <artifactId>mybatis-spring</artifactId>  
             <version>1.3.1</version>  
@@ -211,6 +211,9 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <compilerArgs>
+                        <arg>-Xlint:unchecked</arg>
+                    </compilerArgs>
                     <compilerArguments>
                         <endorseddirs>${endorsed.dir}</endorseddirs>
                     </compilerArguments>

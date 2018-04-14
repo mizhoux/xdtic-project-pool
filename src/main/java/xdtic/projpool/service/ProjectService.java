@@ -244,9 +244,9 @@ public class ProjectService {
     private PagingModel<Project> parsePagingModel(
             Pair<List<Project>, Long> pair, int pageNum, int pageSize) {
 
-        return PagingModel.builder()
-                .entitiesName("projects")
+        return PagingModel.<Project>builder()
                 .entities(pair.left())
+                .entitiesName("projects")
                 .pageNum(pageNum)
                 .size(pair.left().size())
                 .hasMore((pageNum + 1) * pageSize < pair.right())
