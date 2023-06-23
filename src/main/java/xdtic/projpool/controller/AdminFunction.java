@@ -32,14 +32,18 @@ import xdtic.projpool.service.UserService;
 @RequestMapping("fn/admin")
 public class AdminFunction {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
+    private final AdminService adminService;
+    private final ProjectService proService;
+    
     @Autowired
-    private AdminService adminService;
-
-    @Autowired
-    private ProjectService proService;
+     public AdminFunction(UserService userService, AdminService adminService, ProjectService proService) {
+        this.userService = userService;
+        this.adminService = adminService;
+        this.proService = proService;
+    }
+     
 
     @PostMapping(value = "login", consumes = APPLICATION_FORM_URLENCODED_VALUE)
     public String login(HttpServletRequest request,
@@ -97,6 +101,7 @@ public class AdminFunction {
     }
 
     @ResponseBody
+    
     @PostMapping("user/delete")
     @SuppressWarnings("unchecked")
     public RespCode deleteUser(@RequestBody Map<String, Object> params) {
@@ -105,5 +110,6 @@ public class AdminFunction {
         boolean success = userService.deleteUsers(userIds);
         return success ? RespCode.OK : RespCode.ERROR;
     }
+    
 
 }
