@@ -10,10 +10,6 @@ import java.util.Date;
  */
 public class Message {
 
-    public static enum Type {
-        POST, PASS, JOIN, REJECT
-    }
-
     private Integer id;
 
     private Integer proId;
@@ -24,11 +20,11 @@ public class Message {
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     private Date creationDate;
 
-    public static Message of(Project project, Message.Type type) {
+    public static Message of(Project project, Type type) {
         return of(project, type, null);
     }
 
-    public static Message of(Project project, Message.Type type, String comment) {
+    public static Message of(Project project, Type type, String comment) {
         Message message = new Message();
 
         message.setUserId(project.getUserId());
@@ -38,7 +34,7 @@ public class Message {
         return message;
     }
 
-    private static String getMessageContent(String proName, Message.Type type, String comment) {
+    private static String getMessageContent(String proName, Type type, String comment) {
         StringBuilder content = new StringBuilder(50);
 
         switch (type) {
